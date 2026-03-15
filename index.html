@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
 
 <meta charset="UTF-8">
@@ -18,12 +17,12 @@ font-family:Arial, sans-serif;
 }
 
 body{
-background:#050505;
+background:#030303;
 color:white;
 overflow-x:hidden;
 }
 
-/* navbar */
+/* NAVBAR */
 
 .navbar{
 position:fixed;
@@ -32,34 +31,40 @@ width:100%;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:18px 40px;
-background:rgba(0,0,0,0.65);
-backdrop-filter:blur(12px);
+padding:20px 50px;
+background:rgba(0,0,0,0.5);
+backdrop-filter:blur(15px);
 z-index:100;
 }
 
 .logo{
-color:#00ffd5;
 font-size:22px;
+color:#00ffd5;
 font-weight:bold;
+letter-spacing:2px;
 }
 
 .menu a{
-margin-left:20px;
+margin-left:25px;
 text-decoration:none;
 color:white;
 font-size:14px;
+transition:0.3s;
 }
 
 .menu a:hover{
 color:#00ffd5;
 }
 
-/* hero */
+/* HERO */
 
 .hero{
 height:100vh;
-background:url("https://images.unsplash.com/photo-1503264116251-35a269479413") center/cover no-repeat;
+background:
+linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.9)),
+url("https://c10.patreonusercontent.com/4/patreon-media/p/post/150765348/ad9f53cd292849189563a7cdcab6d7ba/eyJ3IjoxMDgwfQ%3D%3D/1.png?token-hash=ni5M9sz61GbJuB5QIZjUgsnq0iy9YnX66PztaABGCMw%3D&token-time=1774828800")
+center/cover no-repeat;
+
 display:flex;
 align-items:center;
 justify-content:center;
@@ -67,97 +72,112 @@ text-align:center;
 }
 
 .hero-box{
-background:rgba(0,0,0,0.65);
-padding:60px;
-border-radius:15px;
-box-shadow:0 0 60px rgba(0,255,213,0.3);
+max-width:700px;
 }
 
 .hero h1{
-font-size:50px;
-margin-bottom:10px;
+font-size:60px;
+margin-bottom:15px;
+text-shadow:0 0 20px #00ffd5;
 }
 
 .hero p{
-margin-bottom:25px;
+font-size:18px;
+margin-bottom:30px;
+opacity:0.9;
 }
 
+/* BUTTON */
+
 .btn{
+display:inline-block;
+padding:14px 40px;
 background:#00ffd5;
 color:black;
-padding:12px 30px;
+font-weight:bold;
 border-radius:8px;
 text-decoration:none;
-font-weight:bold;
 transition:0.3s;
+box-shadow:0 0 20px #00ffd5;
 }
 
 .btn:hover{
-transform:scale(1.05);
+transform:scale(1.1);
+box-shadow:0 0 40px #00ffd5;
 }
 
-/* section */
+/* SECTION */
 
 .section{
-padding:100px 20px;
-max-width:1100px;
+padding:120px 20px;
+max-width:1200px;
 margin:auto;
 text-align:center;
 }
 
 .section h2{
-color:#00ffd5;
-font-size:34px;
+font-size:40px;
 margin-bottom:30px;
+color:#00ffd5;
 }
 
-/* cards */
+/* FEATURES */
 
-.cards{
+.features{
 display:flex;
-gap:20px;
+gap:30px;
 flex-wrap:wrap;
 justify-content:center;
+margin-top:40px;
 }
 
-.card{
-background:#121212;
-padding:30px;
+.feature{
+background:#0f0f0f;
+padding:40px;
 width:260px;
 border-radius:12px;
-transition:0.4s;
+transition:0.3s;
 }
 
-.card:hover{
+.feature:hover{
 transform:translateY(-10px);
-box-shadow:0 0 25px #00ffd5;
+box-shadow:0 0 30px #00ffd5;
 }
 
-/* gallery */
+.feature h3{
+margin-bottom:10px;
+color:#00ffd5;
+}
+
+/* GALLERY */
 
 .gallery{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:25px;
+margin-top:40px;
 }
 
 .gallery img{
 width:100%;
-border-radius:10px;
+border-radius:15px;
 transition:0.4s;
 }
 
 .gallery img:hover{
-transform:scale(1.08);
+transform:scale(1.07);
+box-shadow:0 0 30px #00ffd5;
 }
 
-/* footer */
+/* FOOTER */
 
 footer{
-background:black;
+margin-top:120px;
 padding:40px;
 text-align:center;
-margin-top:80px;
+background:#000;
+font-size:14px;
+opacity:0.8;
 }
 
 </style>
@@ -168,13 +188,13 @@ margin-top:80px;
 
 <div class="navbar">
 
-<div class="logo">Kaii VN</div>
+<div class="logo">KAII VN</div>
 
 <div class="menu">
-<a href="#">Trang chủ</a>
-<a href="#">Nhân vật</a>
+<a href="#">Home</a>
+<a href="#">Features</a>
 <a href="#">Gallery</a>
-<a href="#">Liên hệ</a>
+<a href="#">Contact</a>
 </div>
 
 </div>
@@ -183,11 +203,11 @@ margin-top:80px;
 
 <div class="hero-box">
 
-<h1>Kaii Visual Novel</h1>
+<h1>KAII VISUAL NOVEL</h1>
 
-<p>Trải nghiệm visual novel trực tiếp trên web</p>
+<p>Experience visual novel directly on the web</p>
 
-<a class="btn">Bắt đầu</a>
+<a class="btn">START</a>
 
 </div>
 
@@ -195,23 +215,23 @@ margin-top:80px;
 
 <div class="section">
 
-<h2>Tính năng</h2>
+<h2>Features</h2>
 
-<div class="cards">
+<div class="features">
 
-<div class="card">
+<div class="feature">
 <h3>Visual Novel</h3>
-<p>Scene hiển thị giống game.</p>
+<p>Scene and character presentation similar to the game.</p>
 </div>
 
-<div class="card">
-<h3>Chạy trên web</h3>
-<p>Không cần tải game.</p>
+<div class="feature">
+<h3>Play On Web</h3>
+<p>No download required, play directly in browser.</p>
 </div>
 
-<div class="card">
-<h3>Dễ mở rộng</h3>
-<p>Có thể thêm nhiều story.</p>
+<div class="feature">
+<h3>Expandable</h3>
+<p>Easily add new stories and scenes.</p>
 </div>
 
 </div>
@@ -224,9 +244,9 @@ margin-top:80px;
 
 <div class="gallery">
 
-<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee">
-<img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470">
-<img src="https://images.unsplash.com/photo-1503264116251-35a269479413">
+<img src="https://c10.patreonusercontent.com/4/patreon-media/p/post/134027967/e8a22d1f218a46158ed74b9e2461b65c/eyJ3IjoxMDgwfQ%3D%3D/1.png?token-hash=RpznTndYKxek-siEabDybCuqSZmEMTP0xi9KTVG_Qgc%3D&token-time=1774828800">
+
+<img src="https://c10.patreonusercontent.com/4/patreon-media/p/post/68936209/67dde7ae097148ecafb8b399af1611d9/eyJ3IjoxMDgwfQ%3D%3D/1.png?token-hash=EDQjKSwarAcVJz6BFyuvSVRb5sr9ANhmTeYIfGA6KWg%3D&token-time=1774828800">
 
 </div>
 
