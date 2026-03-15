@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Kaii VN</title>
 
-<style>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-html{
-scroll-behavior:smooth;
-}
+<style>
 
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial, sans-serif;
+font-family:'Poppins',sans-serif;
 }
 
 body{
 background:#050505;
 color:white;
+overflow-x:hidden;
 }
 
 /* NAVBAR */
@@ -32,59 +33,79 @@ width:100%;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:16px 30px;
+padding:18px 30px;
 background:rgba(0,0,0,0.7);
-backdrop-filter:blur(10px);
 z-index:100;
 }
 
 .logo{
+font-family:'Orbitron',sans-serif;
 color:#00ffd5;
-font-weight:bold;
 font-size:20px;
 }
 
-.menu a{
-margin-left:20px;
-text-decoration:none;
-color:white;
-font-size:14px;
+.menu{
+display:flex;
+gap:20px;
 }
 
-.menu a:hover{
-color:#00ffd5;
+.menu a{
+color:white;
+text-decoration:none;
+}
+
+.menu-btn{
+display:none;
+font-size:22px;
+cursor:pointer;
+}
+
+/* MOBILE MENU */
+
+.mobile{
+position:fixed;
+right:-250px;
+top:0;
+width:250px;
+height:100%;
+background:#111;
+padding:40px 20px;
+transition:0.3s;
+}
+
+.mobile a{
+display:block;
+margin-bottom:15px;
+color:white;
+text-decoration:none;
 }
 
 /* HERO */
 
 .hero{
 height:100vh;
+
 background:
-linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.9)),
-url("https://images.unsplash.com/photo-1503264116251-35a269479413")
+linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.9)),
+url("https://c10.patreonusercontent.com/4/patreon-media/p/post/150765348/ad9f53cd292849189563a7cdcab6d7ba/eyJ3IjoxMDgwfQ%3D%3D/1.png?token-time=1774828800")
 center/cover no-repeat;
 
 display:flex;
 align-items:center;
 justify-content:center;
 text-align:center;
-padding:20px;
 }
 
 .hero h1{
-font-size:52px;
+font-family:'Orbitron',sans-serif;
+font-size:55px;
 text-shadow:0 0 20px #00ffd5;
 }
 
-.hero p{
-margin-top:10px;
-font-size:18px;
-}
-
 .btn{
-display:inline-block;
 margin-top:20px;
-padding:14px 34px;
+display:inline-block;
+padding:15px 35px;
 background:#00ffd5;
 color:black;
 border-radius:8px;
@@ -92,24 +113,14 @@ font-weight:bold;
 text-decoration:none;
 }
 
-/* SECTION */
-
-section{
-padding:80px 20px;
-max-width:1100px;
-margin:auto;
-text-align:center;
-}
-
-section h2{
-color:#00ffd5;
-margin-bottom:30px;
-font-size:30px;
-}
-
 /* NEWS */
 
 .news{
+padding:80px 20px;
+text-align:center;
+}
+
+.news-grid{
 display:flex;
 flex-wrap:wrap;
 gap:20px;
@@ -118,67 +129,68 @@ justify-content:center;
 
 .news-box{
 background:#111;
-padding:25px;
+padding:20px;
 border-radius:10px;
 width:260px;
 }
 
-.news-box h3{
-color:#00ffd5;
-margin-bottom:10px;
-}
-
 /* SEARCH */
 
+.search{
+padding:60px 20px;
+text-align:center;
+}
+
 .search input{
-padding:12px;
+padding:10px;
 width:220px;
-border:none;
-border-radius:5px;
 }
 
 .search button{
-padding:12px;
-margin-left:5px;
+padding:10px;
 background:#00ffd5;
 border:none;
-border-radius:5px;
-cursor:pointer;
 }
 
-/* GALLERY */
+/* GAME LIST */
 
-.gallery{
+.games{
+padding:60px 20px;
+}
+
+.game-grid{
 display:flex;
 flex-wrap:wrap;
 gap:20px;
 justify-content:center;
 }
 
-.gallery img{
+.game{
+background:#111;
+padding:20px;
+border-radius:10px;
+width:200px;
+}
+
+/* GALLERY SLIDER */
+
+.gallery{
+padding:60px 20px;
+text-align:center;
+}
+
+.slider{
+display:flex;
+overflow:auto;
+gap:20px;
+}
+
+.slider img{
 width:300px;
 border-radius:10px;
-transition:0.3s;
 }
 
-.gallery img:hover{
-transform:scale(1.05);
-}
-
-/* DOWNLOAD */
-
-.download a{
-display:inline-block;
-margin:10px;
-padding:15px 35px;
-background:#00ffd5;
-color:black;
-font-weight:bold;
-border-radius:8px;
-text-decoration:none;
-}
-
-/* POPUP LOGIN */
+/* LOGIN */
 
 .popup{
 position:fixed;
@@ -192,168 +204,150 @@ align-items:center;
 justify-content:center;
 }
 
-.popup-box{
+.box{
 background:#111;
 padding:30px;
 border-radius:10px;
 width:280px;
 }
 
-.popup-box input{
+.box input{
 width:100%;
 padding:10px;
 margin-top:10px;
-border:none;
-border-radius:5px;
 }
 
-.popup-box button{
+.box button{
 margin-top:10px;
 width:100%;
 padding:10px;
 background:#00ffd5;
 border:none;
-font-weight:bold;
-cursor:pointer;
 }
 
 footer{
-background:#000;
-padding:30px;
+padding:40px;
 text-align:center;
+background:#000;
 margin-top:80px;
 }
 
+@media(max-width:768px){
+
+.menu{
+display:none;
+}
+
+.menu-btn{
+display:block;
+}
+
+}
+
 </style>
-
-<script>
-
-function openLogin(){
-document.getElementById("login").style.display="flex";
-}
-
-function closeLogin(){
-document.getElementById("login").style.display="none";
-}
-
-</script>
 
 </head>
 
 <body>
 
 <div class="navbar">
+
 <div class="logo">KAII VN</div>
 
 <div class="menu">
 <a href="#">Trang chủ</a>
-<a href="#download">Tải game</a>
-<a href="#gallery">Hình ảnh</a>
-<a href="#" onclick="openLogin()">Tài khoản</a>
-</div>
+<a href="#games">Game</a>
+<a href="#gallery">Ảnh</a>
+<a onclick="openLogin()">Tài khoản</a>
 </div>
 
-<!-- HERO -->
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+
+</div>
+
+<div class="mobile" id="mobile">
+<a href="#">Trang chủ</a>
+<a href="#games">Game</a>
+<a href="#gallery">Ảnh</a>
+<a onclick="openLogin()">Tài khoản</a>
+</div>
 
 <div class="hero">
 
 <div>
+
 <h1>Kaii Visual Novel</h1>
-<p>Trang tải game chính thức</p>
-<a class="btn" href="#download">Tải ngay</a>
-</div>
+
+<a class="btn" href="#games">Tải ngay</a>
 
 </div>
 
-<!-- NEWS -->
+</div>
 
-<section>
+<section class="news">
 
 <h2>Tin tức</h2>
 
-<div class="news">
+<div class="news-grid">
 
-<div class="news-box">
-<h3>Phiên bản 1.0</h3>
-<p>Phát hành bản đầu tiên của game.</p>
-</div>
+<div class="news-box">Update 1.0 phát hành</div>
 
-<div class="news-box">
-<h3>Nhân vật mới</h3>
-<p>Thêm nhiều nhân vật và nội dung.</p>
-</div>
+<div class="news-box">Thêm nhân vật mới</div>
 
-<div class="news-box">
-<h3>Cập nhật sắp tới</h3>
-<p>Sẽ có thêm route và story mới.</p>
-</div>
+<div class="news-box">Story mới sắp ra</div>
 
 </div>
 
 </section>
 
-<!-- SEARCH -->
-
-<section>
+<section class="search">
 
 <h2>Tìm thể loại game</h2>
 
-<div class="search">
+<input id="searchInput" placeholder="Visual Novel">
+<button onclick="searchGame()">Tìm</button>
 
-<input placeholder="Ví dụ: Visual Novel">
-<button>Tìm</button>
+</section>
+
+<section class="games" id="games">
+
+<h2>Danh sách game</h2>
+
+<div class="game-grid" id="gameList">
+
+<div class="game" data-type="visual">Kaii VN</div>
+<div class="game" data-type="horror">Night Story</div>
+<div class="game" data-type="romance">Love Route</div>
 
 </div>
 
 </section>
 
-<!-- GALLERY -->
+<section class="gallery" id="gallery">
 
-<section id="gallery">
+<h2>Hình ảnh game</h2>
 
-<h2>Hình ảnh trong game</h2>
+<div class="slider">
 
-<div class="gallery">
+<img src="https://c10.patreonusercontent.com/4/patreon-media/p/post/134027967/e8a22d1f218a46158ed74b9e2461b65c/1.png">
 
-<img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8">
-
-<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee">
-
-<img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470">
+<img src="https://c10.patreonusercontent.com/4/patreon-media/p/post/68936209/67dde7ae097148ecafb8b399af1611d9/1.png">
 
 </div>
 
 </section>
-
-<!-- DOWNLOAD -->
-
-<section id="download">
-
-<h2>Tải game</h2>
-
-<div class="download">
-
-<a href="#">Windows</a>
-<a href="#">Android</a>
-<a href="#">Patch</a>
-
-</div>
-
-</section>
-
-<!-- LOGIN POPUP -->
 
 <div class="popup" id="login">
 
-<div class="popup-box">
+<div class="box">
 
-<h3>Đăng nhập</h3>
+<h3>Đăng ký / Đăng nhập</h3>
 
-<input placeholder="Tên tài khoản">
-<input type="password" placeholder="Mật khẩu">
+<input id="user" placeholder="Tài khoản">
+<input id="pass" type="password" placeholder="Mật khẩu">
 
-<button>Đăng nhập</button>
-<button onclick="closeLogin()">Đóng</button>
+<button onclick="register()">Đăng ký</button>
+<button onclick="login()">Đăng nhập</button>
 
 </div>
 
@@ -364,6 +358,83 @@ document.getElementById("login").style.display="none";
 © 2026 Kaii VN
 
 </footer>
+
+<script>
+
+function toggleMenu(){
+
+let m=document.getElementById("mobile");
+
+if(m.style.right==="0px"){
+
+m.style.right="-250px";
+
+}else{
+
+m.style.right="0px";
+
+}
+
+}
+
+function openLogin(){
+
+document.getElementById("login").style.display="flex";
+
+}
+
+function register(){
+
+let u=document.getElementById("user").value;
+let p=document.getElementById("pass").value;
+
+localStorage.setItem("user",u);
+localStorage.setItem("pass",p);
+
+alert("Đăng ký xong");
+
+}
+
+function login(){
+
+let u=document.getElementById("user").value;
+let p=document.getElementById("pass").value;
+
+if(localStorage.getItem("user")==u && localStorage.getItem("pass")==p){
+
+alert("Đăng nhập thành công");
+
+}else{
+
+alert("Sai tài khoản");
+
+}
+
+}
+
+function searchGame(){
+
+let q=document.getElementById("searchInput").value.toLowerCase();
+
+let games=document.querySelectorAll(".game");
+
+games.forEach(g=>{
+
+if(g.dataset.type.includes(q)){
+
+g.style.display="block";
+
+}else{
+
+g.style.display="none";
+
+}
+
+});
+
+}
+
+</script>
 
 </body>
 </html>
