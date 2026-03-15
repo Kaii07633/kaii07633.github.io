@@ -9,15 +9,15 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Be+Vietnam+Pro:wght@300;400;600&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 
 body{
-font-family:'Poppins',sans-serif;
-background:url("https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=2000&q=80") center/cover fixed no-repeat;
+font-family:'Be Vietnam Pro',sans-serif;
+background:url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=2000&q=80") center/cover fixed no-repeat;
 color:white;
 }
 
@@ -25,38 +25,44 @@ color:white;
 
 .glass{
 background:rgba(0,0,0,0.6);
-backdrop-filter:blur(10px);
-border:1px solid rgba(255,255,255,0.1);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.08);
+}
+
+/* heading font */
+
+.cyber{
+font-family:'Orbitron',sans-serif;
 }
 
 /* neon */
 
 .neon{
 color:#bc13fe;
+text-shadow:0 0 10px #bc13fe;
 }
 
-.neon-btn{
+.neon-border{
 border:1px solid #bc13fe;
-transition:0.3s;
 }
 
-.neon-btn:hover{
+.neon-border:hover{
 background:#bc13fe;
 box-shadow:0 0 10px #bc13fe;
 }
 
-/* card hover */
+/* cards */
 
 .game-card{
 transition:0.3s;
 }
 
 .game-card:hover{
-transform:scale(1.04);
+transform:scale(1.05);
 box-shadow:0 0 20px #ff00ff;
 }
 
-/* scrollbar */
+/* scroll */
 
 ::-webkit-scrollbar{
 width:6px;
@@ -74,26 +80,22 @@ background:#bc13fe;
 
 <!-- AGE MODAL -->
 
-<div id="ageModal" class="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
+<div id="ageModal" class="fixed inset-0 bg-black/90 flex items-center justify-center z-50 opacity-100 transition">
 
 <div class="glass p-10 rounded-xl text-center w-96">
 
-<h2 class="text-2xl font-bold neon mb-4">
-XÁC MINH TUỔI
-</h2>
-
-<p class="mb-6 text-gray-300">
+<h2 class="cyber text-2xl neon mb-4">
 BẠN CÓ ĐỦ 18 TUỔI ĐỂ VÀO KHÔNG?
-</p>
+</h2>
 
 <div class="flex gap-4 justify-center">
 
 <button onclick="enterSite()" class="px-6 py-2 bg-purple-600 rounded">
-CÓ (VÀO TRANG)
+CÓ (VÀO)
 </button>
 
 <button onclick="leaveSite()" class="px-6 py-2 border border-purple-400 rounded">
-KHÔNG (RỜI ĐI)
+KHÔNG
 </button>
 
 </div>
@@ -102,13 +104,13 @@ KHÔNG (RỜI ĐI)
 
 </div>
 
-<!-- AUTH MODAL -->
+<!-- LOGIN MODAL -->
 
 <div id="authModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
 
 <div class="glass p-8 rounded-xl w-96">
 
-<h2 id="authTitle" class="text-xl font-bold mb-4 neon">
+<h2 id="authTitle" class="cyber text-xl neon mb-4">
 Đăng nhập
 </h2>
 
@@ -134,7 +136,9 @@ Chưa có tài khoản? Đăng ký ngay
 
 <div class="flex justify-between items-center mb-6">
 
-<h2 class="text-lg neon">Menu</h2>
+<h2 class="cyber neon text-lg">
+Menu
+</h2>
 
 <button onclick="closeMenu()">
 <i class="fa fa-times text-xl"></i>
@@ -151,11 +155,11 @@ Chưa có tài khoản? Đăng ký ngay
 <a href="#">Mobile Game</a>
 <a href="#">Nhóm dịch</a>
 
-<button onclick="openAuth()" class="neon-btn py-2 rounded">
+<button onclick="openAuth()" class="neon-border py-2 rounded">
 Đăng nhập
 </button>
 
-<button onclick="openAuth()" class="neon-btn py-2 rounded">
+<button onclick="openAuth()" class="neon-border py-2 rounded">
 Đăng ký
 </button>
 
@@ -169,7 +173,7 @@ Chưa có tài khoản? Đăng ký ngay
 
 <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
 
-<h1 class="text-xl font-bold neon">
+<h1 class="cyber neon text-xl">
 Sakura VN+
 </h1>
 
@@ -184,14 +188,13 @@ Sakura VN+
 
 <div class="hidden md:flex items-center gap-3">
 
-<input placeholder="Tìm game..."
-class="bg-black/40 border border-purple-500 rounded-full px-4 py-1 text-sm">
+<input placeholder="Tìm game..." class="bg-black/40 border border-purple-500 rounded-full px-4 py-1 text-sm">
 
-<button onclick="openAuth()" class="neon-btn px-3 py-1 rounded">
+<button onclick="openAuth()" class="neon-border px-3 py-1 rounded">
 Đăng nhập
 </button>
 
-<button onclick="openAuth()" class="neon-btn px-3 py-1 rounded">
+<button onclick="openAuth()" class="neon-border px-3 py-1 rounded">
 Đăng ký
 </button>
 
@@ -209,13 +212,9 @@ class="bg-black/40 border border-purple-500 rounded-full px-4 py-1 text-sm">
 
 <section class="max-w-4xl mx-auto mt-16 p-10 glass rounded-xl text-center">
 
-<h1 class="text-4xl font-bold neon mb-4">
+<h1 class="cyber text-4xl neon mb-4 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
 Khám phá thế giới Visual Novel
 </h1>
-
-<p class="text-gray-300 mb-6">
-Thư viện Visual Novel Việt hóa dành cho cộng đồng.
-</p>
 
 <button class="px-6 py-2 bg-purple-600 rounded">
 Xem game mới
@@ -231,27 +230,20 @@ Xem game mới
 
 <div class="md:col-span-3 glass p-5 rounded-xl order-2 md:order-none">
 
-<h2 class="neon font-bold mb-4">
+<h2 class="cyber neon mb-4">
 BỘ LỌC
 </h2>
-
-<p class="text-sm mb-2">Thể loại</p>
 
 <label><input type="checkbox"> Romance</label><br>
 <label><input type="checkbox"> Harem</label><br>
 <label><input type="checkbox"> Fantasy</label><br>
-<label><input type="checkbox"> Mystery</label><br>
 
 <hr class="my-4 border-gray-700">
-
-<p class="text-sm mb-2">Tình trạng</p>
 
 <label><input type="radio" name="status"> Full</label><br>
 <label><input type="radio" name="status"> Đang dịch</label>
 
 <hr class="my-4 border-gray-700">
-
-<p class="text-sm mb-2">Đánh giá</p>
 
 <label><input type="radio" name="rate"> 5★</label><br>
 <label><input type="radio" name="rate"> 4★</label><br>
@@ -265,166 +257,70 @@ BỘ LỌC
 
 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
 
-<!-- CARD 1 -->
-
 <div class="game-card glass rounded-lg overflow-hidden">
-
 <div class="relative">
-
 <img src="https://picsum.photos/300/400">
-
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">
-18+
-</span>
-
+<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
 </div>
-
 <div class="p-3">
-
-<h3 class="font-bold text-sm">Học viện tình yêu</h3>
+<h3 class="cyber text-sm">Học viện tình yêu</h3>
 <p class="text-xs text-purple-400">VN Team</p>
-
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-xs">
-Chi tiết
-</button>
-
 </div>
-
 </div>
-
-<!-- CARD 2 -->
 
 <div class="game-card glass rounded-lg overflow-hidden">
-
 <div class="relative">
-
 <img src="https://picsum.photos/301/400">
-
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">
-18+
-</span>
-
+<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
 </div>
-
 <div class="p-3">
-
-<h3 class="font-bold text-sm">Bí ẩn học đường</h3>
+<h3 class="cyber text-sm">Bí ẩn học đường</h3>
 <p class="text-xs text-purple-400">Night VN</p>
-
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-xs">
-Chi tiết
-</button>
-
 </div>
-
 </div>
-
-<!-- CARD 3 -->
 
 <div class="game-card glass rounded-lg overflow-hidden">
-
 <div class="relative">
-
 <img src="https://picsum.photos/302/400">
-
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">
-18+
-</span>
-
+<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
 </div>
-
 <div class="p-3">
-
-<h3 class="font-bold text-sm">Thế giới phép thuật</h3>
+<h3 class="cyber text-sm">Thế giới phép thuật</h3>
 <p class="text-xs text-purple-400">Magic VN</p>
-
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-xs">
-Chi tiết
-</button>
-
 </div>
-
 </div>
-
-<!-- CARD 4 -->
 
 <div class="game-card glass rounded-lg overflow-hidden">
-
 <div class="relative">
-
 <img src="https://picsum.photos/303/400">
-
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">
-18+
-</span>
-
+<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
 </div>
-
 <div class="p-3">
-
-<h3 class="font-bold text-sm">Đêm định mệnh</h3>
+<h3 class="cyber text-sm">Đêm định mệnh</h3>
 <p class="text-xs text-purple-400">VN Night</p>
-
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-xs">
-Chi tiết
-</button>
-
 </div>
-
 </div>
-
-<!-- CARD 5 -->
 
 <div class="game-card glass rounded-lg overflow-hidden">
-
 <div class="relative">
-
 <img src="https://picsum.photos/304/400">
-
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">
-18+
-</span>
-
+<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
 </div>
-
 <div class="p-3">
-
-<h3 class="font-bold text-sm">Harem School</h3>
+<h3 class="cyber text-sm">Harem School</h3>
 <p class="text-xs text-purple-400">VN Studio</p>
-
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-xs">
-Chi tiết
-</button>
-
 </div>
-
 </div>
-
-<!-- CARD 6 -->
 
 <div class="game-card glass rounded-lg overflow-hidden">
-
 <div class="relative">
-
 <img src="https://picsum.photos/305/400">
-
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">
-18+
-</span>
-
+<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
 </div>
-
 <div class="p-3">
-
-<h3 class="font-bold text-sm">Mystic Dream</h3>
+<h3 class="cyber text-sm">Mystic Dream</h3>
 <p class="text-xs text-purple-400">Dream VN</p>
-
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-xs">
-Chi tiết
-</button>
-
 </div>
-
 </div>
 
 </div>
@@ -435,7 +331,7 @@ Chi tiết
 
 <div class="md:col-span-3 glass p-5 rounded-xl order-3">
 
-<h2 class="neon font-bold mb-4">
+<h2 class="cyber neon mb-4">
 Cập nhật mới nhất
 </h2>
 
@@ -468,8 +364,6 @@ Cảnh báo: Nội dung dành cho người trên 18 tuổi.
 
 <script>
 
-/* AGE GATE */
-
 function enterSite(){
 localStorage.setItem("ageVerified","true")
 document.getElementById("ageModal").style.display="none"
@@ -484,8 +378,6 @@ if(localStorage.getItem("ageVerified")==="true"){
 document.getElementById("ageModal").style.display="none"
 }
 }
-
-/* AUTH MODAL */
 
 function openAuth(){
 document.getElementById("authModal").classList.remove("hidden")
@@ -504,8 +396,6 @@ this.innerText="Chưa có tài khoản? Đăng ký ngay"
 }
 
 }
-
-/* MOBILE MENU */
 
 function openMenu(){
 document.getElementById("mobileMenu").style.right="0"
