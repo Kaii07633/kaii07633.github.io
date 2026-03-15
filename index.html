@@ -5,13 +5,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sakura VN+ Library</title>
+<title>VN VN+ Library</title>
 
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <!-- Font -->
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <!-- Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -19,66 +19,83 @@
 <style>
 
 body{
-font-family:'Quicksand',sans-serif;
-background:url("https://share.google/DWPhYxd5a7oLmtBPi") center/cover fixed no-repeat;
+font-family:'Poppins',sans-serif;
+background:url("https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=2000&q=80") center/cover fixed no-repeat;
+color:white;
 }
 
-/* glass */
+/* glass effect */
 
 .glass{
-background:rgba(0,0,0,0.55);
+background:rgba(0,0,0,0.6);
 backdrop-filter:blur(12px);
+}
+
+/* neon */
+
+.neon{
+color:#bc13fe;
+}
+
+.neon-btn{
+border:1px solid #bc13fe;
+transition:0.3s;
+}
+
+.neon-btn:hover{
+background:#bc13fe;
+box-shadow:0 0 10px #bc13fe;
 }
 
 /* card hover */
 
-.card{
+.game-card{
 transition:0.3s;
 }
 
-.card:hover{
+.game-card:hover{
 transform:scale(1.04);
-box-shadow:0 0 20px rgba(255,120,180,0.9);
+box-shadow:0 0 20px #ff00ff;
 }
 
-/* scrollbar */
+/* scroll */
 
 ::-webkit-scrollbar{
 width:6px;
 }
 
 ::-webkit-scrollbar-thumb{
-background:#ff9acb;
+background:#bc13fe;
 }
 
 </style>
 
 </head>
 
-<body class="text-white">
+<body>
 
-<!-- AGE MODAL -->
+<!-- AGE GATE -->
 
 <div id="ageModal" class="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
 
 <div class="glass p-10 rounded-xl text-center w-96">
 
-<h2 class="text-2xl font-bold text-pink-300 mb-4">
-Bạn đã trên 18 tuổi chưa?
+<h2 class="text-2xl font-bold neon mb-4">
+XÁC MINH TUỔI
 </h2>
 
 <p class="mb-6 text-gray-300">
-Trang web này chứa nội dung dành cho người trưởng thành.
+BẠN CÓ ĐỦ 18 TUỔI ĐỂ VÀO KHÔNG?
 </p>
 
 <div class="flex gap-4 justify-center">
 
-<button onclick="enterSite()" class="px-6 py-2 bg-pink-400 text-black rounded">
-Có
+<button onclick="enterSite()" class="px-6 py-2 bg-purple-600 rounded">
+CÓ (VÀO TRANG)
 </button>
 
-<button onclick="leaveSite()" class="px-6 py-2 border border-pink-400 rounded">
-Không
+<button onclick="leaveSite()" class="px-6 py-2 border border-purple-400 rounded">
+KHÔNG (RỜI ĐI)
 </button>
 
 </div>
@@ -87,21 +104,21 @@ Không
 
 </div>
 
-<!-- LOGIN MODAL -->
+<!-- LOGIN / REGISTER -->
 
 <div id="authModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
 
 <div class="glass p-8 rounded-xl w-96">
 
-<h2 id="authTitle" class="text-xl font-bold mb-4 text-pink-300">
+<h2 id="authTitle" class="text-xl font-bold mb-4 neon">
 Đăng nhập
 </h2>
 
-<input placeholder="Email" class="w-full mb-3 p-2 rounded bg-black/50 border border-pink-400">
+<input placeholder="Email" class="w-full mb-3 p-2 rounded bg-black/50 border border-purple-500">
 
-<input type="password" placeholder="Password" class="w-full mb-4 p-2 rounded bg-black/50 border border-pink-400">
+<input type="password" placeholder="Password" class="w-full mb-4 p-2 rounded bg-black/50 border border-purple-500">
 
-<button class="w-full bg-pink-400 text-black py-2 rounded mb-3">
+<button class="w-full bg-purple-600 py-2 rounded mb-3">
 Xác nhận
 </button>
 
@@ -119,11 +136,11 @@ Chưa có tài khoản? Đăng ký ngay
 
 <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
 
-<h1 class="font-bold text-xl text-pink-300">
-Sakura VN+
+<h1 class="text-xl font-bold neon">
+VN VN+ Library
 </h1>
 
-<div class="hidden md:flex gap-6">
+<div class="hidden md:flex gap-6 text-sm">
 
 <a href="#">TRANG CHỦ</a>
 <a href="#">PC GAME</a>
@@ -135,10 +152,14 @@ Sakura VN+
 <div class="flex items-center gap-3">
 
 <input id="searchInput" placeholder="Tìm game..."
-class="bg-black/40 border border-pink-300 rounded-full px-4 py-1 text-sm">
+class="bg-black/40 border border-purple-500 rounded-full px-4 py-1 text-sm">
 
-<button onclick="openAuth()" class="border border-pink-300 px-3 py-1 rounded hover:bg-pink-300 hover:text-black">
+<button onclick="openAuth()" class="neon-btn px-3 py-1 rounded">
 Đăng nhập
+</button>
+
+<button onclick="openAuth()" class="neon-btn px-3 py-1 rounded">
+Đăng ký
 </button>
 
 </div>
@@ -151,7 +172,7 @@ class="bg-black/40 border border-pink-300 rounded-full px-4 py-1 text-sm">
 
 <section class="max-w-5xl mx-auto mt-16 p-10 glass rounded-xl text-center">
 
-<h1 class="text-4xl font-bold text-pink-300 mb-4">
+<h1 class="text-4xl font-bold neon mb-4">
 Khám phá thế giới Visual Novel
 </h1>
 
@@ -159,13 +180,13 @@ Khám phá thế giới Visual Novel
 Thư viện Visual Novel Việt hóa dành cho cộng đồng.
 </p>
 
-<button class="px-6 py-2 bg-pink-400 text-black rounded">
+<button class="px-6 py-2 bg-purple-600 rounded">
 Xem game mới
 </button>
 
 </section>
 
-<!-- MAIN LAYOUT -->
+<!-- MAIN GRID -->
 
 <div class="max-w-7xl mx-auto mt-10 grid grid-cols-12 gap-6 px-6">
 
@@ -173,7 +194,7 @@ Xem game mới
 
 <div class="col-span-12 md:col-span-3 glass p-5 rounded-xl">
 
-<h2 class="text-pink-300 font-bold mb-4">
+<h2 class="neon font-bold mb-4">
 BỘ LỌC
 </h2>
 
@@ -191,6 +212,14 @@ BỘ LỌC
 <label><input type="radio" name="status"> Full</label><br>
 <label><input type="radio" name="status"> Đang dịch</label>
 
+<hr class="my-4 border-gray-700">
+
+<p class="text-sm mb-2">Đánh giá</p>
+
+<label><input type="radio" name="rate"> 5★</label><br>
+<label><input type="radio" name="rate"> 4★</label><br>
+<label><input type="radio" name="rate"> 3★</label>
+
 </div>
 
 <!-- GAME GRID -->
@@ -199,9 +228,9 @@ BỘ LỌC
 
 <div class="grid md:grid-cols-3 gap-5">
 
-<!-- CARD -->
+<!-- GAME CARD -->
 
-<div class="card glass rounded-lg overflow-hidden">
+<div class="game-card glass rounded-lg overflow-hidden">
 
 <div class="relative">
 
@@ -217,11 +246,9 @@ BỘ LỌC
 
 <h3 class="font-bold">Học viện tình yêu</h3>
 
-<p class="text-xs text-pink-300">[Romance] [Harem]</p>
+<p class="text-xs text-purple-400">VN Team</p>
 
-<p class="text-xs text-gray-400">VN Team</p>
-
-<button class="mt-2 w-full bg-pink-400 text-black py-1 rounded text-sm">
+<button class="mt-2 w-full bg-purple-600 py-1 rounded text-sm">
 Chi tiết
 </button>
 
@@ -229,7 +256,7 @@ Chi tiết
 
 </div>
 
-<div class="card glass rounded-lg overflow-hidden">
+<div class="game-card glass rounded-lg overflow-hidden">
 
 <div class="relative">
 
@@ -245,11 +272,9 @@ Chi tiết
 
 <h3 class="font-bold">Bí ẩn học đường</h3>
 
-<p class="text-xs text-pink-300">[Mystery]</p>
+<p class="text-xs text-purple-400">Night VN</p>
 
-<p class="text-xs text-gray-400">Night VN</p>
-
-<button class="mt-2 w-full bg-pink-400 text-black py-1 rounded text-sm">
+<button class="mt-2 w-full bg-purple-600 py-1 rounded text-sm">
 Chi tiết
 </button>
 
@@ -257,7 +282,7 @@ Chi tiết
 
 </div>
 
-<div class="card glass rounded-lg overflow-hidden">
+<div class="game-card glass rounded-lg overflow-hidden">
 
 <div class="relative">
 
@@ -273,11 +298,9 @@ Chi tiết
 
 <h3 class="font-bold">Thế giới phép thuật</h3>
 
-<p class="text-xs text-pink-300">[Fantasy]</p>
+<p class="text-xs text-purple-400">Magic VN</p>
 
-<p class="text-xs text-gray-400">Magic VN</p>
-
-<button class="mt-2 w-full bg-pink-400 text-black py-1 rounded text-sm">
+<button class="mt-2 w-full bg-purple-600 py-1 rounded text-sm">
 Chi tiết
 </button>
 
@@ -293,8 +316,8 @@ Chi tiết
 
 <div class="col-span-12 md:col-span-3 glass p-5 rounded-xl">
 
-<h2 class="text-pink-300 font-bold mb-4">
-Cập nhật mới
+<h2 class="neon font-bold mb-4">
+Cập nhật mới nhất
 </h2>
 
 <ul class="text-sm space-y-3 text-gray-300">
@@ -319,7 +342,7 @@ Cảnh báo: Nội dung dành cho người trên 18 tuổi.
 </p>
 
 <p class="text-gray-400 text-sm mt-2">
-© 2026 Sakura VN+ Library
+© 2026 VN VN+ Library
 </p>
 
 </footer>
@@ -329,7 +352,7 @@ Cảnh báo: Nội dung dành cho người trên 18 tuổi.
 /* AGE GATE */
 
 function enterSite(){
-localStorage.setItem("age","true")
+localStorage.setItem("ageVerified","true")
 document.getElementById("ageModal").style.display="none"
 }
 
@@ -338,7 +361,7 @@ window.location="https://google.com"
 }
 
 window.onload=function(){
-if(localStorage.getItem("age")=="true"){
+if(localStorage.getItem("ageVerified")==="true"){
 document.getElementById("ageModal").style.display="none"
 }
 }
@@ -368,7 +391,7 @@ this.innerText="Chưa có tài khoản? Đăng ký ngay"
 document.getElementById("searchInput").addEventListener("input",function(){
 
 let val=this.value.toLowerCase()
-let cards=document.querySelectorAll(".card")
+let cards=document.querySelectorAll(".game-card")
 
 cards.forEach(card=>{
 let name=card.innerText.toLowerCase()
