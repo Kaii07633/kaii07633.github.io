@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>VN VN+ Library</title>
+<title>Sakura VN+ Library</title>
 
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <!-- Font -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 
 <!-- Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -18,26 +19,26 @@
 <style>
 
 body{
-font-family:'Poppins',sans-serif;
-background:#0a0a0a;
-color:white;
+font-family:'Quicksand',sans-serif;
+background:url("https://share.google/DWPhYxd5a7oLmtBPi") center/cover fixed no-repeat;
 }
 
-/* neon hover card */
+/* glass */
 
-.game-card{
-transition:all .3s ease;
+.glass{
+background:rgba(0,0,0,0.55);
+backdrop-filter:blur(12px);
 }
 
-.game-card:hover{
-transform:translateY(-6px) scale(1.03);
-box-shadow:0 0 20px #bc13fe;
+/* card hover */
+
+.card{
+transition:0.3s;
 }
 
-/* modal */
-
-.modal-bg{
-backdrop-filter:blur(8px);
+.card:hover{
+transform:scale(1.04);
+box-shadow:0 0 20px rgba(255,120,180,0.9);
 }
 
 /* scrollbar */
@@ -47,40 +48,66 @@ width:6px;
 }
 
 ::-webkit-scrollbar-thumb{
-background:#bc13fe;
+background:#ff9acb;
 }
 
 </style>
 
 </head>
 
-<body>
+<body class="text-white">
 
-<!-- AGE GATE -->
+<!-- AGE MODAL -->
 
-<div id="ageModal" class="fixed inset-0 flex items-center justify-center bg-black/80 modal-bg z-50">
+<div id="ageModal" class="fixed inset-0 bg-black/90 flex items-center justify-center z-50">
 
-<div class="bg-[#111] p-10 rounded-xl text-center max-w-md">
+<div class="glass p-10 rounded-xl text-center w-96">
 
-<h1 class="text-2xl font-bold text-pink-500 mb-4">
-NỘI DUNG 18+
-</h1>
+<h2 class="text-2xl font-bold text-pink-300 mb-4">
+Bạn đã trên 18 tuổi chưa?
+</h2>
 
-<p class="mb-6">
-Bạn có đủ 18 tuổi để truy cập nội dung này?
+<p class="mb-6 text-gray-300">
+Trang web này chứa nội dung dành cho người trưởng thành.
 </p>
 
-<div class="flex justify-center gap-4">
+<div class="flex gap-4 justify-center">
 
-<button onclick="enterSite()" class="bg-purple-600 hover:bg-purple-500 px-6 py-2 rounded">
-CÓ (VÀO TRANG)
+<button onclick="enterSite()" class="px-6 py-2 bg-pink-400 text-black rounded">
+Có
 </button>
 
-<button onclick="leaveSite()" class="bg-red-600 px-6 py-2 rounded">
-KHÔNG
+<button onclick="leaveSite()" class="px-6 py-2 border border-pink-400 rounded">
+Không
 </button>
 
 </div>
+
+</div>
+
+</div>
+
+<!-- LOGIN MODAL -->
+
+<div id="authModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+
+<div class="glass p-8 rounded-xl w-96">
+
+<h2 id="authTitle" class="text-xl font-bold mb-4 text-pink-300">
+Đăng nhập
+</h2>
+
+<input placeholder="Email" class="w-full mb-3 p-2 rounded bg-black/50 border border-pink-400">
+
+<input type="password" placeholder="Password" class="w-full mb-4 p-2 rounded bg-black/50 border border-pink-400">
+
+<button class="w-full bg-pink-400 text-black py-2 rounded mb-3">
+Xác nhận
+</button>
+
+<p id="switchText" class="text-sm text-gray-300 cursor-pointer">
+Chưa có tài khoản? Đăng ký ngay
+</p>
 
 </div>
 
@@ -88,15 +115,15 @@ KHÔNG
 
 <!-- NAVBAR -->
 
-<nav class="sticky top-0 bg-black/80 backdrop-blur border-b border-purple-700 z-40">
+<nav class="glass sticky top-0 z-40">
 
 <div class="max-w-7xl mx-auto flex justify-between items-center p-4">
 
-<h1 class="text-xl font-bold text-purple-400">
-VN VN+ Library
+<h1 class="font-bold text-xl text-pink-300">
+Sakura VN+
 </h1>
 
-<div class="hidden md:flex gap-6 text-sm">
+<div class="hidden md:flex gap-6">
 
 <a href="#">TRANG CHỦ</a>
 <a href="#">PC GAME</a>
@@ -105,12 +132,14 @@ VN VN+ Library
 
 </div>
 
-<div class="relative">
+<div class="flex items-center gap-3">
 
 <input id="searchInput" placeholder="Tìm game..."
-class="bg-[#111] border border-purple-600 rounded-full px-4 py-1 text-sm">
+class="bg-black/40 border border-pink-300 rounded-full px-4 py-1 text-sm">
 
-<i class="fa fa-search absolute right-3 top-2 text-purple-400"></i>
+<button onclick="openAuth()" class="border border-pink-300 px-3 py-1 rounded hover:bg-pink-300 hover:text-black">
+Đăng nhập
+</button>
 
 </div>
 
@@ -120,68 +149,63 @@ class="bg-[#111] border border-purple-600 rounded-full px-4 py-1 text-sm">
 
 <!-- HERO -->
 
-<section class="text-center py-20">
+<section class="max-w-5xl mx-auto mt-16 p-10 glass rounded-xl text-center">
 
-<h1 class="text-4xl font-bold mb-4 text-purple-400">
-KHO TÀNG VISUAL NOVEL VIỆT HÓA DÀNH CHO BẠN
+<h1 class="text-4xl font-bold text-pink-300 mb-4">
+Khám phá thế giới Visual Novel
 </h1>
 
-<button class="mt-4 bg-purple-600 hover:bg-purple-500 px-8 py-3 rounded-full">
-XEM MỚI NHẤT
+<p class="text-gray-300 mb-6">
+Thư viện Visual Novel Việt hóa dành cho cộng đồng.
+</p>
+
+<button class="px-6 py-2 bg-pink-400 text-black rounded">
+Xem game mới
 </button>
 
 </section>
 
-<!-- MAIN -->
+<!-- MAIN LAYOUT -->
 
-<div class="max-w-7xl mx-auto grid grid-cols-12 gap-8 px-6">
+<div class="max-w-7xl mx-auto mt-10 grid grid-cols-12 gap-6 px-6">
 
 <!-- FILTER -->
 
-<div class="col-span-12 md:col-span-3">
+<div class="col-span-12 md:col-span-3 glass p-5 rounded-xl">
 
-<div class="bg-[#111] p-6 rounded-lg">
-
-<h2 class="text-purple-400 font-bold mb-4">
-BỘ LỌC TÌM KIẾM
+<h2 class="text-pink-300 font-bold mb-4">
+BỘ LỌC
 </h2>
 
-<p class="mb-2 text-sm text-gray-400">Thể loại</p>
+<p class="text-sm mb-2">Thể loại</p>
 
-<div class="space-y-1 text-sm">
-
-<label><input type="checkbox" class="genre" value="romance"> Romance</label><br>
-<label><input type="checkbox" class="genre" value="harem"> Harem</label><br>
-<label><input type="checkbox" class="genre" value="fantasy"> Fantasy</label><br>
-<label><input type="checkbox" class="genre" value="mystery"> Mystery</label><br>
-<label><input type="checkbox" class="genre" value="18"> 18+ Only</label>
-
-</div>
+<label><input type="checkbox"> Romance</label><br>
+<label><input type="checkbox"> Harem</label><br>
+<label><input type="checkbox"> Fantasy</label><br>
+<label><input type="checkbox"> Mystery</label><br>
 
 <hr class="my-4 border-gray-700">
 
-<p class="mb-2 text-sm text-gray-400">Tình trạng</p>
+<p class="text-sm mb-2">Tình trạng</p>
 
-<label class="text-sm"><input type="radio" name="status"> Full</label><br>
-<label class="text-sm"><input type="radio" name="status"> Đang dịch</label>
-
-</div>
+<label><input type="radio" name="status"> Full</label><br>
+<label><input type="radio" name="status"> Đang dịch</label>
 
 </div>
 
 <!-- GAME GRID -->
 
-<div class="col-span-12 md:col-span-9">
+<div class="col-span-12 md:col-span-6">
 
-<div id="gameGrid" class="grid md:grid-cols-3 gap-6">
+<div class="grid md:grid-cols-3 gap-5">
 
 <!-- CARD -->
 
-<div class="game-card bg-[#111] rounded-lg overflow-hidden" data-title="love academy" data-genre="romance harem">
+<div class="card glass rounded-lg overflow-hidden">
 
 <div class="relative">
 
-<img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400">
+<img src="https://picsum.photos/300/400">
 
 <span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">
 18+
@@ -189,127 +213,72 @@ BỘ LỌC TÌM KIẾM
 
 </div>
 
-<div class="p-4">
+<div class="p-3">
 
-<h3 class="font-bold">
-HỌC VIỆN TÌNH YÊU
-</h3>
+<h3 class="font-bold">Học viện tình yêu</h3>
 
-<p class="text-xs text-purple-400">
-[Romance] [Harem]
-</p>
+<p class="text-xs text-pink-300">[Romance] [Harem]</p>
 
-<p class="text-xs text-gray-400">
-Nhóm dịch: VN Studio
-</p>
+<p class="text-xs text-gray-400">VN Team</p>
 
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-sm">
-CHI TIẾT & TẢI VỀ
+<button class="mt-2 w-full bg-pink-400 text-black py-1 rounded text-sm">
+Chi tiết
 </button>
 
 </div>
 
 </div>
 
-<div class="game-card bg-[#111] rounded-lg overflow-hidden" data-title="dark mystery" data-genre="mystery">
+<div class="card glass rounded-lg overflow-hidden">
 
 <div class="relative">
-<img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400">
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
+
+<img src="https://picsum.photos/301/400">
+
+<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">
+18+
+</span>
+
 </div>
 
-<div class="p-4">
+<div class="p-3">
 
-<h3 class="font-bold">BÍ ẨN BÓNG TỐI</h3>
-<p class="text-xs text-purple-400">[Mystery]</p>
-<p class="text-xs text-gray-400">Night VN Team</p>
+<h3 class="font-bold">Bí ẩn học đường</h3>
 
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-sm">
-CHI TIẾT & TẢI VỀ
+<p class="text-xs text-pink-300">[Mystery]</p>
+
+<p class="text-xs text-gray-400">Night VN</p>
+
+<button class="mt-2 w-full bg-pink-400 text-black py-1 rounded text-sm">
+Chi tiết
 </button>
 
 </div>
 
 </div>
 
-<div class="game-card bg-[#111] rounded-lg overflow-hidden" data-title="fantasy world" data-genre="fantasy">
+<div class="card glass rounded-lg overflow-hidden">
 
 <div class="relative">
-<img src="https://images.unsplash.com/photo-1605902711622-cfb43c4437d1?w=400">
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
-</div>
 
-<div class="p-4">
+<img src="https://picsum.photos/302/400">
 
-<h3 class="font-bold">THẾ GIỚI PHÉP THUẬT</h3>
-<p class="text-xs text-purple-400">[Fantasy]</p>
-<p class="text-xs text-gray-400">VN Magic Team</p>
-
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-sm">
-CHI TIẾT & TẢI VỀ
-</button>
+<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">
+18+
+</span>
 
 </div>
 
-</div>
+<div class="p-3">
 
-<div class="game-card bg-[#111] rounded-lg overflow-hidden" data-title="school love" data-genre="romance">
+<h3 class="font-bold">Thế giới phép thuật</h3>
 
-<div class="relative">
-<img src="https://images.unsplash.com/photo-1580128637393-16f7f0c50f75?w=400">
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
-</div>
+<p class="text-xs text-pink-300">[Fantasy]</p>
 
-<div class="p-4">
+<p class="text-xs text-gray-400">Magic VN</p>
 
-<h3 class="font-bold">TÌNH YÊU HỌC ĐƯỜNG</h3>
-<p class="text-xs text-purple-400">[Romance]</p>
-<p class="text-xs text-gray-400">Heart VN</p>
-
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-sm">
-CHI TIẾT & TẢI VỀ
-</button>
-
-</div>
-
-</div>
-
-<div class="game-card bg-[#111] rounded-lg overflow-hidden" data-title="mystic dream" data-genre="fantasy">
-
-<div class="relative">
-<img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400">
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
-</div>
-
-<div class="p-4">
-
-<h3 class="font-bold">GIẤC MƠ HUYỀN BÍ</h3>
-<p class="text-xs text-purple-400">[Fantasy]</p>
-<p class="text-xs text-gray-400">Dream VN</p>
-
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-sm">
-CHI TIẾT & TẢI VỀ
-</button>
-
-</div>
-
-</div>
-
-<div class="game-card bg-[#111] rounded-lg overflow-hidden" data-title="night romance" data-genre="romance 18">
-
-<div class="relative">
-<img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400">
-<span class="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded">18+</span>
-</div>
-
-<div class="p-4">
-
-<h3 class="font-bold">ĐÊM ĐỊNH MỆNH</h3>
-<p class="text-xs text-purple-400">[Romance] [18+]</p>
-<p class="text-xs text-gray-400">VN Night Team</p>
-
-<button class="mt-2 w-full bg-purple-600 py-1 rounded text-sm">
-CHI TIẾT & TẢI VỀ
+<button class="mt-2 w-full bg-pink-400 text-black py-1 rounded text-sm">
+Chi tiết
 </button>
 
 </div>
@@ -317,6 +286,25 @@ CHI TIẾT & TẢI VỀ
 </div>
 
 </div>
+
+</div>
+
+<!-- NEWS -->
+
+<div class="col-span-12 md:col-span-3 glass p-5 rounded-xl">
+
+<h2 class="text-pink-300 font-bold mb-4">
+Cập nhật mới
+</h2>
+
+<ul class="text-sm space-y-3 text-gray-300">
+
+<li>[Tin] VN Team ra patch Love Academy</li>
+<li>[Thông báo] Bảo trì server tải game</li>
+<li>[Tin] Night VN ra bản update</li>
+<li>[Tin] Thêm game mới vào thư viện</li>
+
+</ul>
 
 </div>
 
@@ -324,21 +312,14 @@ CHI TIẾT & TẢI VỀ
 
 <!-- FOOTER -->
 
-<footer class="mt-20 border-t border-purple-700 text-center py-10">
+<footer class="mt-20 text-center glass py-6">
 
-<div class="flex justify-center gap-6 text-xl mb-4">
-
-<i class="fab fa-discord"></i>
-<i class="fab fa-facebook"></i>
-
-</div>
-
-<p class="text-sm text-gray-400">
+<p class="text-gray-300 text-sm">
 Cảnh báo: Nội dung dành cho người trên 18 tuổi.
 </p>
 
-<p class="text-sm text-gray-500 mt-2">
-© 2026 VN VN+ Library
+<p class="text-gray-400 text-sm mt-2">
+© 2026 Sakura VN+ Library
 </p>
 
 </footer>
@@ -348,7 +329,7 @@ Cảnh báo: Nội dung dành cho người trên 18 tuổi.
 /* AGE GATE */
 
 function enterSite(){
-localStorage.setItem("ageVerified","true")
+localStorage.setItem("age","true")
 document.getElementById("ageModal").style.display="none"
 }
 
@@ -357,47 +338,41 @@ window.location="https://google.com"
 }
 
 window.onload=function(){
-if(localStorage.getItem("ageVerified")==="true"){
+if(localStorage.getItem("age")=="true"){
 document.getElementById("ageModal").style.display="none"
 }
+}
+
+/* AUTH MODAL */
+
+function openAuth(){
+document.getElementById("authModal").classList.remove("hidden")
+}
+
+document.getElementById("switchText").onclick=function(){
+
+let title=document.getElementById("authTitle")
+
+if(title.innerText=="Đăng nhập"){
+title.innerText="Đăng ký"
+this.innerText="Đã có tài khoản? Đăng nhập"
+}else{
+title.innerText="Đăng nhập"
+this.innerText="Chưa có tài khoản? Đăng ký ngay"
+}
+
 }
 
 /* SEARCH */
 
 document.getElementById("searchInput").addEventListener("input",function(){
 
-let value=this.value.toLowerCase()
-let cards=document.querySelectorAll(".game-card")
+let val=this.value.toLowerCase()
+let cards=document.querySelectorAll(".card")
 
 cards.forEach(card=>{
-let title=card.dataset.title
-card.style.display=title.includes(value)?"block":"none"
-})
-
-})
-
-/* FILTER GENRE */
-
-document.querySelectorAll(".genre").forEach(box=>{
-
-box.addEventListener("change",()=>{
-
-let checked=[...document.querySelectorAll(".genre:checked")].map(x=>x.value)
-
-let cards=document.querySelectorAll(".game-card")
-
-cards.forEach(card=>{
-
-let genre=card.dataset.genre
-
-if(checked.length===0){
-card.style.display="block"
-}else{
-card.style.display=checked.some(g=>genre.includes(g))?"block":"none"
-}
-
-})
-
+let name=card.innerText.toLowerCase()
+card.style.display=name.includes(val)?"block":"none"
 })
 
 })
