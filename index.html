@@ -7,7 +7,7 @@
 
 <title>Kaii VN</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
 
@@ -15,7 +15,7 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Poppins',sans-serif;
+font-family:'Montserrat',sans-serif;
 }
 
 body{
@@ -34,14 +34,14 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 padding:18px 30px;
-background:rgba(0,0,0,0.7);
+background:rgba(0,0,0,0.8);
 z-index:100;
 }
 
 .logo{
-font-family:'Orbitron',sans-serif;
-color:#00ffd5;
+font-weight:800;
 font-size:20px;
+color:#00ffd5;
 }
 
 .menu{
@@ -52,6 +52,7 @@ gap:20px;
 .menu a{
 color:white;
 text-decoration:none;
+font-size:14px;
 }
 
 .menu-btn{
@@ -60,7 +61,7 @@ font-size:22px;
 cursor:pointer;
 }
 
-/* MOBILE MENU */
+/* MOBILE */
 
 .mobile{
 position:fixed;
@@ -86,8 +87,8 @@ text-decoration:none;
 height:100vh;
 
 background:
-linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.9)),
-url("https://c10.patreonusercontent.com/4/patreon-media/p/post/150765348/ad9f53cd292849189563a7cdcab6d7ba/eyJ3IjoxMDgwfQ%3D%3D/1.png?token-time=1774828800")
+linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.9)),
+url("https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1500&q=80")
 center/cover no-repeat;
 
 display:flex;
@@ -97,9 +98,7 @@ text-align:center;
 }
 
 .hero h1{
-font-family:'Orbitron',sans-serif;
-font-size:55px;
-text-shadow:0 0 20px #00ffd5;
+font-size:60px;
 }
 
 .btn{
@@ -144,6 +143,7 @@ text-align:center;
 .search input{
 padding:10px;
 width:220px;
+border:none;
 }
 
 .search button{
@@ -172,7 +172,7 @@ border-radius:10px;
 width:200px;
 }
 
-/* GALLERY SLIDER */
+/* GALLERY */
 
 .gallery{
 padding:60px 20px;
@@ -186,7 +186,7 @@ gap:20px;
 }
 
 .slider img{
-width:300px;
+width:320px;
 border-radius:10px;
 }
 
@@ -291,9 +291,7 @@ display:block;
 <div class="news-grid">
 
 <div class="news-box">Update 1.0 phát hành</div>
-
 <div class="news-box">Thêm nhân vật mới</div>
-
 <div class="news-box">Story mới sắp ra</div>
 
 </div>
@@ -304,7 +302,7 @@ display:block;
 
 <h2>Tìm thể loại game</h2>
 
-<input id="searchInput" placeholder="Visual Novel">
+<input id="searchInput" placeholder="visual">
 <button onclick="searchGame()">Tìm</button>
 
 </section>
@@ -329,9 +327,9 @@ display:block;
 
 <div class="slider">
 
-<img src="https://c10.patreonusercontent.com/4/patreon-media/p/post/134027967/e8a22d1f218a46158ed74b9e2461b65c/1.png">
-
-<img src="https://c10.patreonusercontent.com/4/patreon-media/p/post/68936209/67dde7ae097148ecafb8b399af1611d9/1.png">
+<img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=1200&q=80">
+<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80">
+<img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80">
 
 </div>
 
@@ -362,76 +360,39 @@ display:block;
 <script>
 
 function toggleMenu(){
-
 let m=document.getElementById("mobile");
-
-if(m.style.right==="0px"){
-
-m.style.right="-250px";
-
-}else{
-
-m.style.right="0px";
-
-}
-
+if(m.style.right==="0px"){m.style.right="-250px";}else{m.style.right="0px";}
 }
 
 function openLogin(){
-
 document.getElementById("login").style.display="flex";
-
 }
 
 function register(){
-
 let u=document.getElementById("user").value;
 let p=document.getElementById("pass").value;
-
 localStorage.setItem("user",u);
 localStorage.setItem("pass",p);
-
 alert("Đăng ký xong");
-
 }
 
 function login(){
-
 let u=document.getElementById("user").value;
 let p=document.getElementById("pass").value;
-
 if(localStorage.getItem("user")==u && localStorage.getItem("pass")==p){
-
 alert("Đăng nhập thành công");
-
 }else{
-
 alert("Sai tài khoản");
-
 }
-
 }
 
 function searchGame(){
-
 let q=document.getElementById("searchInput").value.toLowerCase();
-
 let games=document.querySelectorAll(".game");
-
 games.forEach(g=>{
-
-if(g.dataset.type.includes(q)){
-
-g.style.display="block";
-
-}else{
-
-g.style.display="none";
-
-}
-
+if(g.dataset.type.includes(q)){g.style.display="block";}
+else{g.style.display="none";}
 });
-
 }
 
 </script>
