@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEONVERSE • HỆ SINH THÁI TỐI THƯỢNG V16</title>
+    <title>NEONVERSE • HỆ SINH THÁI TỐI THƯỢNG V17</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -71,11 +71,10 @@
             
             <div id="userContainer" class="hidden md:flex items-center gap-4">
                 <div onclick="switchView('profileView')" class="flex items-center gap-3 bg-black/50 px-4 py-2 rounded-full border border-white/10 cursor-pointer hover:border-[#bc13fe] transition">
-                    <div class="w-7 h-7 rounded-full flex items-center justify-center text-black font-bold text-xs" id="userAvatar">U</div>
+                    <div class="w-7 h-7 rounded-full flex items-center justify-center text-black font-bold text-xs overflow-hidden bg-gradient-to-r from-[#bc13fe] to-[#00f0ff]" id="userAvatar">U</div>
                     <span id="userNameDisplay" class="font-bold text-sm">User</span>
                 </div>
-                <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition" title="Đăng xuất"><i class="fa-solid fa-right-from-bracket"></i></button>
-            </div>
+                </div>
 
             <button onclick="toggleDrawer()" class="md:hidden p-2 text-white hover:text-[#bc13fe] text-2xl"><i class="fa-solid fa-bars"></i></button>
         </div>
@@ -251,25 +250,36 @@
             </form>
         </div>
 
-        <div class="glass-panel rounded-2xl md:rounded-3xl p-6 md:p-8 border-t-4 border-yellow-400 relative overflow-hidden">
+        <div class="glass-panel rounded-2xl md:rounded-3xl p-6 md:p-8 border-t-4 border-yellow-400 relative overflow-hidden mb-8">
             <h3 class="logo-font text-xl md:text-2xl font-black text-yellow-400 mb-6 uppercase tracking-wider"><i class="fa-solid fa-list mr-2"></i> Quản Lý Bài Đăng VN+</h3>
             <div id="adminGameManageListContainer" class="flex flex-col gap-3 md:gap-4"></div>
+        </div>
+
+        <div class="glass-panel rounded-2xl md:rounded-3xl p-6 md:p-8 border-t-4 border-red-500 relative overflow-hidden">
+            <h3 class="logo-font text-xl md:text-2xl font-black text-red-500 mb-6 uppercase tracking-wider"><i class="fa-solid fa-users mr-2"></i> Quản Lý Tài Khoản Người Chơi</h3>
+            <div id="adminUserManageListContainer" class="flex flex-col gap-3 md:gap-4"></div>
         </div>
     </div>
 
     <div id="profileView" class="view-section view-hidden max-w-screen-md mx-auto px-4 md:px-6 pt-32 pb-20">
         <div class="glass-panel rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden border-t-4 border-[#00f0ff] mb-8">
-            <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-[#bc13fe] to-[#00f0ff] flex items-center justify-center text-4xl text-black font-black mb-4 shadow-[0_0_30px_#bc13fe]" id="profileAvatarLarge">U</div>
+            <div class="relative w-24 h-24 rounded-full bg-gradient-to-tr from-[#bc13fe] to-[#00f0ff] flex items-center justify-center text-4xl text-black font-black mb-4 shadow-[0_0_30px_#bc13fe] cursor-pointer group" onclick="document.getElementById('profileAvatarInput').click()" title="Đổi Avatar">
+                <img id="profileAvatarImg" src="" class="w-full h-full rounded-full object-cover hidden">
+                <span id="profileAvatarText">U</span>
+                <div class="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-camera text-white text-xl"></i></div>
+            </div>
+            <input type="file" id="profileAvatarInput" class="hidden" accept="image/*" onchange="handleAvatarChange(event)">
+            
             <h2 class="logo-font text-3xl font-black text-white mb-2" id="profileNameLarge">Username</h2>
             <span class="px-4 py-1 bg-[#00f0ff]/20 text-[#00f0ff] border border-[#00f0ff] rounded-full text-xs font-bold uppercase tracking-widest mb-6" id="profileRoleBadge">Thành viên mới</span>
             
             <div class="w-full grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
-                <div class="text-center"><div class="text-2xl font-black text-[#bc13fe]">0</div><div class="text-xs text-gray-400 uppercase tracking-widest">Đã tải</div></div>
-                <div class="text-center border-x border-white/10"><div class="text-2xl font-black text-yellow-400">0</div><div class="text-xs text-gray-400 uppercase tracking-widest">Yêu thích</div></div>
-                <div class="text-center"><div class="text-2xl font-black text-[#00f0ff]">0</div><div class="text-xs text-gray-400 uppercase tracking-widest">Bình luận</div></div>
+                <div class="text-center"><div class="text-2xl font-black text-[#bc13fe]" id="stat1-value">0</div><div class="text-xs text-gray-400 uppercase tracking-widest" id="stat1-label">Đã tải</div></div>
+                <div class="text-center border-x border-white/10"><div class="text-2xl font-black text-yellow-400" id="stat2-value">0</div><div class="text-xs text-gray-400 uppercase tracking-widest" id="stat2-label">Yêu thích</div></div>
+                <div class="text-center"><div class="text-2xl font-black text-[#00f0ff]" id="stat3-value">0</div><div class="text-xs text-gray-400 uppercase tracking-widest" id="stat3-label">Bình luận</div></div>
             </div>
         </div>
-        <p class="text-center text-gray-500 italic text-sm">Các tính năng Lịch sử tải game và Danh sách yêu thích đang được phát triển...</p>
+        <p class="text-center text-gray-500 italic text-sm">Chăm chỉ tương tác để mở khóa thêm các tính năng ẩn trên Neonverse nhé!</p>
     </div>
 
     <div id="imageLightbox" class="fixed inset-0 z-[100000] flex items-center justify-center bg-black/95 transition-opacity duration-300 hidden opacity-0" onclick="closeLightbox()">
@@ -296,12 +306,12 @@
     <script>
         const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'%3E%3Crect width='500' height='500' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='24' font-weight='bold' fill='%23bc13fe' text-anchor='middle' dominant-baseline='middle'%3EL%E1%BB%97i Link %E1%BA%A2nh%3C/text%3E%3C/svg%3E";
         
-        // ADMIN BÍ MẬT (Chỉ Admin mới biết)
+        // ADMIN BÍ MẬT 
         const SECRET_ADMIN_USER = "Admin";
         const SECRET_ADMIN_PASS = "Admin123";
 
         let gamesDB = []; 
-        let isLoginMode = true; // Trạng thái form Login/Register
+        let isLoginMode = true; 
 
         function initApp() {
             loadGamesFromStorage();
@@ -318,11 +328,8 @@
             }
         }
 
-        function loadGamesFromStorage() {
-            gamesDB = JSON.parse(localStorage.getItem('nv_custom_games')) || [];
-        }
+        function loadGamesFromStorage() { gamesDB = JSON.parse(localStorage.getItem('nv_custom_games')) || []; }
 
-        // UPDATE V16: HÀM RENDER CÓ THÊM TÍNH NĂNG NHẬN DATA LỌC (TÌM KIẾM)
         function renderGameGrid(data = gamesDB) {
             const container = document.getElementById('gameGridContainer');
             if(!container) return;
@@ -365,47 +372,125 @@
             `).join('');
         }
 
-        // UPDATE V16: HÀM TÌM KIẾM (LỌC THEO TÊN / TAG)
         function handleSearch(query) {
             const q = query.toLowerCase().trim();
             if(!q) { renderGameGrid(gamesDB); return; }
-            
-            // Lọc theo Tên (Title) HOẶC Thể loại (Genre/Tags)
-            const filteredData = gamesDB.filter(game => 
-                game.title.toLowerCase().includes(q) || 
-                game.genre.toLowerCase().includes(q)
-            );
-            
+            const filteredData = gamesDB.filter(game => game.title.toLowerCase().includes(q) || game.genre.toLowerCase().includes(q));
             renderGameGrid(filteredData);
-            
-            // Tự động chuyển về HomeView nếu đang ở trang khác mà gõ tìm kiếm
-            if(localStorage.getItem('nv_current_view') !== 'homeView') {
-                switchView('homeView');
-            }
+            if(localStorage.getItem('nv_current_view') !== 'homeView') switchView('homeView');
         }
 
         function renderAdminManageList() {
             const container = document.getElementById('adminGameManageListContainer');
             if(!container) return;
-            if(gamesDB.length === 0) { container.innerHTML = '<p class="text-gray-500 italic text-sm p-4 text-center">Chưa có bài đăng VN+ nào của Admin.</p>'; return; }
-
-            container.innerHTML = gamesDB.map(game => `
-                <div class="card-3d glass-panel p-3 rounded-xl flex items-center h-[120px]">
-                    <div class="w-24 flex-shrink-0 relative rounded-lg overflow-hidden h-full"><img src="${game.cover}" onerror="this.onerror=null; this.src=fallbackImg;" class="w-full h-full object-cover"></div>
-                    <div class="flex-1 p-3 flex flex-col min-w-0 h-full justify-between">
-                        <h3 class="font-bold text-white truncate text-base">${game.title}</h3>
-                        <p class="text-xs text-gray-500 truncate">${game.author || 'Unknown'} | ${game.genre}</p>
-                        <div class="flex gap-2 mt-auto">
-                            <button onclick="startEditGame('${game.id}')" class="flex-1 py-1.5 bg-yellow-400 text-black rounded-lg text-xs font-bold transition">Sửa</button>
-                            <button onclick="deleteGame('${game.id}')" class="flex-1 py-1.5 border border-red-500 text-red-500 rounded-lg text-xs font-bold transition hover:bg-red-500 hover:text-white">Xóa</button>
+            if(gamesDB.length === 0) { container.innerHTML = '<p class="text-gray-500 italic text-sm p-4 text-center">Chưa có bài đăng VN+ nào của Admin.</p>'; }
+            else {
+                container.innerHTML = gamesDB.map(game => `
+                    <div class="card-3d glass-panel p-3 rounded-xl flex items-center h-[120px]">
+                        <div class="w-24 flex-shrink-0 relative rounded-lg overflow-hidden h-full"><img src="${game.cover}" onerror="this.onerror=null; this.src=fallbackImg;" class="w-full h-full object-cover"></div>
+                        <div class="flex-1 p-3 flex flex-col min-w-0 h-full justify-between">
+                            <h3 class="font-bold text-white truncate text-base">${game.title}</h3>
+                            <p class="text-xs text-gray-500 truncate">${game.author || 'Unknown'} | ${game.genre}</p>
+                            <div class="flex gap-2 mt-auto">
+                                <button onclick="startEditGame('${game.id}')" class="flex-1 py-1.5 bg-yellow-400 text-black rounded-lg text-xs font-bold transition">Sửa</button>
+                                <button onclick="deleteGame('${game.id}')" class="flex-1 py-1.5 border border-red-500 text-red-500 rounded-lg text-xs font-bold transition hover:bg-red-500 hover:text-white">Xóa</button>
+                            </div>
                         </div>
                     </div>
+                `).join('');
+            }
+            renderAdminUserList();
+        }
+
+        // V17: RENDER DANH SÁCH USER CHO ADMIN XÓA
+        function renderAdminUserList() {
+            const users = JSON.parse(localStorage.getItem('nv_users')) || [];
+            const container = document.getElementById('adminUserManageListContainer');
+            if(!container) return;
+            if(users.length === 0) { container.innerHTML = '<p class="text-gray-500 italic text-sm p-4 text-center">Chưa có người chơi nào đăng ký.</p>'; return; }
+
+            container.innerHTML = users.map(u => `
+                <div class="card-3d glass-panel p-3 md:p-4 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-[#bc13fe] to-[#00f0ff] flex items-center justify-center text-black font-bold overflow-hidden">
+                            ${u.avatar ? `<img src="${u.avatar}" class="w-full h-full object-cover">` : u.u[0].toUpperCase()}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm md:text-base">${u.u}</h4>
+                            <p class="text-[10px] text-gray-500">Thành viên</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteUserAccount('${u.u}')" class="px-3 py-1.5 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white rounded text-xs font-bold transition">Xóa</button>
                 </div>
             `).join('');
         }
 
+        function deleteUserAccount(username) {
+            if(!confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản: ${username}?`)) return;
+            let users = JSON.parse(localStorage.getItem('nv_users')) || [];
+            users = users.filter(u => u.u !== username);
+            localStorage.setItem('nv_users', JSON.stringify(users));
+            showToast(`Đã xóa tài khoản ${username} khỏi hệ thống!`);
+            renderAdminUserList();
+            if(localStorage.getItem('nv_current_view') === 'profileView') updateProfileView();
+        }
+
         function readFileAsBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); reader.readAsDataURL(file); }); }
         function applyColorToMsg() { const textarea = document.getElementById('adMsg'); const color = document.getElementById('adColorPicker').value; const start = textarea.selectionStart; const end = textarea.selectionEnd; const selectedText = textarea.value.substring(start, end); if (!selectedText) return showToast("Hãy bôi đen chữ cần tô màu trước!", "error"); const wrappedText = `<span style="color: ${color}">${selectedText}</span>`; textarea.value = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end); textarea.focus(); }
+
+        // V17: ĐỔI AVATAR 
+        async function handleAvatarChange(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            try {
+                showToast("Đang cập nhật Avatar...");
+                const base64 = await readFileAsBase64(file);
+                const user = localStorage.getItem('nv_current_user');
+                
+                if(user === "Admin") {
+                    localStorage.setItem('nv_admin_avatar', base64);
+                } else {
+                    let users = JSON.parse(localStorage.getItem('nv_users')) || [];
+                    const index = users.findIndex(x => x.u === user);
+                    if(index > -1) { users[index].avatar = base64; localStorage.setItem('nv_users', JSON.stringify(users)); }
+                }
+                updateAvatarUI();
+                showToast("Cập nhật Avatar thành công!");
+            } catch(err) { showToast("Lỗi: Ảnh quá nặng!", "error"); }
+        }
+
+        function updateAvatarUI() {
+            const user = localStorage.getItem('nv_current_user');
+            if(!user) return;
+            
+            let avatarData = null;
+            if(user === "Admin") { avatarData = localStorage.getItem('nv_admin_avatar'); } 
+            else {
+                const users = JSON.parse(localStorage.getItem('nv_users')) || [];
+                const uObj = users.find(x => x.u === user);
+                if(uObj && uObj.avatar) avatarData = uObj.avatar;
+            }
+
+            const initial = user[0].toUpperCase();
+            const navAv = document.getElementById('userAvatar');
+            if(avatarData) {
+                navAv.innerHTML = `<img src="${avatarData}" class="w-full h-full rounded-full object-cover">`;
+                navAv.classList.remove('bg-gradient-to-r', 'from-[#bc13fe]', 'to-[#00f0ff]');
+            } else {
+                navAv.innerHTML = initial;
+                navAv.classList.add('bg-gradient-to-r', 'from-[#bc13fe]', 'to-[#00f0ff]');
+            }
+
+            const profImg = document.getElementById('profileAvatarImg');
+            const profText = document.getElementById('profileAvatarText');
+            if(profImg && profText) {
+                if(avatarData) {
+                    profImg.src = avatarData; profImg.classList.remove('hidden'); profText.classList.add('hidden');
+                } else {
+                    profImg.classList.add('hidden'); profText.classList.remove('hidden'); profText.innerText = initial;
+                }
+            }
+        }
 
         async function handleAdminFormSubmit(e) {
             e.preventDefault();
@@ -475,17 +560,26 @@
         function openGameDetail(gameId) {
             const game = gamesDB.find(g => g.id == gameId); if(!game) return;
             localStorage.setItem('nv_current_game', gameId);
-            document.getElementById('detailCover').src = game.cover; document.getElementById('detailCover').onerror = function() { this.src = fallbackImg; };
+            const coverImg = document.getElementById('detailCover');
+            coverImg.src = game.cover; coverImg.onerror = function() { this.src = fallbackImg; };
+            
             document.getElementById('detailTitle').innerText = game.title; document.getElementById('detailAuthor').innerText = game.author || "Đang cập nhật"; document.getElementById('detailVersion').innerText = game.version || "v1.0"; document.getElementById('detailProgress').innerHTML = `<i class="fa-solid fa-spinner mr-1"></i> ${game.progress || "Đang cập nhật"}`; document.getElementById('detailPlatform').innerHTML = `<i class="fa-solid fa-desktop mr-1"></i> ${game.platform || "Android/PC"}`; document.getElementById('detailTransType').innerHTML = `<i class="fa-solid fa-language mr-1"></i> ${game.transType || "Dev+AI"}`; document.getElementById('detailSize').innerHTML = `<i class="fa-solid fa-database mr-1"></i> ${game.size || "Chưa rõ"}`; document.getElementById('detailGenre').innerText = game.genre; document.getElementById('detailTeam').innerText = game.team; document.getElementById('detailDesc').innerText = game.desc;
-            const adminMsgBox = document.getElementById('detailAdminMsgBox'); if(game.adminMsg && game.adminMsg.trim() !== "") { adminMsgBox.classList.remove('hidden'); document.getElementById('detailAdminMsg').innerHTML = game.adminMsg; } else { adminMsgBox.classList.add('hidden'); }
-            const scContainer = document.getElementById('detailScreenshots'); if(game.screenshots && game.screenshots.length > 0) { scContainer.innerHTML = game.screenshots.map(img => `<div class="rounded-xl overflow-hidden border border-white/10 aspect-video hover:border-[#bc13fe] transition shadow-lg cursor-pointer" onclick="openLightbox(this.querySelector('img').src)"><img src="${img}" onerror="this.onerror=null; this.src='${fallbackImg}';" class="w-full h-full object-cover"></div>`).join(''); } else { scContainer.innerHTML = '<p class="text-gray-500 italic text-sm">Chưa có ảnh giới thiệu cho game này.</p>'; }
+
+            const adminMsgBox = document.getElementById('detailAdminMsgBox');
+            if(game.adminMsg && game.adminMsg.trim() !== "") { adminMsgBox.classList.remove('hidden'); document.getElementById('detailAdminMsg').innerHTML = game.adminMsg; } else { adminMsgBox.classList.add('hidden'); }
+
+            const scContainer = document.getElementById('detailScreenshots');
+            if(game.screenshots && game.screenshots.length > 0) { scContainer.innerHTML = game.screenshots.map(img => `<div class="rounded-xl overflow-hidden border border-white/10 aspect-video hover:border-[#bc13fe] transition shadow-lg cursor-pointer" onclick="openLightbox(this.querySelector('img').src)"><img src="${img}" onerror="this.onerror=null; this.src='${fallbackImg}';" class="w-full h-full object-cover"></div>`).join(''); } 
+            else { scContainer.innerHTML = '<p class="text-gray-500 italic text-sm">Chưa có ảnh giới thiệu cho game này.</p>'; }
+
             const links = game.links || { android: {}, pc: {} };
             let andHtml = ''; andHtml += renderLinkButton(links.android?.terabox, 'Terabox', 'bg-blue-600', 'fa-solid fa-cloud'); andHtml += renderLinkButton(links.android?.mediafire, 'MediaFire', 'bg-red-500', 'fa-solid fa-fire'); andHtml += renderLinkButton(links.android?.drive, 'Google Drive', 'bg-green-600', 'fa-brands fa-google-drive'); if(!andHtml) andHtml = '<p class="text-sm text-gray-500 italic">Chưa có bản Android cho game này.</p>'; document.getElementById('detailAndroidLinks').innerHTML = andHtml;
             let pcHtml = ''; pcHtml += renderLinkButton(links.pc?.terabox, 'Terabox', 'bg-blue-600', 'fa-solid fa-cloud'); pcHtml += renderLinkButton(links.pc?.mediafire, 'MediaFire', 'bg-red-500', 'fa-solid fa-fire'); pcHtml += renderLinkButton(links.pc?.drive, 'Google Drive', 'bg-green-600', 'fa-brands fa-google-drive'); if(!pcHtml) pcHtml = '<p class="text-sm text-gray-500 italic">Chưa có bản PC cho game này.</p>'; document.getElementById('detailPcLinks').innerHTML = pcHtml;
+
             switchView('detailView');
         }
 
-        // UPDATE V16: LOGIC ĐĂNG NHẬP / ĐĂNG KÝ
+        // ĐỔI TRẠNG THÁI FORM LOGIN/REGISTER
         function toggleAuthMode() { 
             isLoginMode = !isLoginMode;
             document.getElementById('authTitle').innerText = isLoginMode ? "ĐĂNG NHẬP" : "ĐĂNG KÝ TÀI KHOẢN";
@@ -494,7 +588,7 @@
             document.getElementById('authSwitchBtn').innerText = isLoginMode ? "Đăng ký ngay" : "Đăng nhập";
         }
         function toggleAuthModal(mode) { 
-            isLoginMode = (mode === 'login'); toggleAuthMode(); toggleAuthMode(); // Hack gọn để update UI
+            isLoginMode = (mode === 'login'); toggleAuthMode(); toggleAuthMode(); 
             const modal = document.getElementById('authModal'); modal.classList.remove('hidden'); setTimeout(() => modal.classList.add('opacity-100'), 10); 
         }
         function closeAuthModal() { document.getElementById('authModal').classList.remove('opacity-100'); setTimeout(() => document.getElementById('authModal').classList.add('hidden'), 300); }
@@ -505,20 +599,16 @@
             const p = document.getElementById('authPassword').value;
 
             if(!isLoginMode) {
-                // Đăng ký
                 if(u.toLowerCase() === SECRET_ADMIN_USER.toLowerCase()) return showToast("Không thể đăng ký tên này!", "error");
                 let users = JSON.parse(localStorage.getItem('nv_users')) || [];
                 if(users.find(x => x.u.toLowerCase() === u.toLowerCase())) return showToast("Tên tài khoản đã tồn tại!", "error");
-                
                 users.push({u, p}); localStorage.setItem('nv_users', JSON.stringify(users));
                 showToast("Đăng ký thành công! Vui lòng đăng nhập."); toggleAuthMode();
             } else {
-                // Đăng nhập Admin
                 if(u === SECRET_ADMIN_USER && p === SECRET_ADMIN_PASS) {
                     localStorage.setItem('nv_current_user', 'Admin'); localStorage.setItem('nv_role', 'admin');
                     showToast("Kích hoạt đặc quyền Admin!"); closeAuthModal(); checkAuthState(); switchView('adminView');
                 } else {
-                    // Đăng nhập User
                     let users = JSON.parse(localStorage.getItem('nv_users')) || [];
                     let valid = users.find(x => x.u.toLowerCase() === u.toLowerCase() && x.p === p);
                     if(valid) {
@@ -536,33 +626,24 @@
             const user = localStorage.getItem('nv_current_user'); 
             const role = localStorage.getItem('nv_role');
             const authC = document.getElementById('authContainer'); const userC = document.getElementById('userContainer'); 
-            
-            // Xử lý các nút Admin/Profile trên Desktop
-            const navAdmin = document.getElementById('navAdminBtn');
-            const navProfile = document.getElementById('navProfileBtn');
-            
-            // Xử lý các nút Admin/Profile trên Mobile
-            const mobAdmin = document.getElementById('mobileAdminBtn');
-            const mobProfile = document.getElementById('mobileProfileBtn');
+            const navAdmin = document.getElementById('navAdminBtn'); const navProfile = document.getElementById('navProfileBtn');
+            const mobAdmin = document.getElementById('mobileAdminBtn'); const mobProfile = document.getElementById('mobileProfileBtn');
 
             if(user) { 
                 authC.classList.replace('md:flex', 'hidden'); userC.classList.replace('hidden', 'md:flex'); 
                 document.getElementById('userNameDisplay').innerText = user; 
-                document.getElementById('userAvatar').innerText = user[0].toUpperCase(); 
                 document.getElementById('mobileAuthMenu').classList.add('hidden'); 
                 document.getElementById('mobileUserMenu').classList.remove('hidden'); document.getElementById('mobileUserMenu').classList.add('flex'); 
                 document.getElementById('mobileUserName').innerText = user; 
 
-                // Phân quyền
                 if(role === 'admin') {
                     navAdmin.classList.remove('hidden'); mobAdmin.classList.remove('hidden');
-                    document.getElementById('userAvatar').classList.add('bg-yellow-400');
                     navProfile.classList.remove('hidden'); mobProfile.classList.remove('hidden');
                 } else {
                     navAdmin.classList.add('hidden'); mobAdmin.classList.add('hidden');
-                    document.getElementById('userAvatar').classList.remove('bg-yellow-400');
                     navProfile.classList.remove('hidden'); mobProfile.classList.remove('hidden');
                 }
+                updateAvatarUI();
             } else { 
                 authC.classList.replace('hidden', 'md:flex'); userC.classList.replace('md:flex', 'hidden'); 
                 document.getElementById('mobileAuthMenu').classList.remove('hidden'); 
@@ -572,20 +653,29 @@
             } 
         }
 
-        // UPDATE V16: Render dữ liệu cho Profile
+        // V17: RENDER DỮ LIỆU ĐỘNG VÀO TRANG PROFILE
         function updateProfileView() {
             const user = localStorage.getItem('nv_current_user');
             const role = localStorage.getItem('nv_role');
             if(!user) return switchView('homeView');
-            document.getElementById('profileNameLarge').innerText = user;
-            document.getElementById('profileAvatarLarge').innerText = user[0].toUpperCase();
             
-            const badge = document.getElementById('profileRoleBadge');
+            document.getElementById('profileNameLarge').innerText = user;
+            
+            const customGames = JSON.parse(localStorage.getItem('nv_custom_games')) || [];
+            const usersList = JSON.parse(localStorage.getItem('nv_users')) || [];
+            
             if(role === 'admin') {
-                badge.innerText = 'BẤT TỬ (ADMIN)'; badge.className = 'px-4 py-1 bg-yellow-400/20 text-yellow-400 border border-yellow-400 rounded-full text-xs font-bold uppercase tracking-widest mb-6';
+                document.getElementById('profileRoleBadge').innerText = 'BẤT TỬ (ADMIN)'; document.getElementById('profileRoleBadge').className = 'px-4 py-1 bg-yellow-400/20 text-yellow-400 border border-yellow-400 rounded-full text-xs font-bold uppercase tracking-widest mb-6';
+                document.getElementById('stat1-value').innerText = customGames.length; document.getElementById('stat1-label').innerText = "Đã đăng";
+                document.getElementById('stat2-value').innerText = "99+"; document.getElementById('stat2-label').innerText = "Lượt tải";
+                document.getElementById('stat3-value').innerText = usersList.length; document.getElementById('stat3-label').innerText = "Người chơi";
             } else {
-                badge.innerText = 'THÀNH VIÊN VÀNG'; badge.className = 'px-4 py-1 bg-[#00f0ff]/20 text-[#00f0ff] border border-[#00f0ff] rounded-full text-xs font-bold uppercase tracking-widest mb-6';
+                document.getElementById('profileRoleBadge').innerText = 'THÀNH VIÊN VÀNG'; document.getElementById('profileRoleBadge').className = 'px-4 py-1 bg-[#00f0ff]/20 text-[#00f0ff] border border-[#00f0ff] rounded-full text-xs font-bold uppercase tracking-widest mb-6';
+                document.getElementById('stat1-value').innerText = "0"; document.getElementById('stat1-label').innerText = "Đã tải";
+                document.getElementById('stat2-value').innerText = "0"; document.getElementById('stat2-label').innerText = "Yêu thích";
+                document.getElementById('stat3-value').innerText = "0"; document.getElementById('stat3-label').innerText = "Bình luận";
             }
+            updateAvatarUI();
         }
 
         function openLightbox(src) { const lb = document.getElementById('imageLightbox'); document.getElementById('lightboxImage').src = src; lb.classList.remove('hidden'); setTimeout(() => lb.classList.add('opacity-100'), 10); document.body.style.overflow = 'hidden'; }
