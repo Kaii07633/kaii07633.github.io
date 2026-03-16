@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEONVERSE • HỆ SINH THÁI TỐI THƯỢNG V12</title>
+    <title>NEONVERSE • HỆ SINH THÁI TỐI THƯỢNG V13</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -113,7 +113,7 @@
         <div class="glass-panel rounded-2xl md:rounded-3xl p-5 md:p-10 flex flex-col md:flex-row gap-6 md:gap-12 relative overflow-hidden mb-8">
             <div class="w-full md:w-1/3 flex flex-col gap-4 md:gap-6 relative z-10">
                 <div class="rounded-xl overflow-hidden shadow-[0_0_30px_rgba(188,19,254,0.3)] border border-white/10 relative">
-                    <img id="detailCover" src="" class="w-full aspect-[3/4] object-cover cursor-pointer hover:scale-105 transition" onclick="openLightbox(this.src)" alt="Cover">
+                    <img id="detailCover" src="" onerror="this.onerror=null; this.src=fallbackImg;" class="w-full aspect-[3/4] object-cover cursor-pointer hover:scale-105 transition" onclick="openLightbox(this.src)" alt="Cover">
                 </div>
                 <button class="w-full py-4 bg-gradient-to-r from-[#bc13fe] to-[#ff00ff] text-white font-black rounded-xl hover:shadow-[0_0_25px_#bc13fe] transition-all flex items-center justify-center gap-2 text-sm md:text-lg"><i class="fa-solid fa-cloud-arrow-down"></i> TẢI XUỐNG</button>
             </div>
@@ -208,13 +208,13 @@
                 <div>
                     <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Bìa (Upload File hoặc dán Link URL)</label>
                     <input id="adCoverFile" type="file" accept="image/*" class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-yellow-400 file:text-black hover:file:bg-yellow-300 transition cursor-pointer text-sm mb-2">
-                    <input id="adCoverUrl" type="text" placeholder="Hoặc dán Link URL Ảnh (VD: ImgBB) vào đây..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm">
+                    <input id="adCoverUrl" type="text" placeholder="Dán Direct Link đuôi .jpg, .png (Khuyên dùng ImgBB)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm">
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Giới Thiệu (Upload File hoặc dán nhiều Link URL)</label>
                     <input id="adScreenshotsFile" type="file" accept="image/*" multiple class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#bc13fe] file:text-white hover:file:bg-[#ff00ff] transition cursor-pointer text-sm mb-2">
-                    <textarea id="adScreenshotsUrl" placeholder="Hoặc dán các Link URL Ảnh giới thiệu (Mỗi link 1 dòng, tối đa 5 link)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm h-24 resize-none leading-relaxed"></textarea>
+                    <textarea id="adScreenshotsUrl" placeholder="Dán các Direct Link Ảnh giới thiệu (Mỗi link 1 dòng, tối đa 5 link)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm h-24 resize-none leading-relaxed"></textarea>
                 </div>
 
                 <div>
@@ -247,7 +247,7 @@
     </div>
 
     <div id="imageLightbox" class="fixed inset-0 z-[100000] flex items-center justify-center bg-black/95 transition-opacity duration-300 hidden opacity-0" onclick="closeLightbox()">
-        <img id="lightboxImage" src="" class="max-w-full max-h-full object-contain shadow-2xl animate-[zoomIn_0.3s_ease]" alt="Lightbox">
+        <img id="lightboxImage" src="" onerror="this.onerror=null; this.src=fallbackImg;" class="max-w-full max-h-full object-contain shadow-2xl animate-[zoomIn_0.3s_ease]" alt="Lightbox">
     </div>
 
     <div id="authModal" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/90 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
@@ -264,6 +264,9 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-[999999] flex flex-col gap-3 pointer-events-none"></div>
 
     <script>
+        // HÌNH ẢNH FALLBACK NẾU LINK BỊ LỖI
+        const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'%3E%3Crect width='500' height='500' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='24' font-weight='bold' fill='%23bc13fe' text-anchor='middle' dominant-baseline='middle'%3EL%E1%BB%97i Link %E1%BA%A2nh%3C/text%3E%3C/svg%3E";
+
         const defaultGamesDB = [
             { id: 1, title: "Hồng Nhãn Ma Đạo", author: "MagicVN", version: "v1.0 Final", progress: "100%", platform: "Android/PC", transType: "Dev+AI", size: "3.5 GB", genre: "Fantasy, Romance, Visual Novel", team: "Magic Team", is18: false, cover: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500", desc: "Kiệt tác Fantasy, đồ họa siêu đỉnh.", adminMsg: "<span style='color: #00f0ff'>Game đã test kỹ trên Android 13, không lỗi vặt!</span>", screenshots: [] },
             { id: 2, title: "Cyber Romance 2077", author: "NeoCity", version: "Ep. 3", progress: "Đang dịch", platform: "PC", transType: "Thô AI", size: "1.2 GB", genre: "Sci-Fi, 3DCG, Dystopia", team: "VN Studio", is18: true, cover: "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?w=500", desc: "Thành phố Cyberpunk năm 2077.", adminMsg: "<span style='color: #ff00ff'>Cẩn thận: Dịch thô AI nên nhiều đoạn xưng hô sẽ hơi cấn nhé!</span>", screenshots: [] },
@@ -291,7 +294,7 @@
                 <div onclick="openGameDetail('${game.id}')" class="card-3d glass-panel rounded-xl md:rounded-2xl overflow-hidden flex flex-row items-stretch h-[150px] md:h-[180px]">
                     <div class="w-32 md:w-44 flex-shrink-0 relative">
                         ${game.is18 ? `<div class="absolute top-1.5 left-1.5 bg-red-600 text-white text-[9px] md:text-[11px] font-bold px-2 py-0.5 rounded shadow-lg z-10 animate-pulse">18+</div>` : ''}
-                        <img src="${game.cover}" class="w-full h-full object-cover cursor-pointer" onclick="event.stopPropagation(); openLightbox(this.src)">
+                        <img src="${game.cover}" onerror="this.onerror=null; this.src=fallbackImg;" class="w-full h-full object-cover cursor-pointer" onclick="event.stopPropagation(); openLightbox(this.src)">
                     </div>
                     <div class="flex-1 p-3 md:p-5 bg-[#0a0a0a] relative flex flex-col min-w-0">
                         <div class="flex items-start justify-between mb-1 gap-2 border-b border-white/5 pb-1">
@@ -328,7 +331,9 @@
 
             container.innerHTML = customGames.map(game => `
                 <div class="card-3d glass-panel p-3 rounded-xl flex items-center h-[120px]">
-                    <div class="w-24 flex-shrink-0 relative rounded-lg overflow-hidden h-full"><img src="${game.cover}" class="w-full h-full object-cover"></div>
+                    <div class="w-24 flex-shrink-0 relative rounded-lg overflow-hidden h-full">
+                        <img src="${game.cover}" onerror="this.onerror=null; this.src=fallbackImg;" class="w-full h-full object-cover">
+                    </div>
                     <div class="flex-1 p-3 flex flex-col min-w-0 h-full justify-between">
                         <h3 class="font-bold text-white truncate text-base">${game.title}</h3>
                         <p class="text-xs text-gray-500 truncate">${game.author || 'Unknown'} | ${game.genre}</p>
@@ -375,29 +380,35 @@
                 return showToast("Vui lòng điền đầy đủ các thông tin chữ!", "error");
             }
 
-            // Xử lý Ảnh Bìa
             const coverFileInput = document.getElementById('adCoverFile');
             const coverUrlInput = document.getElementById('adCoverUrl');
             let coverData = coverUrlInput.value.trim(); 
+            
+            // Xử lý bóc tách link gốc nếu user lỡ dán HTML
+            if(coverData) {
+                const match = coverData.match(/(https?:\/\/[^"'\s>]+)/);
+                if(match) coverData = match[1];
+            }
+
             if (coverFileInput.files.length > 0) {
                 showToast("Đang xử lý hình ảnh, chờ xíu...");
                 coverData = await readFileAsBase64(coverFileInput.files[0]);
             }
 
-            // Xử lý Ảnh Giới Thiệu (Kết hợp File Base64 và Dán URL)
             const screenshotsInput = document.getElementById('adScreenshotsFile');
             const screenshotsUrlInput = document.getElementById('adScreenshotsUrl').value.trim();
             let screenshotsArray = [];
             
-            // 1. Ưu tiên lấy Link URL trước
             if(screenshotsUrlInput) {
                 const urls = screenshotsUrlInput.split('\n').map(u => u.trim()).filter(u => u !== '');
                 urls.forEach(u => {
-                    if(screenshotsArray.length < 5) screenshotsArray.push(u);
+                    let cleanUrl = u;
+                    const match = u.match(/(https?:\/\/[^"'\s>]+)/);
+                    if (match) cleanUrl = match[1]; // Bóc tách link tránh lỗi
+                    if(screenshotsArray.length < 5 && cleanUrl) screenshotsArray.push(cleanUrl);
                 });
             }
 
-            // 2. Nếu chưa đủ 5 tấm, lấy thêm từ File Upload
             if (screenshotsInput.files.length > 0) {
                 const remainingSlots = 5 - screenshotsArray.length;
                 if (remainingSlots > 0) {
@@ -453,7 +464,6 @@
             document.getElementById('adCoverFile').value = ""; document.getElementById('adCoverUrl').value = "";
             document.getElementById('adScreenshotsFile').value = "";
             
-            // Bơm các link ảnh (nếu là url http) vào lại ô dán Link ảnh giới thiệu
             const scUrls = (game.screenshots || []).filter(s => s.startsWith('http'));
             document.getElementById('adScreenshotsUrl').value = scUrls.join('\n');
 
@@ -479,7 +489,12 @@
         function openGameDetail(gameId) {
             const game = gamesDB.find(g => g.id == gameId);
             if(!game) return;
-            document.getElementById('detailCover').src = game.cover; document.getElementById('detailTitle').innerText = game.title;
+            
+            const coverImg = document.getElementById('detailCover');
+            coverImg.src = game.cover;
+            coverImg.onerror = function() { this.src = fallbackImg; };
+            
+            document.getElementById('detailTitle').innerText = game.title;
             document.getElementById('detailAuthor').innerText = game.author || "Đang cập nhật"; document.getElementById('detailVersion').innerText = game.version || "v1.0";
             document.getElementById('detailProgress').innerHTML = `<i class="fa-solid fa-spinner mr-1"></i> ${game.progress || "Đang cập nhật"}`;
             document.getElementById('detailPlatform').innerHTML = `<i class="fa-solid fa-desktop mr-1"></i> ${game.platform || "Android/PC"}`;
@@ -495,7 +510,13 @@
             } else { adminMsgBox.classList.add('hidden'); }
 
             const scContainer = document.getElementById('detailScreenshots');
-            if(game.screenshots && game.screenshots.length > 0) { scContainer.innerHTML = game.screenshots.map(img => `<div class="rounded-xl overflow-hidden border border-white/10 aspect-video hover:border-[#bc13fe] transition shadow-lg cursor-pointer" onclick="openLightbox(this.querySelector('img').src)"><img src="${img}" class="w-full h-full object-cover"></div>`).join(''); } 
+            if(game.screenshots && game.screenshots.length > 0) { 
+                scContainer.innerHTML = game.screenshots.map(img => `
+                    <div class="rounded-xl overflow-hidden border border-white/10 aspect-video hover:border-[#bc13fe] transition shadow-lg cursor-pointer" onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="${img}" onerror="this.onerror=null; this.src='${fallbackImg}';" class="w-full h-full object-cover">
+                    </div>
+                `).join(''); 
+            } 
             else { scContainer.innerHTML = '<p class="text-gray-500 italic text-sm">Chưa có ảnh giới thiệu cho game này.</p>'; }
             switchView('detailView');
         }
