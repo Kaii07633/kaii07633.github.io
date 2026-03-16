@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEONVERSE • HỆ SINH THÁI TỐI THƯỢNG V11</title>
+    <title>NEONVERSE • HỆ SINH THÁI TỐI THƯỢNG V12</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -206,14 +206,15 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Bìa (Upload File/Hoặc dán Link URL)</label>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Bìa (Upload File hoặc dán Link URL)</label>
                     <input id="adCoverFile" type="file" accept="image/*" class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-yellow-400 file:text-black hover:file:bg-yellow-300 transition cursor-pointer text-sm mb-2">
-                    <input id="adCoverUrl" type="text" placeholder="Hoặc dán Link Ảnh (ImgBB, Google Drive) để nhẹ bộ nhớ máy..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm">
+                    <input id="adCoverUrl" type="text" placeholder="Hoặc dán Link URL Ảnh (VD: ImgBB) vào đây..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Giới Thiệu (Upload File)</label>
-                    <input id="adScreenshotsFile" type="file" accept="image/*" multiple class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#bc13fe] file:text-white hover:file:bg-[#ff00ff] transition cursor-pointer text-sm">
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Giới Thiệu (Upload File hoặc dán nhiều Link URL)</label>
+                    <input id="adScreenshotsFile" type="file" accept="image/*" multiple class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#bc13fe] file:text-white hover:file:bg-[#ff00ff] transition cursor-pointer text-sm mb-2">
+                    <textarea id="adScreenshotsUrl" placeholder="Hoặc dán các Link URL Ảnh giới thiệu (Mỗi link 1 dòng, tối đa 5 link)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm h-24 resize-none leading-relaxed"></textarea>
                 </div>
 
                 <div>
@@ -263,7 +264,6 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-[999999] flex flex-col gap-3 pointer-events-none"></div>
 
     <script>
-        // 1. DATA CƠ BẢN (Thêm size)
         const defaultGamesDB = [
             { id: 1, title: "Hồng Nhãn Ma Đạo", author: "MagicVN", version: "v1.0 Final", progress: "100%", platform: "Android/PC", transType: "Dev+AI", size: "3.5 GB", genre: "Fantasy, Romance, Visual Novel", team: "Magic Team", is18: false, cover: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500", desc: "Kiệt tác Fantasy, đồ họa siêu đỉnh.", adminMsg: "<span style='color: #00f0ff'>Game đã test kỹ trên Android 13, không lỗi vặt!</span>", screenshots: [] },
             { id: 2, title: "Cyber Romance 2077", author: "NeoCity", version: "Ep. 3", progress: "Đang dịch", platform: "PC", transType: "Thô AI", size: "1.2 GB", genre: "Sci-Fi, 3DCG, Dystopia", team: "VN Studio", is18: true, cover: "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?w=500", desc: "Thành phố Cyberpunk năm 2077.", adminMsg: "<span style='color: #ff00ff'>Cẩn thận: Dịch thô AI nên nhiều đoạn xưng hô sẽ hơi cấn nhé!</span>", screenshots: [] },
@@ -309,7 +309,7 @@
                         <div class="flex items-center justify-between text-[10px] md:text-xs font-bold mb-auto mt-1">
                             <span class="text-gray-300 truncate pr-2"><i class="fa-solid fa-desktop text-[#00f0ff] mr-1"></i>${game.platform || 'Android/PC'}</span>
                             <span class="text-[#ff00ff] flex-shrink-0"><i class="fa-solid fa-language mr-1"></i>${game.transType || 'Dev+AI'}</span>
-                            </div>
+                        </div>
 
                         <div class="flex items-center justify-between text-[10px] md:text-sm text-gray-400 mt-auto pt-2 border-t border-white/5">
                             <span class="truncate pr-2"><i class="fa-solid fa-users text-[#bc13fe] mr-1"></i>${game.team}</span>
@@ -343,16 +343,13 @@
 
         function readFileAsBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); reader.readAsDataURL(file); }); }
 
-        // TOOL TÔ MÀU CHỮ
         function applyColorToMsg() {
             const textarea = document.getElementById('adMsg');
             const color = document.getElementById('adColorPicker').value;
             const start = textarea.selectionStart;
             const end = textarea.selectionEnd;
             const selectedText = textarea.value.substring(start, end);
-            
             if (!selectedText) return showToast("Hãy bôi đen chữ cần tô màu trước!", "error");
-            
             const wrappedText = `<span style="color: ${color}">${selectedText}</span>`;
             textarea.value = textarea.value.substring(0, start) + wrappedText + textarea.value.substring(end);
             textarea.focus();
@@ -367,7 +364,7 @@
             const progress = document.getElementById('adProgress').value;
             const platform = document.getElementById('adPlatform').value;
             const transType = document.getElementById('adTransType').value;
-            const size = document.getElementById('adSize').value; // Get Size
+            const size = document.getElementById('adSize').value;
             const genre = document.getElementById('adGenre').value;
             const team = document.getElementById('adTeam').value;
             const desc = document.getElementById('adDesc').value;
@@ -375,26 +372,41 @@
             const is18 = document.getElementById('ad18').checked;
 
             if(!title || !author || !genre || !team || !desc || !version || !progress || !platform || !transType || !size) {
-                return showToast("Vui lòng điền đầy đủ các thông tin chữ!");
+                return showToast("Vui lòng điền đầy đủ các thông tin chữ!", "error");
             }
 
+            // Xử lý Ảnh Bìa
             const coverFileInput = document.getElementById('adCoverFile');
             const coverUrlInput = document.getElementById('adCoverUrl');
             let coverData = coverUrlInput.value.trim(); 
-
-            // Nếu người dùng chọn Upload file (Ghi đè URL)
             if (coverFileInput.files.length > 0) {
                 showToast("Đang xử lý hình ảnh, chờ xíu...");
                 coverData = await readFileAsBase64(coverFileInput.files[0]);
             }
 
+            // Xử lý Ảnh Giới Thiệu (Kết hợp File Base64 và Dán URL)
             const screenshotsInput = document.getElementById('adScreenshotsFile');
+            const screenshotsUrlInput = document.getElementById('adScreenshotsUrl').value.trim();
             let screenshotsArray = [];
+            
+            // 1. Ưu tiên lấy Link URL trước
+            if(screenshotsUrlInput) {
+                const urls = screenshotsUrlInput.split('\n').map(u => u.trim()).filter(u => u !== '');
+                urls.forEach(u => {
+                    if(screenshotsArray.length < 5) screenshotsArray.push(u);
+                });
+            }
+
+            // 2. Nếu chưa đủ 5 tấm, lấy thêm từ File Upload
             if (screenshotsInput.files.length > 0) {
-                const filesToProcess = Math.min(screenshotsInput.files.length, 5);
-                for(let i = 0; i < filesToProcess; i++) {
-                    const base64Img = await readFileAsBase64(screenshotsInput.files[i]);
-                    screenshotsArray.push(base64Img);
+                const remainingSlots = 5 - screenshotsArray.length;
+                if (remainingSlots > 0) {
+                    showToast("Đang tải ảnh giới thiệu lên...");
+                    const filesToProcess = Math.min(screenshotsInput.files.length, remainingSlots);
+                    for(let i = 0; i < filesToProcess; i++) {
+                        const base64Img = await readFileAsBase64(screenshotsInput.files[i]);
+                        screenshotsArray.push(base64Img);
+                    }
                 }
             }
 
@@ -433,14 +445,17 @@
             document.getElementById('adTitle').value = game.title; document.getElementById('adAuthor').value = game.author || "";
             document.getElementById('adVersion').value = game.version || ""; document.getElementById('adProgress').value = game.progress || "";
             document.getElementById('adPlatform').value = game.platform || ""; document.getElementById('adTransType').value = game.transType || "";
-            document.getElementById('adSize').value = game.size || ""; // Fill Size
+            document.getElementById('adSize').value = game.size || ""; 
             document.getElementById('adGenre').value = game.genre; document.getElementById('adTeam').value = game.team;
             document.getElementById('adDesc').value = game.desc; document.getElementById('adMsg').value = game.adminMsg || "";
             document.getElementById('ad18').checked = game.is18;
             
-            // Xóa file đang chọn
-            document.getElementById('adCoverFile').value = "";
-            document.getElementById('adCoverUrl').value = "";
+            document.getElementById('adCoverFile').value = ""; document.getElementById('adCoverUrl').value = "";
+            document.getElementById('adScreenshotsFile').value = "";
+            
+            // Bơm các link ảnh (nếu là url http) vào lại ô dán Link ảnh giới thiệu
+            const scUrls = (game.screenshots || []).filter(s => s.startsWith('http'));
+            document.getElementById('adScreenshotsUrl').value = scUrls.join('\n');
 
             document.getElementById('adminSubmitBtn').innerHTML = `<i class="fa-solid fa-pen mr-2"></i> CẬP NHẬT GAME NÀY`;
             showToast("Đã điền thông tin bài đăng, hãy sửa đổi nhé."); window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -469,19 +484,15 @@
             document.getElementById('detailProgress').innerHTML = `<i class="fa-solid fa-spinner mr-1"></i> ${game.progress || "Đang cập nhật"}`;
             document.getElementById('detailPlatform').innerHTML = `<i class="fa-solid fa-desktop mr-1"></i> ${game.platform || "Android/PC"}`;
             document.getElementById('detailTransType').innerHTML = `<i class="fa-solid fa-language mr-1"></i> ${game.transType || "Dev+AI"}`;
-            // HIỆN DUNG LƯỢNG Ở TRANG CHI TIẾT
             document.getElementById('detailSize').innerHTML = `<i class="fa-solid fa-database mr-1"></i> ${game.size || "Chưa rõ"}`;
 
             document.getElementById('detailGenre').innerText = game.genre; document.getElementById('detailTeam').innerText = game.team; document.getElementById('detailDesc').innerText = game.desc;
 
-            // Xử lý Lời Nhắn Admin
             const adminMsgBox = document.getElementById('detailAdminMsgBox');
             if(game.adminMsg && game.adminMsg.trim() !== "") {
                 adminMsgBox.classList.remove('hidden');
                 document.getElementById('detailAdminMsg').innerHTML = game.adminMsg;
-            } else {
-                adminMsgBox.classList.add('hidden');
-            }
+            } else { adminMsgBox.classList.add('hidden'); }
 
             const scContainer = document.getElementById('detailScreenshots');
             if(game.screenshots && game.screenshots.length > 0) { scContainer.innerHTML = game.screenshots.map(img => `<div class="rounded-xl overflow-hidden border border-white/10 aspect-video hover:border-[#bc13fe] transition shadow-lg cursor-pointer" onclick="openLightbox(this.querySelector('img').src)"><img src="${img}" class="w-full h-full object-cover"></div>`).join(''); } 
