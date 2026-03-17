@@ -3,118 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEONVH - TRẠM CHỈ HUY</title>
+    <title>CỔNG XÁC THỰC ADMIN</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
         body { background-color: #050505; color: #fff; font-family: sans-serif; }
         .glass { background: rgba(20,20,20,0.9); border: 1px solid #bc13fe; box-shadow: 0 0 20px rgba(188, 19, 254, 0.2); }
     </style>
 </head>
-<body class="p-4 md:p-10 flex justify-center items-center min-h-screen">
+<body class="p-4 flex justify-center items-center min-h-screen">
 
-    <div id="loginSection" class="glass p-8 rounded-3xl w-full max-w-sm text-center transition-all duration-500">
-        <h2 class="text-2xl font-black text-[#bc13fe] mb-2">TRẠM CHỈ HUY</h2>
-        <p class="text-xs text-gray-500 mb-8">Khu vực dành riêng cho Boss</p>
+    <div class="glass p-8 rounded-3xl w-full max-w-sm text-center">
+        <h2 class="text-2xl font-black text-[#bc13fe] mb-2">ĐĂNG NHẬP BOSS</h2>
+        <p class="text-xs text-gray-500 mb-8">Xác thực để mở khóa index.html</p>
         
-        <input id="adminU" placeholder="Tên định danh" class="w-full bg-black border border-white/20 p-4 rounded-xl mb-4 text-white focus:border-[#bc13fe] outline-none">
-        <input id="adminP" type="password" placeholder="Mật mã" class="w-full bg-black border border-white/20 p-4 rounded-xl mb-8 text-white focus:border-[#bc13fe] outline-none">
+        <input id="adminU" placeholder="Tên định danh (Admin)" class="w-full bg-black border border-white/20 p-4 rounded-xl mb-4 text-white focus:border-[#bc13fe] outline-none">
+        <input id="adminP" type="password" placeholder="Mật mã (Admin123)" class="w-full bg-black border border-white/20 p-4 rounded-xl mb-8 text-white focus:border-[#bc13fe] outline-none">
         
-        <button onclick="login()" class="w-full bg-[#bc13fe] text-white py-4 rounded-xl font-black hover:shadow-[0_0_20px_#bc13fe] transition">MỞ CỔNG</button>
-    </div>
-
-    <div id="adminSection" class="glass p-8 md:p-12 rounded-3xl w-full max-w-2xl hidden transition-all duration-500">
-        <div class="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
-            <h2 class="text-2xl font-black text-yellow-400">🔥 ĐĂNG GAME MỚI</h2>
-            <button onclick="logout()" class="text-red-500 font-bold hover:underline">RÚT LUI</button>
-        </div>
-
-        <div class="space-y-4">
-            <div><label class="text-xs text-gray-400 font-bold">TÊN GAME</label><input id="gTitle" class="w-full bg-black border border-white/20 p-3 rounded-xl text-white mt-1"></div>
-            <div><label class="text-xs text-gray-400 font-bold">THỂ LOẠI (TAGS)</label><input id="gGenre" placeholder="Tag1, Tag2, Tag3..." class="w-full bg-black border border-white/20 p-3 rounded-xl text-white mt-1"></div>
-            <div><label class="text-xs text-gray-400 font-bold">NỘI DUNG / CỐT TRUYỆN</label><textarea id="gDesc" class="w-full bg-black border border-white/20 p-3 rounded-xl text-white h-32 mt-1"></textarea></div>
-            <div><label class="text-xs text-[#bc13fe] font-bold">LINK ẢNH BÌA</label><input id="gCover" class="w-full bg-black border border-[#bc13fe]/50 p-3 rounded-xl text-white mt-1"></div>
-            <div><label class="text-xs text-[#00f0ff] font-bold">LINK TERABOX (ANDROID)</label><input id="gLink" class="w-full bg-black border border-[#00f0ff]/50 p-3 rounded-xl text-white mt-1"></div>
-            
-            <button onclick="postGame()" id="postBtn" class="w-full bg-yellow-400 text-black py-4 rounded-xl font-black mt-6 hover:shadow-[0_0_20px_#facc15] transition">BẮN LÊN DATABASE</button>
-        </div>
+        <button onclick="login()" class="w-full bg-[#bc13fe] text-white py-4 rounded-xl font-black hover:shadow-[0_0_20px_#bc13fe] transition">XÁC THỰC & CHUYỂN HƯỚNG</button>
     </div>
 
     <script>
-        // ⚠️ ĐẠI CA NHỚ ĐIỀN ĐÚNG THÔNG TIN FIREBASE VÀO ĐÂY NHÉ
-        const firebaseConfig = {
-            apiKey: "AIzaSy...", // ĐIỀN KEY CỦA ĐẠI CA VÀO
-            projectId: "neonverse...", 
-            databaseURL: "..."
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // HIỂN THỊ ĐÚNG KHU VỰC DỰA VÀO TRẠNG THÁI
-        function checkAuth() {
-            if(localStorage.getItem('isBoss') === 'true') {
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('adminSection').classList.remove('hidden');
-            } else {
-                document.getElementById('loginSection').classList.remove('hidden');
-                document.getElementById('adminSection').classList.add('hidden');
-            }
-        }
-
-        // XỬ LÝ ĐĂNG NHẬP
         function login() {
             const u = document.getElementById('adminU').value;
             const p = document.getElementById('adminP').value;
             
-            // Pass mặc định của đại ca (Muốn đổi gì thì sửa ở đây)
             if(u === 'Admin' && p === 'Admin123') { 
-                localStorage.setItem('isBoss', 'true');
-                checkAuth();
-            } else { 
-                alert('Sai mật mã! Cảnh báo xâm nhập!'); 
-            }
-        }
-
-        function logout() { 
-            localStorage.removeItem('isBoss'); 
-            checkAuth(); 
-        }
-
-        // BẮN DỮ LIỆU LÊN FIREBASE
-        async function postGame() {
-            const title = document.getElementById('gTitle').value;
-            if(!title) return alert("Đại ca chưa nhập tên game!");
-            
-            const btn = document.getElementById('postBtn');
-            btn.innerText = "ĐANG TẢI LÊN...";
-            btn.disabled = true;
-
-            try {
-                await db.collection('games').add({
-                    title: title,
-                    genre: document.getElementById('gGenre').value || "18+, Visual Novel",
-                    desc: document.getElementById('gDesc').value,
-                    cover: document.getElementById('gCover').value || "https://i.imgur.com/8N4N89n.png",
-                    createdAt: Date.now(),
-                    links: { android: { terabox: document.getElementById('gLink').value } },
-                    // Thêm sẵn mấy thông số phụ cho nó đẹp ngoài mặt tiền
-                    author: "NeonVH", team: "Team Neon", version: "v1.0", progress: "100%", is18: true
-                });
+                // 1. Cấp quyền Admin vào bộ nhớ trình duyệt
+                localStorage.setItem('user', 'Admin');
+                localStorage.setItem('role', 'admin');
                 
-                alert('Đã tải game lên kho thành công!');
-                // Xóa trắng form để đăng bài tiếp theo
-                document.querySelectorAll('input, textarea').forEach(i => i.value = '');
-            } catch(e) { 
-                alert('Có lỗi xảy ra: ' + e.message); 
+                alert('Xác thực thành công! Đang bế đại ca về Trang chủ...');
+                
+                // 2. Chuyển thẳng về index.html
+                window.location.href = 'index.html';
+            } else { 
+                alert('Sai mật mã! Cút!'); 
             }
-            
-            btn.innerText = "BẮN LÊN DATABASE";
-            btn.disabled = false;
         }
-
-        // Chạy kiểm tra lúc mới vào trang
-        checkAuth();
     </script>
 </body>
 </html>
