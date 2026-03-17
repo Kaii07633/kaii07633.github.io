@@ -278,7 +278,7 @@
             <h2 id="authTitle" class="logo-font text-2xl md:text-3xl font-black text-center mb-6 neon-text text-white">ĐĂNG NHẬP</h2>
             <form id="authForm" onsubmit="handleAuth(event)">
                 <input id="authUsername" type="text" required placeholder="Tên tài khoản" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-4 text-sm">
-                <input id="authPassword" type="password" required placeholder="Mật khẩu" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-6 text-sm">
+                <input id="authPassword" type="password" required placeholder="                <input id="authPassword" type="password" required placeholder="Mật khẩu" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-6 text-sm">
                 <button type="submit" id="authSubmitBtn" class="w-full py-3 bg-[#bc13fe] text-white font-black rounded-xl hover:shadow-[0_0_20px_#bc13fe] transition text-sm">VÀO HỆ THỐNG</button>
             </form>
             <div class="mt-6 text-center text-xs text-gray-400"><span id="authSwitchText">Chưa có tài khoản?</span> <button onclick="toggleAuthMode()" id="authSwitchBtn" class="text-[#00f0ff] font-bold hover:underline ml-1">Đăng ký ngay</button></div>
@@ -312,6 +312,8 @@
         // ==========================================
         const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'%3E%3Crect width='500' height='500' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='24' font-weight='bold' fill='%23bc13fe' text-anchor='middle' dominant-baseline='middle'%3EL%E1%BB%97i Link %E1%BA%A2nh%3C/text%3E%3C/svg%3E";
         const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+        
+        // 👉 CHÚ Ý CHỖ NÀY: NHỚ ĐỔI ĐÚNG TÊN MIỀN VERCEL CỦA BRO
         const VERCEL_API = "https://neon-vh-github-io.vercel.app/api";
 
         let gamesDB = []; let isLoginMode = true; 
@@ -470,17 +472,30 @@
         }
 
         async function changeUserVip(username, newVip) {
-            if(isOnline) { const snap = await db.collection('users').where('u', '==', username).get(); snap.
-forEach(doc => doc.ref.update({ vipLevel: newVip })); } 
-            else { let users = JSON.parse(localStorage.getItem('nv_users')) || []; const index = users.findIndex(u => u.u === username); if(index > -1) { users[index].vipLevel = newVip; localStorage.setItem('nv_users', JSON.stringify(users)); } }
-            showToast(`Đã đổi quyền ${newVip.toUpperCase()} cho ${username}!`); renderAdminUserList();
+            if(isOnline) { 
+                const snap = await db.collection('users').where('u', '==', username).get(); 
+                snap.forEach(doc => doc.ref.update({ vipLevel: newVip })); 
+            } else { 
+                let users = JSON.parse(localStorage.getItem('nv_users')) || []; 
+                const index = users.findIndex(u => u.u === username); 
+                if(index > -1) { users[index].vipLevel = newVip; localStorage.setItem('nv_users', JSON.stringify(users)); } 
+            }
+            showToast(`Đã đổi quyền ${newVip.toUpperCase()} cho ${username}!`); 
+            renderAdminUserList();
         }
 
         async function deleteUserAccount(username) {
             if(!confirm(`XÓA vĩnh viễn tài khoản: ${username}?`)) return;
-            if(isOnline) { const snap = await db.collection('users').where('u', '==', username).get(); snap.forEach(doc => doc.ref.delete()); } 
-            else { let users = JSON.parse(localStorage.getItem('nv_users')) || []; localStorage.setItem('nv_users', JSON.stringify(users.filter(u => u.u !== username))); }
-            showToast(`Đã xóa ${username}!`); renderAdminUserList(); if(localStorage.getItem('nv_current_view') === 'profileView') updateProfileView();
+            if(isOnline) { 
+                const snap = await db.collection('users').where('u', '==', username).get(); 
+                snap.forEach(doc => doc.ref.delete()); 
+            } else { 
+                let users = JSON.parse(localStorage.getItem('nv_users')) || []; 
+                localStorage.setItem('nv_users', JSON.stringify(users.filter(u => u.u !== username))); 
+            }
+            showToast(`Đã xóa ${username}!`); 
+            renderAdminUserList(); 
+            if(localStorage.getItem('nv_current_view') === 'profileView') updateProfileView();
         }
 
         function readFileAsBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error); reader.readAsDataURL(file); }); }
@@ -595,9 +610,7 @@ forEach(doc => doc.ref.update({ vipLevel: newVip })); }
         }
 
         function resetAdminForm() { document.getElementById('adGameId').value = ""; document.getElementById('adminForm').reset(); document.getElementById('adminSubmitBtn').innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> LƯU LÊN MÁY CHỦ`; }
-        function switchView(viewId) { localStorage.setItem('nv_current_view', viewId
-        // ... (phần trước giữ nguyên) ...
-
+        
         function switchView(viewId) { 
             localStorage.setItem('nv_current_view', viewId); 
             const views = ['homeView', 'detailView', 'adminView', 'profileView']; 
@@ -772,3 +785,4 @@ forEach(doc => doc.ref.update({ vipLevel: newVip })); }
     </script>
 </body>
 </html>
+ 
