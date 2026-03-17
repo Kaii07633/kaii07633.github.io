@@ -6,7 +6,8 @@
     <script src="https://cdn.tailwindcss.com"></script>  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">  
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>  
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script> <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>  
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>  
 
 <style>  
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap');  
@@ -305,9 +306,6 @@
 
     const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'%3E%3Crect width='500' height='500' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='24' font-weight='bold' fill='%23bc13fe' text-anchor='middle' dominant-baseline='middle'%3EL%E1%BB%97i Link %E1%BA%A2nh%3C/text%3E%3C/svg%3E";  
     const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;  
-      
-    // CHÚ Ý CHỖ NÀY: VẪN GIỮ NGUYÊN ĐỂ LẤY FIREBASE CONFIG NHÉ
-    const VERCEL_API = "https://neon-vh-github-io.vercel.app/api";  
 
     let gamesDB = []; let isLoginMode = true;   
     let db = null; let isOnline = false;  
@@ -324,6 +322,18 @@
     }  
 
     // ==========================================  
+    // ĐIỀN CHÌA KHÓA FIREBASE CỦA ĐẠI CA VÀO ĐÂY!
+    // ==========================================  
+    const firebaseConfig = {
+        apiKey: "ĐIỀN_API_KEY_CỦA_ĐẠI_CA_VÀO_ĐÂY",
+        authDomain: "ĐIỀN_AUTH_DOMAIN_VÀO_ĐÂY",
+        projectId: "ĐIỀN_PROJECT_ID_VÀO_ĐÂY",
+        storageBucket: "ĐIỀN_STORAGE_BUCKET_VÀO_ĐÂY",
+        messagingSenderId: "ĐIỀN_MESSAGING_SENDER_ID_VÀO_ĐÂY",
+        appId: "ĐIỀN_APP_ID_VÀO_ĐÂY"
+    };
+
+    // ==========================================  
     // KHỞI TẠO WEB & LẮNG NGHE FIREBASE AUTH
     // ==========================================  
     async function initApp() {  
@@ -331,41 +341,38 @@
         document.getElementById('networkStatus').className = "text-[10px] font-bold text-yellow-400 ml-2 border border-yellow-400 px-2 py-0.5 rounded-full animate-pulse";  
           
         try {   
-            const response = await fetch(`${VERCEL_API}?type=get_gate`);  
-            const secureConfig = await response.json();  
-              
-            if(secureConfig && secureConfig.apiKey) {  
-                firebase.initializeApp(secureConfig);   
-                db = firebase.firestore();   
-                db.settings({ experimentalForceLongPolling: true, merge: true });  
-                isOnline = true;   
+            // 🚫 ĐÃ XÓA SẠCH VERCEL: Gọi thẳng Firebase luôn!
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();   
+            db.settings({ experimentalForceLongPolling: true, merge: true });  
+            isOnline = true;   
 
-                // ========================================================
-                // LẮNG NGHE TỰ ĐỘNG FIREBASE AUTH (XIN CHÀO GOOGLE)
-                // ========================================================
-                firebase.auth().onAuthStateChanged((user) => {
-                    if (user) {
-                        // Xác định xem có phải Boss không 
-                        // (Để chắc ăn, ta check email admin của Firebase)
-                        const isAdmin = user.email.toLowerCase() === 'admin@neonvh.com' || user.email.toLowerCase() === 'boss@neonvh.com';
-                        const username = isAdmin ? 'Admin' : user.email.split('@')[0];
-                        
-                        localStorage.setItem('nv_current_user', username);
-                        localStorage.setItem('nv_role', isAdmin ? 'admin' : 'user');
-                        checkAuthState();
-                    } else {
-                        localStorage.removeItem('nv_current_user');
-                        localStorage.removeItem('nv_role');
-                        checkAuthState();
-                    }
-                });
-            }  
+            // LẮNG NGHE TỰ ĐỘNG FIREBASE AUTH
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    const isAdmin = user.email.toLowerCase() === 'admin@neonvh.com' || user.email.toLowerCase() === 'boss@neonvh.com';
+                    const username = isAdmin ? 'Admin' : user.email.split('@')[0];
+                    
+                    localStorage.setItem('nv_current_user', username);
+                    localStorage.setItem('nv_role', isAdmin ? 'admin' : 'user');
+                    checkAuthState();
+                } else {
+                    localStorage.removeItem('nv_current_user');
+                    localStorage.removeItem('nv_role');
+                    checkAuthState();
+                }
+            });
+            
+            document.getElementById('networkStatus').innerText = "☁️ Secured Cloud";  
+            document.getElementById('networkStatus').className = "text-[10px] font-bold text-green-400 ml-2 border border-green-400 px-2 py-0.5 rounded-full";  
+            
         } catch(e) {   
-            console.error("Không thể kết nối đến Backend Vercel:", e);   
+            console.error("Lỗi Khởi Tạo Firebase:", e);   
+            document.getElementById('networkStatus').innerText = "⚠️ Offline Mode";  
+            document.getElementById('networkStatus').className = "text-[10px] font-bold text-red-500 ml-2 border border-red-500 px-2 py-0.5 rounded-full";  
         }  
-
-        document.getElementById('networkStatus').innerText = isOnline ? "☁️ Secured Cloud" : "⚠️ Offline Mode";  
-        document.getElementById('networkStatus').className = isOnline ? "text-[10px] font-bold text-green-400 ml-2 border border-green-400 px-2 py-0.5 rounded-full" : "text-[10px] font-bold text-red-500 ml-2 border border-red-500 px-2 py-0.5 rounded-full";  
           
         await loadGamesFromStorage();  
         renderGameGrid(); checkAuthState(); initParticles();  
@@ -688,39 +695,4 @@
                 showToast(`Chào mừng ${username} quay trở lại!`); 
                 closeAuthModal(); 
                 
-                // Tự động đẩy trang tuỳ chức vụ
-                const role = (email.toLowerCase() === 'admin@neonvh.com' || email.toLowerCase() === 'boss@neonvh.com') ? 'admin' : 'user';
-                if(role === 'admin') switchView('adminView');
-                else switchView('profileView');
-            }  
-        } catch (error) {  
-            console.error(error);
-            let msg = error.message;
-            if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') msg = "Sai tài khoản hoặc mật khẩu!";
-            if (error.code === 'auth/email-already-in-use') msg = "Tài khoản (Email) này đã tồn tại!";
-            if (error.code === 'auth/weak-password') msg = "Mật khẩu quá yếu (cần tối thiểu 6 ký tự)!";
-            showToast(msg, "error");   
-        }  
-        
-        document.getElementById('authForm').reset();  
-        btn.innerHTML = isLoginMode ? "VÀO HỆ THỐNG" : "TẠO TÀI KHOẢN";   
-        btn.disabled = false;  
-    }  
-
-    function logout() { 
-        if(firebase.auth) {
-            firebase.auth().signOut().then(() => clearSession());
-        } else {
-            clearSession();
-        }
-        
-        function clearSession() {
-            localStorage.removeItem('nv_current_user'); 
-            localStorage.removeItem('nv_role'); 
-            checkAuthState(); 
-            showToast("Đã đăng xuất khỏi hệ thống!"); 
-            switchView('homeView');
-        }
-    }  
-
-    function checkAuthState() { const user = localStorage.getItem('nv_current_user'); const role = localStorage.getItem('nv_role'); const authC = document.getElementById('authContainer'); const userC = document.getElementById('userContainer'); const navAdmin = document.getElementById('navAdminBtn'); const navProfile = document.getElementById('navProfileBtn'); const mobAdmin = document.getElementById('mobileAdminBtn'); const mobProfile = document.getElementById('mobileProfileBtn'); if(user) { authC.classList.replace('md:flex', 'hidden'); userC.classList.replace('hidden', 'md:flex'); document.getElementById('userNameDisplay').innerText = user; document.getElementById('mobileAuthMenu').classList.add('hidden'); document.getElementById('mobileUserMenu').classList.remove('hidden'); document.getElementById('mobileUserMenu').classList.add('flex'); document.getElementById('mobileUserName').innerText = user; if(role === 'admin') { navAdmin.classList.remove('hidden'); mobAdmin.classList.remove('hidden'); navProfile.classList.remove('hidden'); mobProfile.classList.remove('hidden'); } else { navAdmin.classList.add('hidden'); mobAdmin.classList.add('hidden'); navProfile.classList.remove('hidden'); mobProfile.classList.remove('hidden'); } updateAvatarUI(); } else { authC.classList.replace('hidden', 'md:flex'); userC.classList.replace('md:flex', 'hidden'); document.getElementById('mobileAuthMenu').classList.remove('hidden'); document.getElementById('mobileUserMenu').classList.add('hidden'); document.getElementById('mobileUserMenu').classList.remove('flex'); navAdmin.classList.add('hidden'); mob
+                // Tự động đẩy trang tuỳ chức
