@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEONVERSE • HỆ SINH THÁI TOÀN CẦU V23</title>
+    <title>NEONVERSE • HỆ SINH THÁI TOÀN CẦU V24</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -287,15 +287,13 @@
 
     <script>
         // ====================================================================
-        // 🔥 DÁN ĐOẠN CONFIG BRO LẤY Ở FIREBASE VÀO ĐÂY 🔥
+        // 🔥 BỘ CHÌA KHÓA ĐÃ ĐƯỢC RÁP SẴN HOÀN HẢO - KHÔNG CẦN SỬA GÌ NỮA 🔥
         // ====================================================================
         const firebaseConfig = {
-            apiKey: "AIzaSyASYEtwTigOgBuL62xPr1qxNfh_ptO6dM4", 
-            authDomain: "ĐIỀN_VÀO_ĐÂY",
-            projectId: "ĐIỀN_VÀO_ĐÂY",
-            storageBucket: "ĐIỀN_VÀO_ĐÂY",
-            messagingSenderId: "ĐIỀN_VÀO_ĐÂY",
-            appId: "ĐIỀN_VÀO_ĐÂY"
+            apiKey: "AIzaSyASYEtwTigOgBuL62xPr1qxNfh_ptO6dM4",
+            authDomain: "neonverse-69f48.firebaseapp.com",
+            projectId: "neonverse-69f48",
+            storageBucket: "neonverse-69f48.appspot.com"
         };
 
         const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'%3E%3Crect width='500' height='500' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='24' font-weight='bold' fill='%23bc13fe' text-anchor='middle' dominant-baseline='middle'%3EL%E1%BB%97i Link %E1%BA%A2nh%3C/text%3E%3C/svg%3E";
@@ -303,18 +301,13 @@
         let gamesDB = []; let isLoginMode = true; 
         let db = null; let isOnline = false;
 
-        // V23: FIX LỖI MẠNG 4G BỊ CHẶN WEBSOCKET
-        if(firebaseConfig.apiKey !== "ĐIỀN_API_KEY_CỦA_BRO_VÀO_ĐÂY") {
-            try { 
-                firebase.initializeApp(firebaseConfig); 
-                db = firebase.firestore(); 
-                
-                // ÉP FIREBASE DÙNG ĐƯỜNG TRUYỀN HTTP THƯỜNG (CHỐNG LỖI 4G VIETTEL/VINA CHẶN MẠNG)
-                db.settings({ experimentalForceLongPolling: true, merge: true });
-                
-                isOnline = true; 
-            } catch(e) { console.error(e); }
-        }
+        // KHỞI TẠO FIREBASE VỚI HTTP CHỐNG LỖI MẠNG
+        try { 
+            firebase.initializeApp(firebaseConfig); 
+            db = firebase.firestore(); 
+            db.settings({ experimentalForceLongPolling: true, merge: true });
+            isOnline = true; 
+        } catch(e) { console.error("Lỗi khởi tạo:", e); }
 
         async function initApp() {
             document.getElementById('networkStatus').innerText = isOnline ? "☁️ Online" : "⚠️ Offline Local";
@@ -464,7 +457,7 @@
                 const gameData = { title, author, version, progress, platform, transType, size, genre, team, cover: coverData, desc, adminMsg, is18, screenshots: screenshotsArray, links, createdAt: Date.now() };
 
                 if(isOnline) {
-                    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("LỖI MẠNG FIREBASE!\n1. Hãy chắc chắn bạn đã paste đúng cục Config.\n2. Cảnh báo đỏ ở Firebase không ảnh hưởng, đừng lo.")), 25000));
+                    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("LỖI KẾT NỐI MẠNG 4G: Hãy kiểm tra xem bạn đã lưu 'Quy tắc' chưa nhé!")), 25000));
                     
                     if(gameId) { 
                         const dbId = gamesDB.find(g => g.id === gameId).dbId; 
@@ -598,8 +591,4 @@
         function closeLightbox() { const lb = document.getElementById('imageLightbox'); lb.classList.remove('opacity-100'); setTimeout(() => { lb.classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300); }
         function toggleDrawer() { document.getElementById('mobileDrawer').classList.toggle('translate-x-full'); document.getElementById('mobileDrawer').classList.toggle('translate-x-0'); }
         function showToast(msg, type="success") { const c = document.getElementById('toastContainer'); const t = document.createElement('div'); const borderColor = type === "error" ? "border-red-500 shadow-[0_0_15px_red] text-red-500" : "border-[#00f0ff] shadow-[0_0_15px_#00f0ff] text-[#00f0ff]"; t.className = `glass-panel px-5 py-3 rounded-xl border ${borderColor} font-bold text-sm transform transition-all duration-300 translate-y-10 opacity-0 bg-black/90`; t.innerText = msg; c.appendChild(t); setTimeout(() => t.classList.remove('translate-y-10', 'opacity-0'), 10); setTimeout(() => { t.classList.add('opacity-0', 'translate-x-10'); setTimeout(() => t.remove(), 300); }, 3000); }
-        function initParticles() { const c = document.getElementById("particleCanvas"); if(!c) return; const ctx = c.getContext("2d"); c.width = window.innerWidth; c.height = window.innerHeight; let p = []; for(let i=0; i<30; i++) p.push({ x: Math.random()*c.width, y: Math.random()*c.height, r: Math.random()*2, dx: (Math.random()-0.5)*0.5, dy: (Math.random()-0.5)*0.5 }); function draw() { ctx.clearRect(0, 0, c.width, c.height); ctx.fillStyle = "rgba(188, 19, 254, 0.5)"; p.forEach(i => { ctx.beginPath(); ctx.arc(i.x, i.y, i.r, 0, Math.PI * 2); ctx.fill(); i.x += i.dx; i.y += i.dy; if(i.x<0||i.x>c.width) i.dx*=-1; if(i.y<0||i.y>c.height) i.dy*=-1; }); requestAnimationFrame(draw); } draw(); }
-        window.onload = initApp;
-    </script>
-</body>
-</html>
+        function initParticles() { const c = document.getElementById("particleCanvas"); if(!c) return; const ctx = c.getContext("2d"); c.width = window.innerWidth; c.height = window.innerHeight; let p = []; for(let i=0; i<30; i++) p.push({ x: Math.random()*c.width, y: Math.random()*c.height, r: Math.random()*2, dx: (Math.random()-0.5)*0.5, dy: (Math.random()-0.5)*0.5 }); function draw() { ctx.clearRect(0, 0, c.width, c.height); ctx.fillStyle = "rgba(188, 19, 254, 0.5)"; p.forEach(i => { ctx.beginPath(); ctx.arc(i.x, i.y, i.r, 0, Math.PI * 2); ctx.fill(); i.x += i.dx; i.y += i.dy; if(i.x<0||i.x>c.width) i.dx*=-1; if(i.y
