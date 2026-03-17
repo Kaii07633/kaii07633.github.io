@@ -1,11 +1,15 @@
 const CryptoJS = require("crypto-js");
 
 module.exports = function(req, res) {
-  // 1. Mở cửa cho phép web của đại ca gọi vào (CORS)
+  // Mở cửa hoàn toàn để test xem có bị chặn không
   res.setHeader('Access-Control-Allow-Origin', '*'); 
-  res.setHeader('Access-Control-Allow-Methods', 'GET');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // 2. Bốc chìa khóa Firebase từ Vercel
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   const firebaseConfig = {
     apiKey: process.env.FB_API_KEY,
     authDomain: process.env.FB_AUTH_DOMAIN,
@@ -15,10 +19,8 @@ module.exports = function(req, res) {
     appId: process.env.FB_APP_ID
   };
 
-  // 3. Mã hóa toàn bộ cấu hình
   const SECRET_PASS = "NeonVH_TuyetMat_2026"; 
   const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(firebaseConfig), SECRET_PASS).toString();
 
-  // 4. Quăng cục dữ liệu đã mã hóa về
   res.status(200).json({ secureData: encryptedData });
 };
