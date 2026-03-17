@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÁY QUÉT LỖI VERCEL</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+</head>
+<body style="background: black; color: lime; font-family: monospace; padding: 20px; font-size: 16px;">
+    <h2>[ HỆ THỐNG KIỂM TRA ĐƯỜNG TRUYỀN ]</h2>
+    <div id="log">Đang khởi động radar...<br><br></div>
+
+    <script>
+        async function runTest() {
+            const log = document.getElementById('log');
+            function print(msg) { log.innerHTML += msg + "<br>"; }
+
+            try {
+                print("⏳ 1. Đang gọi điện cho Vercel...");
+                
+                // Gọi sang API
+                const res = await fetch("https://neon-vh-github-io.vercel.app/api/get-config");
+                
+                if (!res.ok) throw new Error("Vercel sập nguồn hoặc bị chặn! (Lỗi: " + res.status + ")");
+                print("✅ 2. Vercel bắt máy! Trạng thái: " + res.status);
+                
+                const data = await res.json();
+                if(!data.secureData) throw new Error("Vercel không trả về két sắt mã hóa!");
+                print("✅ 3. Đã bốc được cục dữ liệu mã hóa!");
+                
+                // Giải mã
+                print("⏳ 4. Đang đút chìa khóa giải mã...");
+                const SECRET = "NeonVH_TuyetMat_2026";
+                const bytes = CryptoJS.AES.decrypt(data.secureData, SECRET);
+                const decString = bytes.toString(CryptoJS.enc.Utf8);
+                
+                if(!decString) throw new Error("Sai mật khẩu giải mã cmnr!");
+                print("✅ 5. Giải mã thành công!");
+                print("👉 Dữ liệu soi được: " + decString.substring(0, 40) + "...");
+                
+                print("<br>🚀 KẾT LUẬN: MÁY CHỦ SỐNG NHĂN RĂNG! NẾU WEB CHÍNH LỖI LÀ DO BỊ LƯU CACHE (BỘ NHỚ TẠM) RỒI ĐẠI CA!");
+                
+            } catch(e) {
+                print("<br>❌ BÁO ĐỘNG ĐỎ TRUY RA LỖI: <span style='color:red'>" + e.message + "</span>");
+            }
+        }
+        
+        // Chạy ngay lập tức
+        runTest();
+    </script>
+</body>
+</html>
