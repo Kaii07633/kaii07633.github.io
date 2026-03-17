@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEONVERSE • HỆ SINH THÁI TOÀN CẦU V22</title>
+    <title>NEONVERSE • HỆ SINH THÁI TOÀN CẦU V23</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -303,11 +303,15 @@
         let gamesDB = []; let isLoginMode = true; 
         let db = null; let isOnline = false;
 
-        // V22: PING FIREBASE ĐỂ KIỂM TRA LỖI CONFIG / DATABASE
+        // V23: FIX LỖI MẠNG 4G BỊ CHẶN WEBSOCKET
         if(firebaseConfig.apiKey !== "ĐIỀN_API_KEY_CỦA_BRO_VÀO_ĐÂY") {
             try { 
                 firebase.initializeApp(firebaseConfig); 
                 db = firebase.firestore(); 
+                
+                // ÉP FIREBASE DÙNG ĐƯỜNG TRUYỀN HTTP THƯỜNG (CHỐNG LỖI 4G VIETTEL/VINA CHẶN MẠNG)
+                db.settings({ experimentalForceLongPolling: true, merge: true });
+                
                 isOnline = true; 
             } catch(e) { console.error(e); }
         }
@@ -432,9 +436,6 @@
             if(profImg && profText) { if(avatarData) { profImg.src = avatarData; profImg.classList.remove('hidden'); profText.classList.add('hidden'); } else { profImg.classList.add('hidden'); profText.classList.remove('hidden'); profText.innerText = user[0].toUpperCase(); } }
         }
 
-        // ==========================================
-        // V22: HỆ THỐNG LƯU GAME ĐƯỢC CHỐNG TREO BÁO LỖI RÕ RÀNG
-        // ==========================================
         async function handleAdminFormSubmit(e) {
             e.preventDefault(); 
             const btn = document.getElementById('adminSubmitBtn');
@@ -463,8 +464,7 @@
                 const gameData = { title, author, version, progress, platform, transType, size, genre, team, cover: coverData, desc, adminMsg, is18, screenshots: screenshotsArray, links, createdAt: Date.now() };
 
                 if(isOnline) {
-                    // V22: Hết 25s mà chưa xong thì 99% là chưa tạo Database hoặc dán sai Config
-                    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("LỖI KẾT NỐI FIREBASE!\n1. Bạn chưa bấm nút 'Tạo' Database.\n2. Bạn copy đoạn mã Config bị thiếu dấu phẩy hoặc ngoặc kép.")), 25000));
+                    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("LỖI MẠNG FIREBASE!\n1. Hãy chắc chắn bạn đã paste đúng cục Config.\n2. Cảnh báo đỏ ở Firebase không ảnh hưởng, đừng lo.")), 25000));
                     
                     if(gameId) { 
                         const dbId = gamesDB.find(g => g.id === gameId).dbId; 
