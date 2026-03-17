@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEONVERSE • HỆ SINH THÁI TOÀN CẦU V19</title>
+    <title>NEONVERSE • HỆ SINH THÁI TOÀN CẦU V20</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -213,12 +213,12 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Bìa (ƯU TIÊN DÁN LINK URL)</label>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Bìa (ƯU TIÊN DÁN LINK URL IMGBB)</label>
                     <input id="adCoverFile" type="file" accept="image/*" class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-yellow-400 file:text-black hover:file:bg-yellow-300 transition cursor-pointer text-sm mb-2">
-                    <input id="adCoverUrl" type="text" placeholder="Dán Direct Link đuôi .jpg, .png (Khuyên dùng)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm">
+                    <input id="adCoverUrl" type="text" placeholder="Dán Direct Link đuôi .jpg, .png (Để chống giật lag)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Giới Thiệu (ƯU TIÊN DÁN LINK URL)</label>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Giới Thiệu (ƯU TIÊN DÁN LINK URL IMGBB)</label>
                     <input id="adScreenshotsFile" type="file" accept="image/*" multiple class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#bc13fe] file:text-white hover:file:bg-[#ff00ff] transition cursor-pointer text-sm mb-2">
                     <textarea id="adScreenshotsUrl" placeholder="Dán các Direct Link Ảnh giới thiệu (Mỗi link 1 dòng)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm h-24 resize-none leading-relaxed"></textarea>
                 </div>
@@ -287,7 +287,7 @@
 
     <script>
         // ====================================================================
-        // 🔥 BƯỚC 4: DÁN ĐOẠN CONFIG BRO LẤY Ở FIREBASE VÀO ĐÂY 🔥
+        // 🔥 DÁN ĐOẠN CONFIG BRO LẤY Ở FIREBASE VÀO ĐÂY 🔥
         // ====================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyASYEtwTigOgBuL62xPr1qxNfh_ptO6dM4", 
@@ -301,20 +301,15 @@
         const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'%3E%3Crect width='500' height='500' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='24' font-weight='bold' fill='%23bc13fe' text-anchor='middle' dominant-baseline='middle'%3EL%E1%BB%97i Link %E1%BA%A2nh%3C/text%3E%3C/svg%3E";
         const SECRET_ADMIN_USER = "Admin"; const SECRET_ADMIN_PASS = "Admin123";
         let gamesDB = []; let isLoginMode = true; 
-        
-        let db = null;
-        let isOnline = false;
+        let db = null; let isOnline = false;
 
         if(firebaseConfig.apiKey !== "ĐIỀN_API_KEY_CỦA_BRO_VÀO_ĐÂY") {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
-            isOnline = true;
+            try { firebase.initializeApp(firebaseConfig); db = firebase.firestore(); isOnline = true; } catch(e) { console.error(e); }
         }
 
         async function initApp() {
             document.getElementById('networkStatus').innerText = isOnline ? "☁️ Online" : "⚠️ Offline Local";
             document.getElementById('networkStatus').className = isOnline ? "text-[10px] font-bold text-green-400 ml-2 border border-green-400 px-2 py-0.5 rounded-full" : "text-[10px] font-bold text-yellow-400 ml-2 border border-yellow-400 px-2 py-0.5 rounded-full";
-            
             await loadGamesFromStorage();
             renderGameGrid(); checkAuthState(); initParticles();
             const savedView = localStorage.getItem('nv_current_view') || 'homeView';
@@ -323,10 +318,8 @@
 
         async function loadGamesFromStorage() {
             if(isOnline) {
-                try {
-                    const snapshot = await db.collection('games').orderBy('createdAt', 'desc').get();
-                    gamesDB = snapshot.docs.map(doc => ({ dbId: doc.id, ...doc.data() }));
-                } catch(e) { gamesDB = JSON.parse(localStorage.getItem('nv_custom_games')) || []; }
+                try { const snapshot = await db.collection('games').orderBy('createdAt', 'desc').get(); gamesDB = snapshot.docs.map(doc => ({ dbId: doc.id, ...doc.data() })); } 
+                catch(e) { gamesDB = JSON.parse(localStorage.getItem('nv_custom_games')) || []; }
             } else { gamesDB = JSON.parse(localStorage.getItem('nv_custom_games')) || []; }
         }
 
@@ -356,15 +349,10 @@
             } renderAdminUserList();
         }
 
-        // UPDATE V19: RENDER ADMIN USER LIST VỚI MENU CHỌN VIP
         async function renderAdminUserList() {
             let users = [];
-            if(isOnline) {
-                const snap = await db.collection('users').get();
-                users = snap.docs.map(d => ({ dbId: d.id, ...d.data() }));
-            } else {
-                users = JSON.parse(localStorage.getItem('nv_users')) || [];
-            }
+            if(isOnline) { const snap = await db.collection('users').get(); users = snap.docs.map(d => ({ dbId: d.id, ...d.data() })); } 
+            else { users = JSON.parse(localStorage.getItem('nv_users')) || []; }
             const container = document.getElementById('adminUserManageListContainer'); if(!container) return;
             if(users.length === 0) { container.innerHTML = '<p class="text-gray-500 italic text-sm p-4 text-center">Chưa có người chơi nào đăng ký.</p>'; return; }
             
@@ -393,18 +381,10 @@
             `).join('');
         }
 
-        // UPDATE V19: HÀM CẬP NHẬT VIP CHO USER
         async function changeUserVip(username, newVip) {
-            if(isOnline) {
-                const snap = await db.collection('users').where('u', '==', username).get();
-                snap.forEach(doc => doc.ref.update({ vipLevel: newVip }));
-            } else {
-                let users = JSON.parse(localStorage.getItem('nv_users')) || [];
-                const index = users.findIndex(u => u.u === username);
-                if(index > -1) { users[index].vipLevel = newVip; localStorage.setItem('nv_users', JSON.stringify(users)); }
-            }
-            showToast(`Đã đổi quyền ${newVip.toUpperCase()} cho ${username}!`);
-            renderAdminUserList();
+            if(isOnline) { const snap = await db.collection('users').where('u', '==', username).get(); snap.forEach(doc => doc.ref.update({ vipLevel: newVip })); } 
+            else { let users = JSON.parse(localStorage.getItem('nv_users')) || []; const index = users.findIndex(u => u.u === username); if(index > -1) { users[index].vipLevel = newVip; localStorage.setItem('nv_users', JSON.stringify(users)); } }
+            showToast(`Đã đổi quyền ${newVip.toUpperCase()} cho ${username}!`); renderAdminUserList();
         }
 
         async function deleteUserAccount(username) {
@@ -420,14 +400,18 @@
         async function handleAvatarChange(e) {
             const file = e.target.files[0]; if(!file) return;
             try {
-                showToast("Đang cập nhật Avatar..."); const base64 = await readFileAsBase64(file); const user = localStorage.getItem('nv_current_user');
+                showToast("Đang xử lý Avatar..."); 
+                const base64 = await readFileAsBase64(file); 
+                if(base64.length > 500000) throw new Error("Ảnh quá nặng (Khuyên dùng < 300KB)!"); // Kiểm tra size Avatar
+                
+                const user = localStorage.getItem('nv_current_user');
                 if(user === "Admin") { localStorage.setItem('nv_admin_avatar', base64); } 
                 else {
                     if(isOnline) { const snap = await db.collection('users').where('u', '==', user).get(); snap.forEach(doc => doc.ref.update({ avatar: base64 })); } 
                     else { let users = JSON.parse(localStorage.getItem('nv_users')) || []; const index = users.findIndex(x => x.u === user); if(index > -1) { users[index].avatar = base64; localStorage.setItem('nv_users', JSON.stringify(users)); } }
                 }
                 updateAvatarUI(); showToast("Đổi Avatar thành công!");
-            } catch(err) { showToast("Lỗi: Ảnh quá nặng!", "error"); }
+            } catch(err) { showToast(err.message || "Lỗi cập nhật ảnh!", "error"); }
         }
 
         async function updateAvatarUI() {
@@ -443,32 +427,67 @@
             if(profImg && profText) { if(avatarData) { profImg.src = avatarData; profImg.classList.remove('hidden'); profText.classList.add('hidden'); } else { profImg.classList.add('hidden'); profText.classList.remove('hidden'); profText.innerText = user[0].toUpperCase(); } }
         }
 
+        // ==========================================
+        // V20: HỆ THỐNG LƯU GAME ĐƯỢC BỌC THÉP CHỐNG LỖI TREO
+        // ==========================================
         async function handleAdminFormSubmit(e) {
-            e.preventDefault(); document.getElementById('adminSubmitBtn').innerText = "ĐANG LƯU DỮ LIỆU...";
-            const gameId = document.getElementById('adGameId').value; const title = document.getElementById('adTitle').value; const author = document.getElementById('adAuthor').value; const version = document.getElementById('adVersion').value; const progress = document.getElementById('adProgress').value; const platform = document.getElementById('adPlatform').value; const transType = document.getElementById('adTransType').value; const size = document.getElementById('adSize').value; const genre = document.getElementById('adGenre').value; const team = document.getElementById('adTeam').value; const desc = document.getElementById('adDesc').value; const adminMsg = document.getElementById('adMsg').value; const is18 = document.getElementById('ad18').checked;
-            const links = { android: { terabox: document.getElementById('adLinkAndTerabox').value.trim(), mediafire: document.getElementById('adLinkAndMediafire').value.trim(), drive: document.getElementById('adLinkAndDrive').value.trim() }, pc: { terabox: document.getElementById('adLinkPcTerabox').value.trim(), mediafire: document.getElementById('adLinkPcMediafire').value.trim(), drive: document.getElementById('adLinkPcDrive').value.trim() } };
-
-            const coverFileInput = document.getElementById('adCoverFile'); const coverUrlInput = document.getElementById('adCoverUrl'); let coverData = coverUrlInput.value.trim(); 
-            if(coverData) { const match = coverData.match(/(https?:\/\/[^"'\s>]+)/); if(match) coverData = match[1]; }
-            if (coverFileInput.files.length > 0) { coverData = await readFileAsBase64(coverFileInput.files[0]); }
-
-            const screenshotsInput = document.getElementById('adScreenshotsFile'); const screenshotsUrlInput = document.getElementById('adScreenshotsUrl').value.trim(); let screenshotsArray = [];
-            if(screenshotsUrlInput) { const urls = screenshotsUrlInput.split('\n').map(u => u.trim()).filter(u => u !== ''); urls.forEach(u => { let cleanUrl = u; const match = u.match(/(https?:\/\/[^"'\s>]+)/); if (match) cleanUrl = match[1]; if(screenshotsArray.length < 5 && cleanUrl) screenshotsArray.push(cleanUrl); }); }
-            if (screenshotsInput.files.length > 0) { const remainingSlots = 5 - screenshotsArray.length; if (remainingSlots > 0) { const filesToProcess = Math.min(screenshotsInput.files.length, remainingSlots); for(let i = 0; i < filesToProcess; i++) { const base64Img = await readFileAsBase64(screenshotsInput.files[i]); screenshotsArray.push(base64Img); } } }
-
-            const gameData = { title, author, version, progress, platform, transType, size, genre, team, cover: coverData, desc, adminMsg, is18, screenshots: screenshotsArray, links, createdAt: Date.now() };
+            e.preventDefault(); 
+            const btn = document.getElementById('adminSubmitBtn');
+            
+            // Đổi trạng thái nút và vô hiệu hóa để chống Spam click
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ĐANG LƯU DỮ LIỆU...`;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btn.disabled = true;
 
             try {
+                const gameId = document.getElementById('adGameId').value; const title = document.getElementById('adTitle').value; const author = document.getElementById('adAuthor').value; const version = document.getElementById('adVersion').value; const progress = document.getElementById('adProgress').value; const platform = document.getElementById('adPlatform').value; const transType = document.getElementById('adTransType').value; const size = document.getElementById('adSize').value; const genre = document.getElementById('adGenre').value; const team = document.getElementById('adTeam').value; const desc = document.getElementById('adDesc').value; const adminMsg = document.getElementById('adMsg').value; const is18 = document.getElementById('ad18').checked;
+                const links = { android: { terabox: document.getElementById('adLinkAndTerabox').value.trim(), mediafire: document.getElementById('adLinkAndMediafire').value.trim(), drive: document.getElementById('adLinkAndDrive').value.trim() }, pc: { terabox: document.getElementById('adLinkPcTerabox').value.trim(), mediafire: document.getElementById('adLinkPcMediafire').value.trim(), drive: document.getElementById('adLinkPcDrive').value.trim() } };
+
+                const coverFileInput = document.getElementById('adCoverFile'); const coverUrlInput = document.getElementById('adCoverUrl'); let coverData = coverUrlInput.value.trim(); 
+                if(coverData) { const match = coverData.match(/(https?:\/\/[^"'\s>]+)/); if(match) coverData = match[1]; }
+                if (coverFileInput.files.length > 0) { coverData = await readFileAsBase64(coverFileInput.files[0]); }
+
+                const screenshotsInput = document.getElementById('adScreenshotsFile'); const screenshotsUrlInput = document.getElementById('adScreenshotsUrl').value.trim(); let screenshotsArray = [];
+                if(screenshotsUrlInput) { const urls = screenshotsUrlInput.split('\n').map(u => u.trim()).filter(u => u !== ''); urls.forEach(u => { let cleanUrl = u; const match = u.match(/(https?:\/\/[^"'\s>]+)/); if (match) cleanUrl = match[1]; if(screenshotsArray.length < 5 && cleanUrl) screenshotsArray.push(cleanUrl); }); }
+                if (screenshotsInput.files.length > 0) { const remainingSlots = 5 - screenshotsArray.length; if (remainingSlots > 0) { const filesToProcess = Math.min(screenshotsInput.files.length, remainingSlots); for(let i = 0; i < filesToProcess; i++) { const base64Img = await readFileAsBase64(screenshotsInput.files[i]); screenshotsArray.push(base64Img); } } }
+
+                // TỰ ĐỘNG CÂN KÝ (Kiểm tra xem file tải lên có lớn hơn 900KB không)
+                let estimatedSize = 0;
+                if(coverData && coverData.startsWith('data:image')) estimatedSize += coverData.length;
+                screenshotsArray.forEach(img => { if(img.startsWith('data:image')) estimatedSize += img.length; });
+                if(estimatedSize > 900000) { throw new Error("Dung lượng ảnh quá lớn! Vui lòng dùng Link URL (ImgBB) thay vì tải File."); }
+
+                const gameData = { title, author, version, progress, platform, transType, size, genre, team, cover: coverData, desc, adminMsg, is18, screenshots: screenshotsArray, links, createdAt: Date.now() };
+
                 if(isOnline) {
-                    if(gameId) { const dbId = gamesDB.find(g => g.id === gameId).dbId; await db.collection('games').doc(dbId).update(gameData); showToast("Cập nhật bài viết lên Cloud thành công!"); } 
-                    else { gameData.id = 'cloud_' + Date.now(); await db.collection('games').add(gameData); showToast("Đã lưu bài viết lên Cloud!"); }
+                    // Ép timeout 10 giây. Nếu mạng đứt hoặc Firebase lỗi, nó sẽ tự nhả nút ra thay vì treo mãi mãi.
+                    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("Mạng yếu hoặc chưa dán đúng Config Firebase!")), 10000));
+                    
+                    if(gameId) { 
+                        const dbId = gamesDB.find(g => g.id === gameId).dbId; 
+                        await Promise.race([ db.collection('games').doc(dbId).update(gameData), timeout ]);
+                        showToast("Cập nhật bài viết lên Cloud thành công!"); 
+                    } else { 
+                        gameData.id = 'cloud_' + Date.now(); 
+                        await Promise.race([ db.collection('games').add(gameData), timeout ]);
+                        showToast("Đã lưu bài viết lên Cloud!"); 
+                    }
                 } else {
                     if(gameId) { const index = gamesDB.findIndex(g => g.id === gameId); gamesDB[index] = { ...gamesDB[index], ...gameData }; showToast("Đã cập nhật (Local)!"); } 
                     else { gameData.id = 'local_' + Date.now(); gamesDB.unshift(gameData); showToast("Đã đăng bài (Local)!"); }
                     localStorage.setItem('nv_custom_games', JSON.stringify(gamesDB));
                 }
+                
                 resetAdminForm(); await loadGamesFromStorage(); renderGameGrid(); renderAdminManageList(); switchView('homeView');
-            } catch (error) { showToast("Lỗi tải lên! Thử dán Link URL thay vì Upload ảnh.", "error"); document.getElementById('adminSubmitBtn').innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> THỬ LẠI`; }
+            } catch (error) { 
+                // Báo lỗi đỏ chót và hồi sinh nút bấm để bro sửa sai
+                showToast(error.message || "Lỗi tải lên! Hãy ưu tiên dán Link URL.", "error"); 
+                console.error(error);
+            } finally {
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> THỬ LẠI LẦN NỮA`;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.disabled = false;
+            }
         }
 
         function startEditGame(gameId) {
@@ -512,7 +531,6 @@
                 if(isOnline) {
                     const snap = await db.collection('users').where('u', '==', u).get();
                     if(!snap.empty) return showToast("Tài khoản đã tồn tại!", "error");
-                    // UPDATE V19: THÊM vipLevel KHI ĐĂNG KÝ
                     await db.collection('users').add({u, p, avatar: '', vipLevel: 'none'});
                 } else {
                     let users = JSON.parse(localStorage.getItem('nv_users')) || [];
@@ -541,7 +559,6 @@
         function logout() { localStorage.removeItem('nv_current_user'); localStorage.removeItem('nv_role'); checkAuthState(); showToast("Đã đăng xuất!"); switchView('homeView'); }
         function checkAuthState() { const user = localStorage.getItem('nv_current_user'); const role = localStorage.getItem('nv_role'); const authC = document.getElementById('authContainer'); const userC = document.getElementById('userContainer'); const navAdmin = document.getElementById('navAdminBtn'); const navProfile = document.getElementById('navProfileBtn'); const mobAdmin = document.getElementById('mobileAdminBtn'); const mobProfile = document.getElementById('mobileProfileBtn'); if(user) { authC.classList.replace('md:flex', 'hidden'); userC.classList.replace('hidden', 'md:flex'); document.getElementById('userNameDisplay').innerText = user; document.getElementById('mobileAuthMenu').classList.add('hidden'); document.getElementById('mobileUserMenu').classList.remove('hidden'); document.getElementById('mobileUserMenu').classList.add('flex'); document.getElementById('mobileUserName').innerText = user; if(role === 'admin') { navAdmin.classList.remove('hidden'); mobAdmin.classList.remove('hidden'); navProfile.classList.remove('hidden'); mobProfile.classList.remove('hidden'); } else { navAdmin.classList.add('hidden'); mobAdmin.classList.add('hidden'); navProfile.classList.remove('hidden'); mobProfile.classList.remove('hidden'); } updateAvatarUI(); } else { authC.classList.replace('hidden', 'md:flex'); userC.classList.replace('md:flex', 'hidden'); document.getElementById('mobileAuthMenu').classList.remove('hidden'); document.getElementById('mobileUserMenu').classList.add('hidden'); document.getElementById('mobileUserMenu').classList.remove('flex'); navAdmin.classList.add('hidden'); mobAdmin.classList.add('hidden'); navProfile.classList.add('hidden'); mobProfile.classList.add('hidden'); } }
         
-        // UPDATE V19: CẬP NHẬT HUY HIỆU DỰA TRÊN VIP LEVEL
         async function updateProfileView() {
             const user = localStorage.getItem('nv_current_user'); const role = localStorage.getItem('nv_role'); if(!user) return switchView('homeView'); 
             document.getElementById('profileNameLarge').innerText = user;
