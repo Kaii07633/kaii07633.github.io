@@ -1,15 +1,10 @@
 {
-  "name": "neonvh-security-core",
+  "name": "neonvh-backend",
   "version": "1.0.0",
-  "description": "Lõi bảo mật 10 lớp cho hệ sinh thái NEON VN+",
-  "main": "api/index.js",
   "scripts": {
-    "start": "node api/index.js"
+    "start": "node api/get-config.js"
   },
   "dependencies": {
-    "crypto-js": "^4.2.0",
-    "dotenv": "^16.4.5"
-  },
-  "author": "Boss NeonVH",
-  "license": "MIT"
+    "crypto-js": "^4.2.0"
+  }
 }
