@@ -4,10 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <title>NEONVH • HỆ SINH THÁI TOÀN CẦU (MAX SECURITY)</title>  
     <script src="https://cdn.tailwindcss.com"></script>  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">  
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>  
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script> 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>  
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>  
 
 <style>  
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap');  
@@ -275,7 +273,7 @@
         <button onclick="closeAuthModal()" class="absolute top-5 right-6 text-gray-400 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>  
         <h2 id="authTitle" class="logo-font text-2xl md:text-3xl font-black text-center mb-6 neon-text text-white">ĐĂNG NHẬP</h2>  
         <form id="authForm" onsubmit="handleAuth(event)">  
-            <input id="authUsername" type="text" required placeholder="Tên tài khoản hoặc Email" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-4 text-sm">  
+            <input id="authUsername" type="text" required placeholder="Tên tài khoản" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-4 text-sm">  
             <input id="authPassword" type="password" required placeholder="Mật khẩu" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-6 text-sm">  
             <button type="submit" id="authSubmitBtn" class="w-full py-3 bg-[#bc13fe] text-white font-black rounded-xl hover:shadow-[0_0_20px_#bc13fe] transition text-sm">VÀO HỆ THỐNG</button>  
         </form>  
@@ -290,13 +288,14 @@
     // ==========================================  
     document.addEventListener('contextmenu', event => event.preventDefault());  
     document.onkeydown = function(e) {  
-        if(e.keyCode == 123) { return false; } 
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } 
+        if(e.keyCode == 123) { return false; } // Khóa F12  
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Khóa Ctrl+Shift+I  
         if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; }  
         if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; }  
-        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } 
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Khóa Ctrl+U  
     }  
 
+    // BẪY DEBUGGER LÀM ĐỨNG MÁY NẾU CỐ MỞ F12  
     setInterval(function() {  
         var before = new Date().getTime();  
         debugger;  
@@ -304,15 +303,22 @@
         if (after - before > 100) { document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%; font-family:sans-serif;'>HÀNH VI ĐÁNG NGỜ! MẠNG LƯỚI ĐÃ KHÓA IP CỦA BẠN.</h1>"; }  
     }, 1000);  
 
+    // ==========================================  
+    // CẤU HÌNH HỆ THỐNG CƠ BẢN  
+    // ==========================================  
     const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'%3E%3Crect width='500' height='500' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='24' font-weight='bold' fill='%23bc13fe' text-anchor='middle' dominant-baseline='middle'%3EL%E1%BB%97i Link %E1%BA%A2nh%3C/text%3E%3C/svg%3E";  
     const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;  
+      
+    // 👉 CHÚ Ý CHỖ NÀY: NHỚ ĐỔI ĐÚNG TÊN MIỀN VERCEL CỦA BRO  
+    const VERCEL_API = "https://neon-vh-github-io.vercel.app/api";  
 
     let gamesDB = []; let isLoginMode = true;   
     let db = null; let isOnline = false;  
       
     let lastActionTime = 0;   
-    const COOLDOWN_MS = 3000;  
+    const COOLDOWN_MS = 3000; // Anti-spam 3 giây  
 
+    // Lấy IP người dùng để log lại  
     async function getClientIP() {  
         try {  
             const res = await fetch('https://api.ipify.org?format=json');  
@@ -322,57 +328,29 @@
     }  
 
     // ==========================================  
-    // ĐIỀN CHÌA KHÓA FIREBASE CỦA ĐẠI CA VÀO ĐÂY!
-    // ==========================================  
-    const firebaseConfig = {
-        apiKey: "AIzaSyASYEtwTigOgBuL62xPr1qxNfh_ptO6dM4",
-        authDomain: "neonverse-69f48.firebaseapp.com",
-        projectId: "neonverse-69f48",
-        storageBucket: "neonverse-69f48.appspot.com",
-        messagingSenderId: "143866572915",
-        appId: "1:143866572915:web:3043304f13653e3133fa06"
-    };
-
-    // ==========================================  
-    // KHỞI TẠO WEB & LẮNG NGHE FIREBASE AUTH
+    // KHỞI TẠO WEB VÀ LẤY CHÌA KHÓA TỪ VERCEL BACKEND  
     // ==========================================  
     async function initApp() {  
-        document.getElementById('networkStatus').innerText = "Đang kết nối...";  
+        document.getElementById('networkStatus').innerText = "Đang kết nối Backend...";  
         document.getElementById('networkStatus').className = "text-[10px] font-bold text-yellow-400 ml-2 border border-yellow-400 px-2 py-0.5 rounded-full animate-pulse";  
           
         try {   
-            // 🚫 ĐÃ XÓA SẠCH VERCEL: Gọi thẳng Firebase luôn!
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            db = firebase.firestore();   
-            db.settings({ experimentalForceLongPolling: true, merge: true });  
-            isOnline = true;   
-
-            // LẮNG NGHE TỰ ĐỘNG FIREBASE AUTH
-            firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    const isAdmin = user.email.toLowerCase() === 'admin@neonvh.com' || user.email.toLowerCase() === 'boss@neonvh.com';
-                    const username = isAdmin ? 'Admin' : user.email.split('@')[0];
-                    
-                    localStorage.setItem('nv_current_user', username);
-                    localStorage.setItem('nv_role', isAdmin ? 'admin' : 'user');
-                    checkAuthState();
-                } else {
-                    localStorage.removeItem('nv_current_user');
-                    localStorage.removeItem('nv_role');
-                    checkAuthState();
-                }
-            });
-            
-            document.getElementById('networkStatus').innerText = "☁️ Secured Cloud";  
-            document.getElementById('networkStatus').className = "text-[10px] font-bold text-green-400 ml-2 border border-green-400 px-2 py-0.5 rounded-full";  
-            
+            // GỌI SANG VERCEL ĐỂ LẤY CONFIG FIREBASE AN TOÀN  
+            const response = await fetch(`${VERCEL_API}?type=get_gate`);  
+            const secureConfig = await response.json();  
+              
+            if(secureConfig && secureConfig.apiKey) {  
+                firebase.initializeApp(secureConfig);   
+                db = firebase.firestore();   
+                db.settings({ experimentalForceLongPolling: true, merge: true });  
+                isOnline = true;   
+            }  
         } catch(e) {   
-            console.error("Lỗi Khởi Tạo Firebase:", e);   
-            document.getElementById('networkStatus').innerText = "⚠️ Offline Mode";  
-            document.getElementById('networkStatus').className = "text-[10px] font-bold text-red-500 ml-2 border border-red-500 px-2 py-0.5 rounded-full";  
+            console.error("Không thể kết nối đến Backend Vercel:", e);   
         }  
+
+        document.getElementById('networkStatus').innerText = isOnline ? "☁️ Secured Cloud" : "⚠️ Offline Mode";  
+        document.getElementById('networkStatus').className = isOnline ? "text-[10px] font-bold text-green-400 ml-2 border border-green-400 px-2 py-0.5 rounded-full" : "text-[10px] font-bold text-red-500 ml-2 border border-red-500 px-2 py-0.5 rounded-full";  
           
         await loadGamesFromStorage();  
         renderGameGrid(); checkAuthState(); initParticles();  
@@ -414,6 +392,7 @@
         renderAdminUserList();  
     }  
 
+    // QUẢN LÝ TÀI KHOẢN VÀ AUTO XÓA 30 NGÀY  
     async function renderAdminUserList() {  
         let users = [];  
         const now = Date.now();  
@@ -421,9 +400,11 @@
 
         if(isOnline) {   
             const snap = await db.collection('users').get();   
+              
             for(let doc of snap.docs) {  
                 let uData = doc.data();  
                 let dbId = doc.id;  
+                  
                 if (uData.lastLogin && (now - uData.lastLogin > THIRTY_DAYS_MS)) {  
                     await db.collection('users').doc(dbId).delete();  
                     deletedCount++;  
@@ -431,7 +412,9 @@
                 }  
                 users.push({ dbId: dbId, ...uData });  
             }  
+              
             if (deletedCount > 0) showToast(`Đã tự động xóa ${deletedCount} acc không online quá 30 ngày!`);  
+
         } else {   
             let localUsers = JSON.parse(localStorage.getItem('nv_users')) || [];   
             users = localUsers.filter(u => {  
@@ -466,6 +449,7 @@
                             ${u.vipLevel === 'vvip' ? '💎 VVIP PREMIUM' : u.vipLevel === 'vip' ? '✨ VIP' : 'Thành viên'}  
                         </p>  
                         <div class="text-[10px] text-gray-400 mt-1 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">  
+                            <span><i class="fa-solid fa-key mr-1"></i> Pass: <span class="text-white">${u.p}</span></span>  
                             <span><i class="fa-solid fa-network-wired mr-1"></i> IP: <span class="text-[#00f0ff]">${u.ip || 'Chưa có'}</span></span>  
                             <span class="col-span-full mt-0.5"><i class="fa-regular fa-clock mr-1"></i> Online: ${dateStr}</span>  
                         </div>  
@@ -545,7 +529,11 @@
 
     async function handleAdminFormSubmit(e) {  
         e.preventDefault();   
-        if (Date.now() - lastActionTime < COOLDOWN_MS) { return showToast("Hệ thống đang xử lý, vui lòng đợi 3 giây!", "error"); }  
+          
+        // CHỐNG SPAM CLICK KHI ĐĂNG BÀI  
+        if (Date.now() - lastActionTime < COOLDOWN_MS) {  
+            return showToast("Hệ thống đang xử lý, vui lòng đợi 3 giây!", "error");  
+        }  
         lastActionTime = Date.now();  
 
         const btn = document.getElementById('adminSubmitBtn');  
@@ -574,6 +562,7 @@
 
             if(isOnline) {  
                 const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("LỖI KẾT NỐI: Backend chưa phản hồi!")), 25000));  
+                  
                 if(gameId) {   
                     const dbId = gamesDB.find(g => g.id === gameId).dbId;   
                     await Promise.race([ db.collection('games').doc(dbId).update(gameData), timeout ]);  
@@ -590,7 +579,10 @@
             }  
               
             resetAdminForm(); await loadGamesFromStorage(); renderGameGrid(); renderAdminManageList(); switchView('homeView');  
-        } catch (error) { showToast(error.message, "error"); console.error(error); } finally {  
+        } catch (error) {   
+            showToast(error.message, "error");   
+            console.error(error);  
+        } finally {  
             btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> LƯU LÊN DATABASE`;  
             btn.classList.remove('opacity-50', 'cursor-not-allowed');  
             btn.disabled = false;  
@@ -632,67 +624,139 @@
     function closeAuthModal() { document.getElementById('authModal').classList.remove('opacity-100'); setTimeout(() => document.getElementById('authModal').classList.add('hidden'), 300); }  
       
     // =================================================================  
-    // HÀM ĐĂNG NHẬP BẢO MẬT TUYỆT ĐỐI (DÙNG FIREBASE AUTHENTICATION)
+    // HÀM ĐĂNG NHẬP BẢO MẬT: XÁC THỰC QUA BACKEND VERCEL  
     // =================================================================  
     async function handleAuth(e) {   
         e.preventDefault();   
 
+        // CHỐNG SPAM BOT CLICK LIÊN TỤC  
         if (Date.now() - lastActionTime < COOLDOWN_MS) {  
             return showToast("Hệ thống đang chống Spam, vui lòng đợi 3 giây!", "error");  
         }  
         lastActionTime = Date.now();  
 
-        let u = document.getElementById('authUsername').value.trim();   
+        const u = document.getElementById('authUsername').value.trim();   
         const p = document.getElementById('authPassword').value;  
         const btn = document.getElementById('authSubmitBtn');  
           
-        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ĐANG XỬ LÝ...`;   
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ĐANG XÁC THỰC...`;   
         btn.disabled = true;  
 
         const userIP = await getClientIP();   
 
-        // CHIÊU TRÒ LƯỜI BIẾNG: Nếu đại ca gõ mỗi chữ Admin, tự động thêm đuôi email vào!
-        const email = u.includes('@') ? u : `${u}@neonvh.com`;
-        const username = u.includes('@') ? u.split('@')[0] : u;
-
-        try {  
-            if(!isLoginMode) {  
-                // ĐĂNG KÝ QUA FIREBASE AUTH  
-                await firebase.auth().createUserWithEmailAndPassword(email, p);
-
-                // GIỮ NGUYÊN CODE LƯU THÔNG TIN PHỤ LÊN FIRESTORE DB ĐỂ QUẢN LÝ PROFILE
-                if(isOnline) {  
-                    await db.collection('users').add({u: username, email: email, avatar: '', vipLevel: 'none', ip: userIP, lastLogin: Date.now()});  
-                } else {  
-                    let users = JSON.parse(localStorage.getItem('nv_users')) || [];  
-                    if(users.find(x => x.u.toLowerCase() === username.toLowerCase())) { showToast("Tài khoản đã tồn tại!", "error"); btn.innerHTML = "TẠO TÀI KHOẢN"; btn.disabled = false; return; }  
-                    users.push({u: username, email: email, avatar: '', vipLevel: 'none', ip: userIP, lastLogin: Date.now()}); localStorage.setItem('nv_users', JSON.stringify(users));  
+        if(!isLoginMode) {  
+            // KIỂM TRA ĐĂNG KÝ (KHÔNG CHO ĐĂNG KÝ TÊN ADMIN)  
+            try {  
+                const checkAdminReq = await fetch(`${VERCEL_API}?type=admin_verify&u=${u}&p=${p}`);  
+                const checkAdminRes = await checkAdminReq.json();  
+                  
+                if(checkAdminRes.role === "admin") {  
+                    showToast("Tên tài khoản này được bảo vệ bởi hệ thống!", "error");   
+                    btn.innerHTML = "TẠO TÀI KHOẢN"; btn.disabled = false; return;  
                 }  
-                
-                showToast("Đăng ký thành công! Đang tự động vào hệ thống..."); 
-                toggleAuthMode();  
-                closeAuthModal();
+            } catch(e) { console.error(e); }  
 
+            if(isOnline) {  
+                const snap = await db.collection('users').where('u', '==', u).get();  
+                if(!snap.empty) { showToast("Tài khoản đã tồn tại!", "error"); btn.innerHTML = "TẠO TÀI KHOẢN"; btn.disabled = false; return; }  
+                await db.collection('users').add({u, p, avatar: '', vipLevel: 'none', ip: userIP, lastLogin: Date.now()});  
             } else {  
-                // ĐĂNG NHẬP QUA FIREBASE AUTH
-                await firebase.auth().signInWithEmailAndPassword(email, p);
+                let users = JSON.parse(localStorage.getItem('nv_users')) || [];  
+                if(users.find(x => x.u.toLowerCase() === u.toLowerCase())) { showToast("Tài khoản đã tồn tại!", "error"); btn.innerHTML = "TẠO TÀI KHOẢN"; btn.disabled = false; return; }  
+                users.push({u, p, avatar: '', vipLevel: 'none', ip: userIP, lastLogin: Date.now()}); localStorage.setItem('nv_users', JSON.stringify(users));  
+            }  
+            showToast("Đăng ký thành công! Hãy đăng nhập."); toggleAuthMode();  
 
-                // GIỮ NGUYÊN CODE CẬP NHẬT IP CỦA ĐẠI CA
+        } else {  
+            // XÁC THỰC MẬT KHẨU ADMIN TỪ BACKEND  
+            let isAdmin = false;  
+            try {  
+                const checkAdminReq = await fetch(`${VERCEL_API}?type=admin_verify&u=${u}&p=${p}`);  
+                const checkAdminRes = await checkAdminReq.json();  
+                if(checkAdminRes.role === "admin") isAdmin = true;  
+            } catch(e) { console.error("Lỗi xác thực Backend", e); }  
+
+            if(isAdmin) {  
+                localStorage.setItem('nv_current_user', 'Admin');   
+                localStorage.setItem('nv_role', 'admin');  
+                showToast("Đặc quyền Admin mở khóa!");   
+                closeAuthModal(); checkAuthState(); switchView('adminView');  
+            } else {  
+                let validUserDoc = null;  
+                let isLocal = false;  
+                  
                 if(isOnline) {  
-                    const snap = await db.collection('users').where('u', '==', username).get();  
-                    if(!snap.empty) {
-                        await snap.docs[0].ref.update({ ip: userIP, lastLogin: Date.now() });
-                    }
+                    const snap = await db.collection('users').where('u', '==', u).where('p', '==', p).get();  
+                    if(!snap.empty) validUserDoc = snap.docs[0];  
                 } else {   
                     let users = JSON.parse(localStorage.getItem('nv_users')) || [];   
-                    const index = users.findIndex(x => x.u.toLowerCase() === username.toLowerCase());  
-                    if(index > -1) { 
-                        users[index].ip = userIP; users[index].lastLogin = Date.now();  
-                        localStorage.setItem('nv_users', JSON.stringify(users));  
-                    }  
+                    const foundIndex = users.findIndex(x => x.u.toLowerCase() === u.toLowerCase() && x.p === p);  
+                    if(foundIndex > -1) { validUserDoc = users[foundIndex]; isLocal = true; validUserDoc.localIndex = foundIndex; }  
                 }  
                   
-                showToast(`Chào mừng ${username} quay trở lại!`); 
-                closeAuthModal(); 
-                
-                // Tự động đẩy trang tuỳ chức
+                if(validUserDoc) {   
+                    if(isOnline) { await validUserDoc.ref.update({ ip: userIP, lastLogin: Date.now() }); }  
+                    else {   
+                        let users = JSON.parse(localStorage.getItem('nv_users'));   
+                        users[validUserDoc.localIndex].ip = userIP; users[validUserDoc.localIndex].lastLogin = Date.now();  
+                        localStorage.setItem('nv_users', JSON.stringify(users));  
+                    }  
+
+                    localStorage.setItem('nv_current_user', u); localStorage.setItem('nv_role', 'user');   
+                    showToast(`Chào mừng ${u}!`); closeAuthModal(); checkAuthState(); switchView('profileView');   
+                } else {   
+                    showToast("Sai tài khoản hoặc mật khẩu!", "error");   
+                }  
+            }  
+        }  
+        document.getElementById('authForm').reset();  
+        btn.innerHTML = isLoginMode ? "VÀO HỆ THỐNG" : "TẠO TÀI KHOẢN";   
+        btn.disabled = false;  
+    }  
+
+    function logout() { localStorage.removeItem('nv_current_user'); localStorage.removeItem('nv_role'); checkAuthState(); showToast("Đã đăng xuất!"); switchView('homeView'); }  
+    function checkAuthState() { const user = localStorage.getItem('nv_current_user'); const role = localStorage.getItem('nv_role'); const authC = document.getElementById('authContainer'); const userC = document.getElementById('userContainer'); const navAdmin = document.getElementById('navAdminBtn'); const navProfile = document.getElementById('navProfileBtn'); const mobAdmin = document.getElementById('mobileAdminBtn'); const mobProfile = document.getElementById('mobileProfileBtn'); if(user) { authC.classList.replace('md:flex', 'hidden'); userC.classList.replace('hidden', 'md:flex'); document.getElementById('userNameDisplay').innerText = user; document.getElementById('mobileAuthMenu').classList.add('hidden'); document.getElementById('mobileUserMenu').classList.remove('hidden'); document.getElementById('mobileUserMenu').classList.add('flex'); document.getElementById('mobileUserName').innerText = user; if(role === 'admin') { navAdmin.classList.remove('hidden'); mobAdmin.classList.remove('hidden'); navProfile.classList.remove('hidden'); mobProfile.classList.remove('hidden'); } else { navAdmin.classList.add('hidden'); mobAdmin.classList.add('hidden'); navProfile.classList.remove('hidden'); mobProfile.classList.remove('hidden'); } updateAvatarUI(); } else { authC.classList.replace('hidden', 'md:flex'); userC.classList.replace('md:flex', 'hidden'); document.getElementById('mobileAuthMenu').classList.remove('hidden'); document.getElementById('mobileUserMenu').classList.add('hidden'); document.getElementById('mobileUserMenu').classList.remove('flex'); navAdmin.classList.add('hidden'); mobAdmin.classList.add('hidden'); navProfile.classList.add('hidden'); mobProfile.classList.add('hidden'); } }  
+      
+    async function updateProfileView() {  
+        const user = localStorage.getItem('nv_current_user'); const role = localStorage.getItem('nv_role'); if(!user) return switchView('homeView');   
+        document.getElementById('profileNameLarge').innerText = user;  
+          
+        let vipLevel = 'none';  
+        if(role !== 'admin') {  
+            if(isOnline) { const snap = await db.collection('users').where('u', '==', user).get(); if(!snap.empty) vipLevel = snap.docs[0].data().vipLevel || 'none'; }   
+            else { const users = JSON.parse(localStorage.getItem('nv_users')) || []; const uObj = users.find(x => x.u === user); if(uObj) vipLevel = uObj.vipLevel || 'none'; }  
+        }  
+
+        const badge = document.getElementById('profileRoleBadge');  
+        const card = document.getElementById('profileContainerCard');  
+
+        if(role === 'admin') {  
+            badge.innerText = 'BẤT TỬ (ADMIN)'; badge.className = 'px-4 py-1 bg-yellow-400/20 text-yellow-400 border border-yellow-400 rounded-full text-xs font-bold uppercase tracking-widest mb-6 shadow-[0_0_10px_#facc15]';  
+            card.className = 'glass-panel rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden border-t-4 border-yellow-400 mb-8';  
+            document.getElementById('stat1-value').innerText = gamesDB.length; document.getElementById('stat1-label').innerText = "Đã đăng"; document.getElementById('stat2-value').innerText = "99+"; document.getElementById('stat2-label').innerText = "Tương tác";  
+            if(isOnline) { const snap = await db.collection('users').get(); document.getElementById('stat3-value').innerText = snap.size; } else { const usersList = JSON.parse(localStorage.getItem('nv_users')) || []; document.getElementById('stat3-value').innerText = usersList.length; } document.getElementById('stat3-label').innerText = "Người chơi";  
+        } else {  
+            if(vipLevel === 'vvip') {  
+                badge.innerText = '💎 VVIP PREMIUM'; badge.className = 'px-4 py-1 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white border-0 rounded-full text-xs font-black uppercase tracking-widest mb-6 shadow-[0_0_15px_#facc15] animate-pulse';  
+                card.className = 'glass-panel rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden border-t-4 border-yellow-400 mb-8';  
+            } else if(vipLevel === 'vip') {  
+                badge.innerText = '✨ VIP MEMBER'; badge.className = 'px-4 py-1 bg-gradient-to-r from-[#bc13fe] to-[#ff00ff] text-white border-0 rounded-full text-xs font-black uppercase tracking-widest mb-6 shadow-[0_0_15px_#bc13fe]';  
+                card.className = 'glass-panel rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden border-t-4 border-[#bc13fe] mb-8';  
+            } else {  
+                badge.innerText = 'THÀNH VIÊN VÀNG'; badge.className = 'px-4 py-1 bg-[#00f0ff]/20 text-[#00f0ff] border border-[#00f0ff] rounded-full text-xs font-bold uppercase tracking-widest mb-6';  
+                card.className = 'glass-panel rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden border-t-4 border-[#00f0ff] mb-8';  
+            }  
+            document.getElementById('stat1-value').innerText = "0"; document.getElementById('stat1-label').innerText = "Đã tải"; document.getElementById('stat2-value').innerText = "0"; document.getElementById('stat2-label').innerText = "Yêu thích"; document.getElementById('stat3-value').innerText = "0"; document.getElementById('stat3-label').innerText = "Bình luận";  
+        } updateAvatarUI();  
+    }  
+
+    function openLightbox(src) { const lb = document.getElementById('imageLightbox'); document.getElementById('lightboxImage').src = src; lb.classList.remove('hidden'); setTimeout(() => lb.classList.add('opacity-100'), 10); document.body.style.overflow = 'hidden'; }  
+    function closeLightbox() { const lb = document.getElementById('imageLightbox'); lb.classList.remove('opacity-100'); setTimeout(() => { lb.classList.add('hidden'); document.body.style.overflow = 'auto'; }, 300); }  
+    function toggleDrawer() { document.getElementById('mobileDrawer').classList.toggle('translate-x-full'); document.getElementById('mobileDrawer').classList.toggle('translate-x-0'); }  
+    function showToast(msg, type="success") { const c = document.getElementById('toastContainer'); const t = document.createElement('div'); const borderColor = type === "error" ? "border-red-500 shadow-[0_0_15px_red] text-red-500" : "border-[#00f0ff] shadow-[0_0_15px_#00f0ff] text-[#00f0ff]"; t.className = `glass-panel px-5 py-3 rounded-xl border ${borderColor} font-bold text-sm transform transition-all duration-300 translate-y-10 opacity-0 bg-black/90`; t.innerText = msg; c.appendChild(t); setTimeout(() => t.classList.remove('translate-y-10', 'opacity-0'), 10); setTimeout(() => { t.classList.add('opacity-0', 'translate-x-10'); setTimeout(() => t.remove(), 300); }, 3000); }  
+    function initParticles() { const c = document.getElementById("particleCanvas"); if(!c) return; const ctx = c.getContext("2d"); c.width = window.innerWidth; c.height = window.innerHeight; let p = []; for(let i=0; i<30; i++) p.push({ x: Math.random()*c.width, y: Math.random()*c.height, r: Math.random()*2, dx: (Math.random()-0.5)*0.5, dy: (Math.random()-0.5)*0.5 }); function draw() { ctx.clearRect(0, 0, c.width, c.height); ctx.fillStyle = "rgba(188, 19, 254, 0.5)"; p.forEach(i => { ctx.beginPath(); ctx.arc(i.x, i.y, i.r, 0, Math.PI * 2); ctx.fill(); i.x += i.dx; i.y += i.dy; if(i.x<0||i.x>c.width) i.dx*=-1; if(i.y<0||i.y>c.height) i.dy*=-1; }); requestAnimationFrame(draw); } draw(); }  
+    window.onload = initApp;  
+</script>
+
+</body>  
+</html>  
