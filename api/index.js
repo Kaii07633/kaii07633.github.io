@@ -1,77 +1,115 @@
 /**
- * CORE SECURITY INDEX - NEONVH ECOSYSTEM
- * Version: 2.0.4 - Max Security Mode
- * Developer: NeonVH Core Team
+ * ==============================================================================
+ * NEONVH MAIN HANDLER - SECURITY GATEWAY v3.0
+ * ------------------------------------------------------------------------------
+ * Chức năng: Routing, Authentication, Vault Management, Response Shielding.
+ * ==============================================================================
  */
 
-const security = require('./security');
-const config = require('./config');
-const auth = require('./auth');
-const logger = require('./logger'); // File log mới
-const crypto = require('./crypto');
+const shield = require('./core-shield');
 
+/**
+ * HÀM ĐÓNG GÓI PHẢN HỒI (Response Shielding)
+ * Mọi dữ liệu trả về đều được mã hóa AES-256 trước khi ra khỏi Server.
+ */
+const secureSend = (res, data, status = 200) => {
+    const stringifiedData = JSON.stringify(data);
+    const encryptedPayload = shield.engine.encrypt(stringifiedData);
+    
+    // Tạo chữ ký xác thực gói tin (Anti-Tamper)
+    const signature = shield.engine.hash(stringifiedData + process.env.SYSTEM_SECRET);
+
+    return res.status(status).json({
+        traceId: shield.engine.generateTraceId(),
+        timestamp: Date.now(),
+        payload: encryptedPayload,
+        sig: signature
+    });
+};
+
+/**
+ * BỘ LỌC XÁC THỰC ADMIN (Boss Auth)
+ */
+const verifyBossAccess = (u, p) => {
+    if (!u || !p) return false;
+    // Băm thông tin đầu vào và so sánh với Master Hash trong .env
+    const inputHash = shield.engine.hash(u + p);
+    return inputHash === process.env.ADMIN_HASH;
+};
+
+/**
+ * XỬ LÝ CHÍNH (Serverless Handler)
+ */
 export default async function handler(req, res) {
-    const startTime = Date.now();
-    const clientIP = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    
+    // 1. Áp dụng khiên Header ngay lập tức
+    shield.firewall.setSecureHeaders(res);
 
-    // 1. THIẾT LẬP HEADER BẢO MẬT TUYỆT ĐỐI
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'DENY');
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-    res.setHeader('Content-Security-Policy', "default-src 'self'");
+    // 2. Kiểm tra Preflight (OPTIONS) cho CORS
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
 
     try {
-        // 2. LỚP BẢO VỆ SỐ 1: CHỐNG DDOS & RATE LIMIT
-        const rateCheck = await security.isRateLimited(clientIP);
-        if (rateCheck) {
-            await logger.logIncident('DDOS_ATTEMPT', clientIP, req.headers);
-            return res.status(429).json({ 
-                code: "ERR_TOO_MANY_REQUESTS",
-                msg: "Hệ thống phát hiện hành vi spam. IP của bạn đã bị đưa vào danh sách theo dõi." 
-            });
+        // 3. KIỂM TRA AN NINH HÀNH VI (Anti-Spam & Anti-Bot)
+        if (shield.firewall.isSpamming(clientIP)) {
+            console.error(`[SECURITY] IP Banned temporarily: ${clientIP}`);
+            return res.status(429).json({ error: "Too many requests. Try again later." });
         }
 
-        // 3. LỚP BẢO VỆ SỐ 2: KIỂM TRA TÍNH TOÀN VẸN CỦA HEADER (ANTI-BOT)
-        const headerIntegrity = security.verifyHeaders(req.headers);
-        if (!headerIntegrity.valid) {
-            await logger.logIncident('INVALID_HEADERS', clientIP, headerIntegrity.reason);
-            return res.status(403).json({ error: "Access Denied: Protocol Violation." });
+        const identity = shield.firewall.validateIdentity(req.headers);
+        if (!identity.ok) {
+            return res.status(403).json({ error: `Access Denied: ${identity.msg}` });
         }
 
-        // 4. LỚP BẢO VỆ SỐ 3: KIỂM TRA MẬT MÃ HỆ THỐNG (SYSTEM SECRET)
-        const systemSecret = req.headers['x-neon-secret'];
-        if (!systemSecret || systemSecret !== process.env.SYSTEM_SECRET) {
-            await logger.logIncident('SECRET_MISMATCH', clientIP);
-            return res.status(401).json({ error: "Unauthorized: Invalid System Key." });
-        }
+        // 4. LÀM SẠCH DỮ LIỆU ĐẦU VÀO (Deep Sanitization)
+        const query = shield.sanitizer.cleanObject(req.query);
+        const body = req.method === 'POST' ? shield.sanitizer.cleanObject(req.body) : {};
 
-        // 5. PHÂN LUỒNG XỬ LÝ
-        const { type } = req.query;
+        const { type, action } = query;
 
+        // 5. PHÂN LUỒNG LOGIC (Routing)
         switch (type) {
+            
+            // TRẠM 1: LẤY CẤU HÌNH FIREBASE (Vault)
             case 'get_gate':
-                // Trả về Config Firebase đã được mã hóa AES-256 + IV
-                return await config.fetchSecureConfig(req, res);
+                const configVault = {
+                    apiKey: process.env.FB_API_KEY,
+                    authDomain: process.env.FB_AUTH_DOMAIN,
+                    projectId: process.env.FB_PROJECT_ID,
+                    storageBucket: process.env.FB_STORAGE_BUCKET,
+                    appId: process.env.FB_APP_ID
+                };
+                console.log(`[INFO] Gateway accessed by: ${clientIP}`);
+                return secureSend(res, configVault);
 
+            // TRẠM 2: XÁC THỰC QUYỀN BOSS (Admin Verify)
             case 'admin_verify':
-                // Xác thực quyền Boss thông qua băm SHA-512
-                return await auth.processAdminAuth(req, res);
+                const { u, p } = query; // Hoặc lấy từ body nếu dùng POST
+                if (verifyBossAccess(u, p)) {
+                    console.log(`[SUCCESS] Boss logged in from IP: ${clientIP}`);
+                    return secureSend(res, { 
+                        role: "admin", 
+                        status: "authenticated",
+                        token: shield.engine.hash(Date.now().toString()) 
+                    });
+                } else {
+                    console.warn(`[WARNING] Failed Admin login attempt from: ${clientIP}`);
+                    return res.status(401).json({ error: "Unauthorized access." });
+                }
 
-            case 'heartbeat':
-                // Kiểm tra trạng thái máy chủ
-                return res.status(200).json({ status: "Online", latency: `${Date.now() - startTime}ms` });
+            // TRẠM 3: KIỂM TRA TRẠNG THÁI (Heartbeat)
+            case 'status':
+                return secureSend(res, { system: "healthy", version: "3.0.4" });
 
             default:
-                await logger.logIncident('UNKNOWN_ENDPOINT', clientIP, { type });
-                return res.status(404).json({ error: "Endpoint not found." });
+                return res.status(404).json({ error: "API Endpoint not found." });
         }
 
     } catch (fatalError) {
-        // LOG LỖI TOÀN CỤC - KHÔNG ĐƯỢC HIỆN CHI TIẾT LỖI RA NGOÀI (TRÁNH EXPLOIT)
-        await logger.logError(fatalError, clientIP);
-        return res.status(500).json({ 
-            error: "Internal Server Error", 
-            traceId: crypto.generateShortId() 
-        });
+        // Log lỗi ẩn danh (Không bao giờ hiện chi tiết lỗi server cho người dùng)
+        console.error(`[CRITICAL_FAILURE] Trace: ${shield.engine.generateTraceId()} | Error:`, fatalError.message);
+        return res.status(500).json({ error: "Internal Gateway Error. Please contact admin." });
     }
 }
