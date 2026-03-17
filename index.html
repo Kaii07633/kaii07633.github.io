@@ -278,7 +278,7 @@
             <h2 id="authTitle" class="logo-font text-2xl md:text-3xl font-black text-center mb-6 neon-text text-white">ĐĂNG NHẬP</h2>
             <form id="authForm" onsubmit="handleAuth(event)">
                 <input id="authUsername" type="text" required placeholder="Tên tài khoản" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-4 text-sm">
-                <input id="authPassword" type="password" required placeholder="Mật khẩu" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-6 text-sm">
+                <input id="authPassword" type="password" required placeholder="                <input id="authPassword" type="password" required placeholder="Mật khẩu" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-6 text-sm">
                 <button type="submit" id="authSubmitBtn" class="w-full py-3 bg-[#bc13fe] text-white font-black rounded-xl hover:shadow-[0_0_20px_#bc13fe] transition text-sm">VÀO HỆ THỐNG</button>
             </form>
             <div class="mt-6 text-center text-xs text-gray-400"><span id="authSwitchText">Chưa có tài khoản?</span> <button onclick="toggleAuthMode()" id="authSwitchBtn" class="text-[#00f0ff] font-bold hover:underline ml-1">Đăng ký ngay</button></div>
@@ -610,8 +610,30 @@
         }
 
         function resetAdminForm() { document.getElementById('adGameId').value = ""; document.getElementById('adminForm').reset(); document.getElementById('adminSubmitBtn').innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> LƯU LÊN MÁY CHỦ`; }
-        function switchView(viewId) { localStorage.setItem('nv_current_view', viewId); const views = ['homeView', 'detailView', 'adminView', 'profileView']; views.forEach(id => { const el = document.getElementById(id); if(!el) return; if(id === viewId) { el.classList.remove('view-hidden'); el.classList.add('view-active'); } else { el.classList.remove('view-active'); el.classList.add('view-hidden'); } }); if(viewId === 'adminView') renderAdminManageList(); if(viewId === 'profileView') updateProfileView(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        function renderLinkButton(url, name, bgClass, iconClass) { if(!url) return ''; return `<a href="${url}" target="_blank" class="w-full py-3 md:py-3.5 ${bgClass} text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:opacity-80 hover:shadow-lg transition transform hover:-translate-y-1 text-sm"><i class="${iconClass}"></i> Tải qua ${name}</a>`; }
+        
+        function switchView(viewId) { 
+            localStorage.setItem('nv_current_view', viewId); 
+            const views = ['homeView', 'detailView', 'adminView', 'profileView']; 
+            views.forEach(id => { 
+                const el = document.getElementById(id); 
+                if(!el) return; 
+                if(id === viewId) { 
+                    el.classList.remove('view-hidden'); 
+                    el.classList.add('view-active'); 
+                } else { 
+                    el.classList.remove('view-active'); 
+                    el.classList.add('view-hidden'); 
+                } 
+            }); 
+            if(viewId === 'adminView') renderAdminManageList(); 
+            if(viewId === 'profileView') updateProfileView(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        }
+
+        function renderLinkButton(url, name, bgClass, iconClass) { 
+            if(!url) return ''; 
+            return `<a href="${url}" target="_blank" class="w-full py-3 md:py-3.5 ${bgClass} text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:opacity-80 hover:shadow-lg transition transform hover:-translate-y-1 text-sm"><i class="${iconClass}"></i> Tải qua ${name}</a>`; 
+        }
 
         function openGameDetail(gameId) {
             const game = gamesDB.find(g => g.id == gameId); if(!game) return; localStorage.setItem('nv_current_game', gameId);
@@ -763,3 +785,4 @@
     </script>
 </body>
 </html>
+
