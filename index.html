@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEONVERSE • HỆ SINH THÁI TOÀN CẦU V20</title>
+    <title>NEONVERSE • HỆ SINH THÁI TOÀN CẦU V21</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -212,15 +212,20 @@
                     </div>
                 </div>
 
+                <div class="bg-red-500/10 border border-red-500/50 p-4 rounded-xl mt-4">
+                    <p class="text-xs text-red-400 font-bold uppercase mb-2"><i class="fa-solid fa-triangle-exclamation mr-1"></i> LƯU Ý QUAN TRỌNG TỪ FIREBASE</p>
+                    <p class="text-xs text-gray-300">Firebase chỉ cho phép up ảnh <b>DƯỚI 1MB</b>. Nếu mạng lag hoặc bấm Lưu bị treo xoay vòng vòng, <b>100% là do bạn up ảnh quá nặng</b>. Lời khuyên: Hãy upload ảnh lên <a href="https://postimages.org/" target="_blank" class="text-yellow-400 underline">PostImages</a> hoặc ImgBB rồi dán Link URL vào ô dưới đây để web chạy mượt nhất!</p>
+                </div>
+
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Bìa (ƯU TIÊN DÁN LINK URL IMGBB)</label>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider mt-4">Ảnh Bìa</label>
                     <input id="adCoverFile" type="file" accept="image/*" class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-yellow-400 file:text-black hover:file:bg-yellow-300 transition cursor-pointer text-sm mb-2">
-                    <input id="adCoverUrl" type="text" placeholder="Dán Direct Link đuôi .jpg, .png (Để chống giật lag)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm">
+                    <input id="adCoverUrl" type="text" placeholder="Hoặc Dán Direct Link đuôi .jpg, .png (Khuyên dùng)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Giới Thiệu (ƯU TIÊN DÁN LINK URL IMGBB)</label>
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Ảnh Giới Thiệu (Tối đa 5 tấm)</label>
                     <input id="adScreenshotsFile" type="file" accept="image/*" multiple class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#bc13fe] file:text-white hover:file:bg-[#ff00ff] transition cursor-pointer text-sm mb-2">
-                    <textarea id="adScreenshotsUrl" placeholder="Dán các Direct Link Ảnh giới thiệu (Mỗi link 1 dòng)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm h-24 resize-none leading-relaxed"></textarea>
+                    <textarea id="adScreenshotsUrl" placeholder="Hoặc Dán các Direct Link Ảnh giới thiệu (Mỗi link 1 dòng)..." class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none text-sm h-24 resize-none leading-relaxed"></textarea>
                 </div>
                 <div><label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Nội dung tóm tắt</label><textarea id="adDesc" required class="w-full bg-black/60 border border-white/20 rounded-xl p-3 text-white focus:border-yellow-400 outline-none h-24 resize-none text-sm"></textarea></div>
                 <div>
@@ -402,7 +407,7 @@
             try {
                 showToast("Đang xử lý Avatar..."); 
                 const base64 = await readFileAsBase64(file); 
-                if(base64.length > 500000) throw new Error("Ảnh quá nặng (Khuyên dùng < 300KB)!"); // Kiểm tra size Avatar
+                if(base64.length > 500000) throw new Error("Ảnh quá nặng (Khuyên dùng < 300KB)!"); 
                 
                 const user = localStorage.getItem('nv_current_user');
                 if(user === "Admin") { localStorage.setItem('nv_admin_avatar', base64); } 
@@ -428,14 +433,13 @@
         }
 
         // ==========================================
-        // V20: HỆ THỐNG LƯU GAME ĐƯỢC BỌC THÉP CHỐNG LỖI TREO
+        // V21: FIX LỖI TREO NÚT + TĂNG THỜI GIAN ĐỢI MẠNG
         // ==========================================
         async function handleAdminFormSubmit(e) {
             e.preventDefault(); 
             const btn = document.getElementById('adminSubmitBtn');
             
-            // Đổi trạng thái nút và vô hiệu hóa để chống Spam click
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ĐANG LƯU DỮ LIỆU...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ĐANG ĐẨY LÊN MÂY...`;
             btn.classList.add('opacity-50', 'cursor-not-allowed');
             btn.disabled = true;
 
@@ -451,17 +455,20 @@
                 if(screenshotsUrlInput) { const urls = screenshotsUrlInput.split('\n').map(u => u.trim()).filter(u => u !== ''); urls.forEach(u => { let cleanUrl = u; const match = u.match(/(https?:\/\/[^"'\s>]+)/); if (match) cleanUrl = match[1]; if(screenshotsArray.length < 5 && cleanUrl) screenshotsArray.push(cleanUrl); }); }
                 if (screenshotsInput.files.length > 0) { const remainingSlots = 5 - screenshotsArray.length; if (remainingSlots > 0) { const filesToProcess = Math.min(screenshotsInput.files.length, remainingSlots); for(let i = 0; i < filesToProcess; i++) { const base64Img = await readFileAsBase64(screenshotsInput.files[i]); screenshotsArray.push(base64Img); } } }
 
-                // TỰ ĐỘNG CÂN KÝ (Kiểm tra xem file tải lên có lớn hơn 900KB không)
+                // KIỂM TRA DUNG LƯỢNG NGHIÊM NGẶT ĐỂ CHỐNG LỖI FIREBASE
                 let estimatedSize = 0;
                 if(coverData && coverData.startsWith('data:image')) estimatedSize += coverData.length;
                 screenshotsArray.forEach(img => { if(img.startsWith('data:image')) estimatedSize += img.length; });
-                if(estimatedSize > 900000) { throw new Error("Dung lượng ảnh quá lớn! Vui lòng dùng Link URL (ImgBB) thay vì tải File."); }
+                
+                if(estimatedSize > 700000) { 
+                    throw new Error("LỖI: Tổng dung lượng ảnh quá nặng (Bị Firebase chặn)! BẮT BUỘC dùng Link URL (ImgBB) để đăng."); 
+                }
 
                 const gameData = { title, author, version, progress, platform, transType, size, genre, team, cover: coverData, desc, adminMsg, is18, screenshots: screenshotsArray, links, createdAt: Date.now() };
 
                 if(isOnline) {
-                    // Ép timeout 10 giây. Nếu mạng đứt hoặc Firebase lỗi, nó sẽ tự nhả nút ra thay vì treo mãi mãi.
-                    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("Mạng yếu hoặc chưa dán đúng Config Firebase!")), 10000));
+                    // Nới lỏng Timeout thành 25 giây để 4G chạy mượt hơn
+                    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("Mạng 4G có thể đang nghẽn hoặc ảnh hơi nặng. Hãy dùng Link URL!")), 25000));
                     
                     if(gameId) { 
                         const dbId = gamesDB.find(g => g.id === gameId).dbId; 
@@ -480,11 +487,10 @@
                 
                 resetAdminForm(); await loadGamesFromStorage(); renderGameGrid(); renderAdminManageList(); switchView('homeView');
             } catch (error) { 
-                // Báo lỗi đỏ chót và hồi sinh nút bấm để bro sửa sai
                 showToast(error.message || "Lỗi tải lên! Hãy ưu tiên dán Link URL.", "error"); 
                 console.error(error);
             } finally {
-                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> THỬ LẠI LẦN NỮA`;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> LƯU LÊN DATABASE`;
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
                 btn.disabled = false;
             }
