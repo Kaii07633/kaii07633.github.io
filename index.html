@@ -277,7 +277,7 @@
         <h2 id="authTitle" class="logo-font text-2xl md:text-3xl font-black text-center mb-6 neon-text text-white">ĐĂNG NHẬP</h2>  
         <form id="authForm" onsubmit="handleAuth(event)">  
             <input id="authUsername" type="text" required placeholder="Tên tài khoản" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-4 text-sm">  
-            <input id="authPassword" type="password" required placeholder="Mật khẩu" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-6 text-sm">  
+            <input id="authPassword" type="password" placeholder="Mật khẩu (Trống nếu là Admin)" class="w-full bg-black/60 border border-white/20 rounded-xl py-3 px-4 text-white focus:border-[#bc13fe] outline-none mb-6 text-sm">  
             <button type="submit" id="authSubmitBtn" class="w-full py-3 bg-[#bc13fe] text-white font-black rounded-xl hover:shadow-[0_0_20px_#bc13fe] transition text-sm">VÀO HỆ THỐNG</button>  
         </form>  
         <div class="mt-6 text-center text-xs text-gray-400"><span id="authSwitchText">Chưa có tài khoản?</span> <button onclick="toggleAuthMode()" id="authSwitchBtn" class="text-[#00f0ff] font-bold hover:underline ml-1">Đăng ký ngay</button></div>  
@@ -287,38 +287,29 @@
 
 <script>  
     // ==========================================  
-    // KHÓA CHUỘT PHẢI & CHỐNG SOI CODE (F12)   
+    // IP CỦA BOSS (BẢO MẬT NHẬN DIỆN THIẾT BỊ)
     // ==========================================  
+    const ADMIN_IP = "171.242.196.88";
+
+    // KHÓA F12
     document.addEventListener('contextmenu', event => event.preventDefault());  
     document.onkeydown = function(e) {  
-        if(e.keyCode == 123) { return false; } // Khóa F12  
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Khóa Ctrl+Shift+I  
+        if(e.keyCode == 123) { return false; } 
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } 
         if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; }  
         if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; }  
-        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Khóa Ctrl+U  
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } 
     }  
 
-    // BẪY DEBUGGER LÀM ĐỨNG MÁY NẾU CỐ MỞ F12  
-    setInterval(function() {  
-        var before = new Date().getTime();  
-        debugger;  
-        var after = new Date().getTime();  
-        if (after - before > 100) { document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%; font-family:sans-serif;'>HÀNH VI ĐÁNG NGỜ! MẠNG LƯỚI ĐÃ KHÓA IP CỦA BẠN.</h1>"; }  
-    }, 1000);  
-
-    // ==========================================  
-    // CẤU HÌNH HỆ THỐNG CƠ BẢN  
-    // ==========================================  
     const fallbackImg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500' viewBox='0 0 500 500'%3E%3Crect width='500' height='500' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='24' font-weight='bold' fill='%23bc13fe' text-anchor='middle' dominant-baseline='middle'%3EL%E1%BB%97i Link %E1%BA%A2nh%3C/text%3E%3C/svg%3E";  
     const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;  
 
     let gamesDB = []; let isLoginMode = true;   
     let db = null; let isOnline = false;  
-      
     let lastActionTime = 0;   
-    const COOLDOWN_MS = 3000; // Anti-spam 3 giây  
+    const COOLDOWN_MS = 3000; 
 
-    // Lấy IP người dùng để log lại  
+    // Lấy IP
     async function getClientIP() {  
         try {  
             const res = await fetch('https://api.ipify.org?format=json');  
@@ -327,47 +318,60 @@
         } catch(e) { return "Không xác định"; }  
     }  
 
-    // ==========================================  
-    // KHỞI TẠO BẢO MẬT (GIẢI MÃ TRỰC TIẾP TẠI CHỖ)  
-    // ==========================================  
+    // =========================================================
+    // KHỞI TẠO BẢO MẬT & TỰ ĐỘNG ĐĂNG NHẬP THEO IP
+    // =========================================================
     async function initApp() {  
-        document.getElementById('networkStatus').innerText = "Đang kết nối...";  
-        document.getElementById('networkStatus').className = "text-[10px] font-bold text-yellow-400 ml-2 border border-yellow-400 px-2 py-0.5 rounded-full animate-pulse";  
+        const statusEl = document.getElementById('networkStatus');
+        if(statusEl) {
+            statusEl.innerText = "Đang khởi động Core...";  
+            statusEl.className = "text-[10px] font-bold text-yellow-400 ml-2 border border-yellow-400 px-2 py-0.5 rounded-full animate-pulse";  
+        }
           
         try {   
-            // 1. CHÌA KHÓA ĐÃ ĐƯỢC MÃ HÓA CỨNG
-            const HASHED_KEY = "U2FsdGVkX181pW13yJtM3DntE1+j8N/tH201jWwzN4zB7kR2+HkK3WwzN4zB7kR2+HkK3WwzN4zB7kR2+HkK3WwzN4zB7kR2+HkK3WwzN4zB7kR2+HkK3WwzN4zB7kR2+HkK3WwzN4zB7kR2+HkK3WwzN4zB7kR2+HkK3WwzN4zB7kR2+HkK3WwzN4zB7kR2+HkK3WwzN4zB7kR2"; 
-            const SECRET_PASS = "NeonVH_TuyetMat_2026"; 
+            // 1. API KEY ĐƯỢC ẨN GIẤU BẰNG BASE64
+            const ENCRYPTED_CONFIG = "eyJhcGlLZXkiOiJBSXphU3lBU1lFdHdUaWdPZ0J1TDYyeFByMXF4TmZoX3B0TzZkTTQiLCJhdXRoRG9tYWluIjoibmVvbnZlcnNlLTY5ZjQ4LmZpcmViYXNlYXBwLmNvbSIsInByb2plY3RJZCI6Im5lb252ZXJzZS02OWY0OCIsInN0b3JhZ2VCdWNrZXQiOiJuZW9udmVyc2UtNjlmNDguYXBwc3BvdC5jb20iLCJtZXNzYWdpbmdTZW5kZXJJZCI6IjE0Mzg2NjU3MjkxNSIsImFwcElkIjoiMToxNDM4NjY1NzI5MTU6d2ViOjMwNDMzMDRmMTM2NTNlMzEzM2ZhMDYifQ=="; 
             
-            // 2. MỞ KHÓA VÀ KHỞI TẠO
-            const secureConfig = {
-              "apiKey": "AIzaSyASYEtwTigOgBuL62xPr1qxNfh_ptO6dM4",
-              "authDomain": "neonverse-69f48.firebaseapp.com",
-              "projectId": "neonverse-69f48",
-              "storageBucket": "neonverse-69f48.appspot.com",
-              "messagingSenderId": "143866572915",
-              "appId": "1:143866572915:web:3043304f13653e3133fa06"
-            };
+            // 2. GIẢI MÃ TẠI CHỖ
+            const decodedString = atob(ENCRYPTED_CONFIG);
+            const secureConfig = JSON.parse(decodedString);
 
+            // 3. BƠM VÀO FIREBASE
             if (!firebase.apps.length) {
                 firebase.initializeApp(secureConfig);   
             }
             db = firebase.firestore();   
             db.settings({ experimentalForceLongPolling: true, merge: true });  
             isOnline = true;   
+            
+            if(statusEl) {
+                statusEl.innerText = "☁️ Secured Cloud";  
+                statusEl.className = "text-[10px] font-bold text-green-400 ml-2 border border-green-400 px-2 py-0.5 rounded-full";  
+            }
+
+            // 4. KIỂM TRA IP - AUTO LOGIN BOSS
+            const userIP = await getClientIP();
+            if(userIP === ADMIN_IP && localStorage.getItem('nv_current_user') !== 'Admin') {
+                localStorage.setItem('nv_current_user', 'Admin');   
+                localStorage.setItem('nv_role', 'admin');
+                showToast("Nhận diện Thiết bị Admin thành công!");
+            }
+
         } catch(e) {   
             console.error("Lỗi khởi tạo:", e);   
+            if(statusEl) {
+                statusEl.innerText = "⚠️ Lỗi Core";  
+                statusEl.className = "text-[10px] font-bold text-red-500 ml-2 border border-red-500 px-2 py-0.5 rounded-full";  
+            }
         }  
 
-        document.getElementById('networkStatus').innerText = isOnline ? "☁️ Secured Cloud" : "⚠️ Offline Mode";  
-        document.getElementById('networkStatus').className = isOnline ? "text-[10px] font-bold text-green-400 ml-2 border border-green-400 px-2 py-0.5 rounded-full" : "text-[10px] font-bold text-red-500 ml-2 border border-red-500 px-2 py-0.5 rounded-full";  
-          
         await loadGamesFromStorage();  
         renderGameGrid(); checkAuthState(); initParticles();  
         const savedView = localStorage.getItem('nv_current_view') || 'homeView';  
         if(savedView === 'detailView') { const savedGameId = localStorage.getItem('nv_current_game'); if(savedGameId) openGameDetail(savedGameId); else switchView('homeView'); } else { switchView(savedView); }  
-    }  
+    }
 
+    // Các hàm phụ trợ
     async function loadGamesFromStorage() {  
         if(isOnline) {  
             try { const snapshot = await db.collection('games').orderBy('createdAt', 'desc').get(); gamesDB = snapshot.docs.map(doc => ({ dbId: doc.id, ...doc.data() })); }   
@@ -402,7 +406,6 @@
         renderAdminUserList();  
     }  
 
-    // QUẢN LÝ TÀI KHOẢN VÀ AUTO XÓA 30 NGÀY  
     async function renderAdminUserList() {  
         let users = [];  
         const now = Date.now();  
@@ -410,11 +413,9 @@
 
         if(isOnline) {   
             const snap = await db.collection('users').get();   
-              
             for(let doc of snap.docs) {  
                 let uData = doc.data();  
                 let dbId = doc.id;  
-                  
                 if (uData.lastLogin && (now - uData.lastLogin > THIRTY_DAYS_MS)) {  
                     await db.collection('users').doc(dbId).delete();  
                     deletedCount++;  
@@ -422,9 +423,7 @@
                 }  
                 users.push({ dbId: dbId, ...uData });  
             }  
-              
             if (deletedCount > 0) showToast(`Đã tự động xóa ${deletedCount} acc không online quá 30 ngày!`);  
-
         } else {   
             let localUsers = JSON.parse(localStorage.getItem('nv_users')) || [];   
             users = localUsers.filter(u => {  
@@ -539,8 +538,6 @@
 
     async function handleAdminFormSubmit(e) {  
         e.preventDefault();   
-          
-        // CHỐNG SPAM CLICK KHI ĐĂNG BÀI  
         if (Date.now() - lastActionTime < COOLDOWN_MS) {  
             return showToast("Hệ thống đang xử lý, vui lòng đợi 3 giây!", "error");  
         }  
@@ -669,12 +666,24 @@
             showToast("Đăng ký thành công! Hãy đăng nhập."); toggleAuthMode();  
 
         } else {  
-            if(u === 'Admin' && p === 'Admin123') {  
-                localStorage.setItem('nv_current_user', 'Admin');   
-                localStorage.setItem('nv_role', 'admin');  
-                showToast("Đặc quyền Admin mở khóa!");   
-                closeAuthModal(); checkAuthState(); switchView('adminView');  
-            } else {  
+            // ---------------------------------------------------------
+            // ĐĂNG NHẬP ADMIN BẰNG IP (BỎ MẬT KHẨU)
+            // ---------------------------------------------------------
+            if(u.toLowerCase() === 'admin') {  
+                if(userIP === ADMIN_IP) {
+                    localStorage.setItem('nv_current_user', 'Admin');   
+                    localStorage.setItem('nv_role', 'admin');  
+                    showToast("Nhận diện IP Admin thành công! Đã mở khóa.");   
+                    closeAuthModal(); checkAuthState(); switchView('adminView');
+                } else {
+                    showToast("CẢNH BÁO: Thiết bị lạ! Bạn không phải là Admin.", "error");   
+                    btn.innerHTML = "VÀO HỆ THỐNG"; btn.disabled = false;
+                }
+                return;
+            } 
+            
+            // ĐĂNG NHẬP USER THƯỜNG
+            else {  
                 let validUserDoc = null;  
                   
                 if(isOnline) {  
@@ -748,7 +757,6 @@
     function showToast(msg, type="success") { const c = document.getElementById('toastContainer'); const t = document.createElement('div'); const borderColor = type === "error" ? "border-red-500 shadow-[0_0_15px_red] text-red-500" : "border-[#00f0ff] shadow-[0_0_15px_#00f0ff] text-[#00f0ff]"; t.className = `glass-panel px-5 py-3 rounded-xl border ${borderColor} font-bold text-sm transform transition-all duration-300 translate-y-10 opacity-0 bg-black/90`; t.innerText = msg; c.appendChild(t); setTimeout(() => t.classList.remove('translate-y-10', 'opacity-0'), 10); setTimeout(() => { t.classList.add('opacity-0', 'translate-x-10'); setTimeout(() => t.remove(), 300); }, 3000); }  
     function initParticles() { const c = document.getElementById("particleCanvas"); if(!c) return; const ctx = c.getContext("2d"); c.width = window.innerWidth; c.height = window.innerHeight; let p = []; for(let i=0; i<30; i++) p.push({ x: Math.random()*c.width, y: Math.random()*c.height, r: Math.random()*2, dx: (Math.random()-0.5)*0.5, dy: (Math.random()-0.5)*0.5 }); function draw() { ctx.clearRect(0, 0, c.width, c.height); ctx.fillStyle = "rgba(188, 19, 254, 0.5)"; p.forEach(i => { ctx.beginPath(); ctx.arc(i.x, i.y, i.r, 0, Math.PI * 2); ctx.fill(); i.x += i.dx; i.y += i.dy; if(i.x<0||i.x>c.width) i.dx*=-1; if(i.y<0||i.y>c.height) i.dy*=-1; }); requestAnimationFrame(draw); } draw(); }  
     
-    // KÍCH HOẠT HỆ THỐNG ÉP BUỘC
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initApp);
     } else {
