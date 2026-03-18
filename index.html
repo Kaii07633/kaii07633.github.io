@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>  <html lang="vi">  
 <head>  
     <meta charset="UTF-8">  
@@ -45,6 +46,8 @@
           
         <div class="hidden md:flex items-center gap-6 text-sm font-bold tracking-wider">  
             <a href="#" onclick="switchView('homeView')" class="hover:text-[#bc13fe] transition">TRANG CHỦ</a>  
+            <a href="#" onclick="switchView('taixiuView')" class="text-[#00f0ff] hover:text-white transition"><i class="fa-solid fa-dice mr-1"></i> TÀI XỈU</a>  
+            
             <div class="relative">  
                 <input type="text" oninput="handleSearch(this.value)" placeholder="Tìm Tên / Tag game..." class="bg-black/50 border border-white/20 rounded-full py-2 px-4 text-xs text-white focus:border-[#bc13fe] outline-none w-48 focus:w-64 transition-all">  
                 <i class="fa-solid fa-magnifying-glass absolute right-3 top-2.5 text-gray-400 text-xs"></i>  
@@ -77,7 +80,9 @@
     </div>  
     <div class="flex flex-col gap-4 mb-8 border-b border-white/10 pb-6">  
         <button onclick="switchView('homeView'); toggleDrawer()" class="w-full text-left font-bold text-lg hover:text-[#bc13fe]">TRANG CHỦ</button>  
-        <button id="mobileProfileBtn" onclick="switchView('profileView'); toggleDrawer()" class="w-full text-left font-bold text-lg text-[#00f0ff] hover:text-white hidden"><i class="fa-solid fa-user mr-2"></i> HỒ SƠ</button>  
+        <button onclick="switchView('taixiuView'); toggleDrawer()" class="w-full text-left font-bold text-lg text-[#00f0ff] hover:text-white"><i class="fa-solid fa-dice mr-2"></i> TÀI XỈU</button>  
+
+        <button id="mobileProfileBtn" onclick="switchView('profileView'); toggleDrawer()" class="w-full text-left font-bold text-lg text-[#bc13fe] hover:text-white hidden"><i class="fa-solid fa-user mr-2"></i> HỒ SƠ</button>  
         <button id="mobileAdminBtn" onclick="switchView('adminView'); toggleDrawer()" class="w-full text-left font-bold text-lg text-yellow-400 hover:text-white hidden"><i class="fa-solid fa-lock mr-2"></i> TRANG ADMIN</button>  
     </div>  
     <div id="mobileAuthMenu" class="flex flex-col gap-3 mb-8">  
@@ -102,7 +107,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="glass-panel p-5 rounded-2xl border-t-2 border-yellow-400 relative overflow-hidden">
                 <div class="absolute -right-4 -top-4 text-yellow-400/10 text-6xl"><i class="fa-solid fa-crown"></i></div>
-                <h3 class="logo-font text-yellow-400 font-bold mb-4 text-lg"><i class="fa-solid fa-crown mr-2"></i> TOP ĐẠI GIA (VIP)</h3>
+                <h3 class="logo-font text-yellow-400 font-bold mb-4 text-lg"><i class="fa-solid fa-crown mr-2"></i> TOP SERVER</h3>
                 <div id="leaderboardVip" class="flex flex-col gap-3 relative z-10">Đang tải...</div>
             </div>
             <div class="glass-panel p-5 rounded-2xl border-t-2 border-[#bc13fe] relative overflow-hidden">
@@ -123,6 +128,35 @@
         <div id="gameGridContainer" class="flex flex-col gap-3 md:gap-4 scroll-mt-24"></div>  
     </div>  
 </div>  
+
+<div id="taixiuView" class="view-section view-hidden max-w-screen-md mx-auto px-4 md:px-6 pt-28 pb-20">
+    <div class="glass-panel rounded-3xl p-6 md:p-10 relative overflow-hidden border-t-4 border-[#00f0ff] mb-8">
+        <h2 class="logo-font text-3xl md:text-4xl font-black text-center mb-2 text-[#00f0ff] drop-shadow-[0_0_15px_#00f0ff]"><i class="fa-solid fa-dice"></i> TÀI XỈU NEON</h2>
+        <p class="text-center text-gray-300 text-sm mb-6">Thử vận may - Trúng thưởng lớn</p>
+        
+        <div class="bg-black/60 border border-white/10 rounded-xl p-4 mb-8 text-center shadow-[inset_0_0_15px_rgba(0,0,0,0.8)]">
+            <p class="text-xs text-gray-400 font-bold uppercase tracking-widest mb-1">Số dư hiện tại</p>
+            <div id="txUserCoin" class="text-3xl font-black text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">0 <span class="text-base text-white">COIN</span></div>
+        </div>
+
+        <div class="flex justify-center gap-6 my-8 text-6xl md:text-8xl text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" id="diceFaces">
+            <i class="fa-solid fa-dice-one"></i>
+            <i class="fa-solid fa-dice-two"></i>
+            <i class="fa-solid fa-dice-three"></i>
+        </div>
+
+        <div class="text-center text-xl md:text-2xl font-black text-white mb-6 min-h-[40px] uppercase tracking-wider" id="txResultText">Mời đặt cược!</div>
+
+        <div class="flex gap-4 justify-center mb-6">
+            <button id="btnBetXiu" onclick="selectBet('xiu')" class="flex-1 py-4 rounded-xl border-2 border-blue-500 text-blue-500 font-black text-xl hover:bg-blue-500 hover:text-white transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)]">XỈU<br><span class="text-xs font-normal">(4 - 10)</span></button>
+            <button id="btnBetTai" onclick="selectBet('tai')" class="flex-1 py-4 rounded-xl border-2 border-red-500 text-red-500 font-black text-xl hover:bg-red-500 hover:text-white transition-all shadow-[0_0_15px_rgba(239,68,68,0.3)]">TÀI<br><span class="text-xs font-normal">(11 - 17)</span></button>
+        </div>
+
+        <input type="number" id="txBetAmount" placeholder="Nhập số Coin cược (Tối thiểu 10)..." class="w-full bg-black/80 border border-white/20 p-4 rounded-xl text-center text-white font-bold text-lg mb-6 focus:border-[#00f0ff] outline-none transition-all">
+        
+        <button onclick="rollDice()" class="w-full py-5 bg-gradient-to-r from-[#00f0ff] to-[#bc13fe] text-white font-black text-xl rounded-xl hover:shadow-[0_0_30px_#00f0ff] transition-all transform hover:scale-105 tracking-widest"><i class="fa-solid fa-play mr-2"></i> BẮT ĐẦU LẮC</button>
+    </div>
+</div>
 
 <div id="detailView" class="view-section view-hidden max-w-screen-xl mx-auto px-4 md:px-6 pt-28 pb-20">  
     <button onclick="switchView('homeView')" class="mb-6 text-gray-400 hover:text-[#bc13fe] transition font-bold flex items-center gap-2 group text-sm md:text-base">  
@@ -260,6 +294,30 @@
         </form>  
     </div>  
 
+    <div class="glass-panel rounded-2xl md:rounded-3xl p-6 md:p-8 border-t-4 border-orange-500 relative overflow-hidden mb-8">
+        <h3 class="logo-font text-xl md:text-2xl font-black text-orange-500 mb-4 uppercase tracking-wider"><i class="fa-solid fa-dice mr-2"></i> Quản Lý Tài Xỉu & Coin</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-black/40 border border-white/10 p-4 rounded-xl">
+                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Tỉ lệ thắng của Server (%)</label>
+                <div class="flex gap-2">
+                    <input id="cfgWinRate" type="number" min="0" max="100" placeholder="Ví dụ: 30" class="flex-1 bg-black border border-white/20 rounded-lg p-2.5 text-white focus:border-orange-500 outline-none text-sm">
+                    <button onclick="saveTaixiuConfig()" class="px-4 py-2 bg-orange-500 text-white font-bold rounded-lg hover:shadow-[0_0_15px_#f97316] transition text-sm">LƯU TỈ LỆ</button>
+                </div>
+                <p class="text-[10px] text-gray-500 mt-2">*Để 50 là ngẫu nhiên xanh chín. Để thấp tụi nó chơi tạch suốt.</p>
+            </div>
+            <div class="bg-black/40 border border-white/10 p-4 rounded-xl">
+                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Cộng/Trừ Coin Người Chơi</label>
+                <div class="flex flex-col gap-2">
+                    <input id="adminCoinUser" type="text" placeholder="Tên tài khoản người chơi" class="w-full bg-black border border-white/20 rounded-lg p-2.5 text-white focus:border-orange-500 outline-none text-sm">
+                    <div class="flex gap-2">
+                        <input id="adminCoinAmount" type="number" placeholder="Nhập số Coin (VD: 5000 hoặc -1000)" class="flex-1 bg-black border border-white/20 rounded-lg p-2.5 text-white focus:border-orange-500 outline-none text-sm">
+                        <button onclick="adminModifyCoin()" class="px-4 py-2 border border-orange-500 text-orange-500 font-bold rounded-lg hover:bg-orange-500 hover:text-white transition text-sm whitespace-nowrap">BƠM COIN</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="glass-panel rounded-2xl md:rounded-3xl p-6 md:p-8 border-t-4 border-[#bc13fe] relative overflow-hidden mb-8">
         <h3 class="logo-font text-xl md:text-2xl font-black text-[#bc13fe] mb-4 uppercase tracking-wider"><i class="fa-solid fa-money-bill-wave mr-2"></i> Cài Đặt Gói VIP</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -307,7 +365,7 @@
           
         <div class="w-full grid grid-cols-3 gap-4 border-t border-white/10 pt-6">  
             <div class="text-center"><div class="text-2xl font-black text-[#bc13fe]" id="stat1-value">0</div><div class="text-xs text-gray-400 uppercase tracking-widest" id="stat1-label">Đã tải</div></div>  
-            <div class="text-center border-x border-white/10"><div class="text-2xl font-black text-yellow-400" id="stat2-value">0</div><div class="text-xs text-gray-400 uppercase tracking-widest" id="stat2-label">Yêu thích</div></div>  
+            <div class="text-center border-x border-white/10"><div class="text-2xl font-black text-yellow-400 flex items-center justify-center gap-1" id="stat2-value">0</div><div class="text-xs text-gray-400 uppercase tracking-widest" id="stat2-label">Neon Coin</div></div>  
             <div class="text-center"><div class="text-2xl font-black text-[#00f0ff]" id="stat3-value">0</div><div class="text-xs text-gray-400 uppercase tracking-widest" id="stat3-label">Bình luận</div></div>  
         </div>  
     </div>  
@@ -380,7 +438,7 @@
     }
 
     // ==========================================  
-    // 2. CHỐNG SOI CODE BẢN NÂNG CẤP  
+    // 2. CHỐNG SOI CODE  
     // ==========================================  
     document.addEventListener('contextmenu', event => event.preventDefault());  
     document.onkeydown = function(e) {  
@@ -413,6 +471,10 @@
     let lastActionTime = 0;   
     const COOLDOWN_MS = 3000; 
     let globalVipConfig = { priceVip: 50000, priceVvip: 100000, bankInfo: "Momo - 0123456789 - NGUYEN VAN A" };
+    let globalTaixiuConfig = { winRate: 50 }; // Mặc định Tài Xỉu 50%
+
+    // BIẾN MINI GAME TÀI XỈU
+    let currentBetType = '';
 
     async function getClientIP() {  
         try {  
@@ -450,11 +512,11 @@
                 statusEl.className = "text-[10px] font-bold text-green-400 ml-2 border border-green-400 px-2 py-0.5 rounded-full";  
             }
 
-            // Load Cấu hình VIP từ Firebase
+            // Load Cấu hình VIP & TÀI XỈU từ Firebase
             const cfgSnap = await db.collection('settings').doc('vip_config').get();
-            if(cfgSnap.exists) {
-                globalVipConfig = cfgSnap.data();
-            }
+            if(cfgSnap.exists) { globalVipConfig = cfgSnap.data(); }
+            const txSnap = await db.collection('settings').doc('taixiu_config').get();
+            if(txSnap.exists) { globalTaixiuConfig = txSnap.data(); }
 
         } catch(e) {   
             console.error("Lỗi khởi tạo:", e);   
@@ -464,12 +526,10 @@
             }
         }  
 
-        // KIỂM TRA HẠN VIP KHI LOAD APP
         await checkVipExpiration();
-
         await loadGamesFromStorage();  
         renderGameGrid(); 
-        renderLeaderboard(); // GỌI RENDER BẢNG XẾP HẠNG
+        renderLeaderboard(); 
         checkAuthState(); 
         initParticles();  
         
@@ -486,7 +546,6 @@
             if(!snap.empty) {
                 const uData = snap.docs[0].data();
                 if(uData.vipExpiry && uData.vipExpiry < Date.now()) {
-                    // Đã hết hạn VIP
                     await snap.docs[0].ref.update({ vipLevel: 'none', vipExpiry: firebase.firestore.FieldValue.delete() });
                     localStorage.setItem('nv_vip_level', 'none');
                     showToast("Gói VIP của bạn đã hết hạn!", "error");
@@ -504,9 +563,11 @@
         } else { gamesDB = JSON.parse(localStorage.getItem('nv_custom_games')) || []; }  
     }  
 
+    // =========================================================
     // RENDER BẢNG XẾP HẠNG TRANG CHỦ
+    // =========================================================
     async function renderLeaderboard() {
-        // Render Game Mới Update (Lấy 5 game đầu)
+        // Top 5 Game Mới Nhất
         const gameContainer = document.getElementById('leaderboardGames');
         if(gameContainer) {
             const topGames = gamesDB.slice(0, 5);
@@ -523,7 +584,7 @@
             `).join('');
         }
 
-        // Render Top VIP
+        // Top Server VIP
         const vipContainer = document.getElementById('leaderboardVip');
         if(vipContainer && isOnline) {
             try {
@@ -531,17 +592,16 @@
                 let allUsers = [];
                 snap.forEach(doc => allUsers.push(doc.data()));
                 
-                // Lọc VIP và VVIP, xếp VVIP trước
                 let vips = allUsers.filter(u => u.vipLevel === 'vvip' || u.vipLevel === 'vip');
                 vips.sort((a, b) => {
                     if (a.vipLevel === 'vvip' && b.vipLevel === 'vip') return -1;
                     if (a.vipLevel === 'vip' && b.vipLevel === 'vvip') return 1;
-                    return (b.lastLogin || 0) - (a.lastLogin || 0); // Ưu tiên thằng vừa login
+                    return (b.lastLogin || 0) - (a.lastLogin || 0); 
                 });
                 vips = vips.slice(0, 5);
 
                 if(vips.length === 0) {
-                    vipContainer.innerHTML = `<div class="text-xs text-gray-500 italic text-center py-4">Chưa có đại gia nào xuất hiện...</div>`;
+                    vipContainer.innerHTML = `<div class="text-xs text-gray-500 italic text-center py-4">Chưa có ai đứng TOP...</div>`;
                 } else {
                     vipContainer.innerHTML = vips.map((u, idx) => `
                         <div class="flex items-center gap-3 bg-black/40 p-2 rounded-xl border border-white/5">
@@ -559,6 +619,129 @@
             } catch(e) { console.error("Lỗi load bảng VIP", e); }
         }
     }
+
+    // =========================================================
+    // LOGIC TÀI XỈU MINI GAME
+    // =========================================================
+    function selectBet(type) {
+        currentBetType = type;
+        document.getElementById('btnBetXiu').classList.replace('bg-blue-500', 'bg-transparent');
+        document.getElementById('btnBetXiu').classList.replace('text-white', 'text-blue-500');
+        document.getElementById('btnBetTai').classList.replace('bg-red-500', 'bg-transparent');
+        document.getElementById('btnBetTai').classList.replace('text-white', 'text-red-500');
+        
+        if(type === 'xiu') {
+            document.getElementById('btnBetXiu').classList.replace('bg-transparent', 'bg-blue-500');
+            document.getElementById('btnBetXiu').classList.replace('text-blue-500', 'text-white');
+        } else {
+            document.getElementById('btnBetTai').classList.replace('bg-transparent', 'bg-red-500');
+            document.getElementById('btnBetTai').classList.replace('text-red-500', 'text-white');
+        }
+    }
+
+    async function rollDice() {
+        const user = localStorage.getItem('nv_current_user');
+        if(!user || user === 'Admin') return showToast("Vui lòng đăng nhập tài khoản User để chơi!", "error");
+        if(!currentBetType) return showToast("Vui lòng chọn TÀI hoặc XỈU trước khi lắc!", "error");
+        
+        let betAmount = parseInt(document.getElementById('txBetAmount').value);
+        if(isNaN(betAmount) || betAmount < 10) return showToast("Số Coin cược không hợp lệ (Tối thiểu 10)!", "error");
+
+        if (Date.now() - lastActionTime < 2000) return showToast("Lắc từ từ thôi đại ca!", "error");
+        lastActionTime = Date.now();
+
+        let uDoc = null; let uData = null; let localIndex = -1;
+        if(isOnline) {
+            const snap = await db.collection('users').where('u', '==', user).get();
+            if(snap.empty) return showToast("Lỗi dữ liệu tài khoản!", "error");
+            uDoc = snap.docs[0];
+            uData = uDoc.data();
+        } else {
+            let users = JSON.parse(localStorage.getItem('nv_users')) || [];
+            localIndex = users.findIndex(x => x.u === user);
+            if(localIndex === -1) return;
+            uData = users[localIndex];
+        }
+
+        let currentCoin = uData.coin || 0;
+        if(currentCoin < betAmount) return showToast(`Sạch túi rồi! Số dư của bạn: ${currentCoin} Coin`, "error");
+
+        // Giao diện quay
+        const faces = ['fa-dice-one', 'fa-dice-two', 'fa-dice-three', 'fa-dice-four', 'fa-dice-five', 'fa-dice-six'];
+        const diceEl = document.getElementById('diceFaces');
+        const resEl = document.getElementById('txResultText');
+        
+        diceEl.classList.add('animate-spin');
+        resEl.innerText = "ĐANG CHỜ KẾT QUẢ...";
+        resEl.className = "text-center text-xl md:text-2xl font-black text-yellow-400 mb-6 uppercase tracking-wider animate-pulse";
+
+        setTimeout(async () => {
+            diceEl.classList.remove('animate-spin');
+
+            // THUẬT TOÁN ADMIN THAO TÚNG TỈ LỆ
+            const isWin = (Math.random() * 100) < globalTaixiuConfig.winRate;
+            let d1, d2, d3, sum;
+            
+            while(true) {
+                d1 = Math.floor(Math.random() * 6) + 1;
+                d2 = Math.floor(Math.random() * 6) + 1;
+                d3 = Math.floor(Math.random() * 6) + 1;
+                sum = d1 + d2 + d3;
+                let isTai = sum >= 11;
+                
+                let willWin = (currentBetType === 'tai' && isTai) || (currentBetType === 'xiu' && !isTai);
+                if (willWin === isWin) break;
+            }
+
+            diceEl.innerHTML = `<i class="fa-solid ${faces[d1-1]}"></i> <i class="fa-solid ${faces[d2-1]}"></i> <i class="fa-solid ${faces[d3-1]}"></i>`;
+            
+            let resultType = sum >= 11 ? 'TÀI' : 'XỈU';
+            let color = resultType === 'TÀI' ? 'text-red-500' : 'text-blue-500';
+            
+            if(isWin) {
+                resEl.innerHTML = `<span class="${color}">${sum} ĐIỂM - ${resultType}</span> | <span class="text-green-400">THẮNG +${betAmount}</span>`;
+                resEl.className = "text-center text-xl md:text-2xl font-black mb-6 uppercase tracking-wider drop-shadow-[0_0_10px_#4ade80]";
+                currentCoin += betAmount;
+            } else {
+                resEl.innerHTML = `<span class="${color}">${sum} ĐIỂM - ${resultType}</span> | <span class="text-gray-500">THUA SẠCH -${betAmount}</span>`;
+                resEl.className = "text-center text-xl md:text-2xl font-black mb-6 uppercase tracking-wider";
+                currentCoin -= betAmount;
+            }
+
+            // Update Database
+            if(isOnline) {
+                await uDoc.ref.update({ coin: currentCoin });
+            } else {
+                let users = JSON.parse(localStorage.getItem('nv_users'));
+                users[localIndex].coin = currentCoin;
+                localStorage.setItem('nv_users', JSON.stringify(users));
+            }
+            
+            // Render lại Coin
+            document.getElementById('txUserCoin').innerHTML = `${currentCoin} <span class="text-base text-white">COIN</span>`;
+            if(document.getElementById('stat2-value')) {
+                document.getElementById('stat2-value').innerHTML = currentCoin;
+            }
+
+        }, 2000);
+    }
+
+    async function updateTxCoinDisplay() {
+        const user = localStorage.getItem('nv_current_user');
+        if(!user || user === 'Admin') return;
+        let c = 0;
+        if(isOnline) {
+            const snap = await db.collection('users').where('u', '==', user).get();
+            if(!snap.empty) c = snap.docs[0].data().coin || 0;
+        } else {
+            let users = JSON.parse(localStorage.getItem('nv_users')) || [];
+            const uObj = users.find(x => x.u === user);
+            if(uObj) c = uObj.coin || 0;
+        }
+        document.getElementById('txUserCoin').innerHTML = `${c} <span class="text-base text-white">COIN</span>`;
+    }
+
+    // =========================================================
 
     function renderGameGrid(data = gamesDB) {  
         const container = document.getElementById('gameGridContainer'); if(!container) return;  
@@ -585,15 +768,17 @@
             container.innerHTML = gamesDB.map(game => `<div class="card-3d glass-panel p-3 rounded-xl flex items-center h-[120px]"><div class="w-24 flex-shrink-0 relative rounded-lg overflow-hidden h-full"><img src="${game.cover}" onerror="this.onerror=null; this.src=fallbackImg;" class="w-full h-full object-cover"></div><div class="flex-1 p-3 flex flex-col min-w-0 h-full justify-between"><h3 class="font-bold text-white truncate text-base">${game.title}</h3><p class="text-xs text-gray-500 truncate">${game.author || 'Unknown'} | ${game.genre}</p><div class="flex gap-2 mt-auto"><button onclick="startEditGame('${game.id}')" class="flex-1 py-1.5 bg-yellow-400 text-black rounded-lg text-xs font-bold transition">Sửa</button><button onclick="deleteGame('${game.id}')" class="flex-1 py-1.5 border border-red-500 text-red-500 rounded-lg text-xs font-bold transition hover:bg-red-500 hover:text-white">Xóa</button></div></div></div>`).join('');  
         }   
         renderAdminUserList();  
-        renderVipRequests(); // Load danh sách yêu cầu VIP
-        loadAdminVipConfig(); // Load text lên form Cài đặt VIP
+        renderVipRequests(); 
+        loadAdminConfigs(); 
     }  
 
-    // Load form Cài Đặt VIP
-    function loadAdminVipConfig() {
+    function loadAdminConfigs() {
+        // Form VIP
         document.getElementById('cfgPriceVip').value = globalVipConfig.priceVip;
         document.getElementById('cfgPriceVvip').value = globalVipConfig.priceVvip;
         document.getElementById('cfgBankInfo').value = globalVipConfig.bankInfo;
+        // Form Tài xỉu
+        document.getElementById('cfgWinRate').value = globalTaixiuConfig.winRate;
     }
 
     async function saveVipConfig() {
@@ -610,7 +795,38 @@
         } catch(e) { showToast("Lỗi lưu DB", "error"); }
     }
 
-    // Render Danh sách Yêu cầu Nạp VIP
+    async function saveTaixiuConfig() {
+        if(!isOnline) return showToast("Chỉ lưu được khi kết nối DB!", "error");
+        try {
+            let newRate = parseFloat(document.getElementById('cfgWinRate').value);
+            if(isNaN(newRate)) newRate = 50;
+            await db.collection('settings').doc('taixiu_config').set({ winRate: newRate });
+            globalTaixiuConfig.winRate = newRate;
+            showToast(`Đã thao túng Tỉ lệ thắng Server thành ${newRate}% !`);
+        } catch(e) { showToast("Lỗi lưu DB", "error"); }
+    }
+
+    async function adminModifyCoin() {
+        if(!isOnline) return showToast("Offline mode không cho phép Bơm Coin!", "error");
+        const u = document.getElementById('adminCoinUser').value.trim();
+        const amt = parseInt(document.getElementById('adminCoinAmount').value);
+        if(!u || isNaN(amt)) return showToast("Dữ liệu nhập không hợp lệ!", "error");
+
+        try {
+            const snap = await db.collection('users').where('u', '==', u).get();
+            if(snap.empty) return showToast("Không tìm thấy người chơi này!", "error");
+            
+            let cur = snap.docs[0].data().coin || 0;
+            let newCoin = cur + amt;
+            if(newCoin < 0) newCoin = 0;
+            
+            await snap.docs[0].ref.update({ coin: newCoin });
+            showToast(`Đã cập nhật Coin thành công! ${u} đang có ${newCoin} Coin.`);
+            document.getElementById('adminCoinUser').value = '';
+            document.getElementById('adminCoinAmount').value = '';
+        } catch(e) { showToast("Lỗi cập nhật Coin!", "error"); }
+    }
+
     async function renderVipRequests() {
         const container = document.getElementById('adminVipRequestsContainer');
         if(!isOnline) { container.innerHTML = "<p class='text-red-500 text-xs'>Offline Mode không hỗ trợ.</p>"; return; }
@@ -647,14 +863,12 @@
         if(!daysStr || daysStr <= 0) return showToast("Vui lòng nhập số ngày cấp VIP hợp lệ!", "error");
         
         try {
-            // Cập nhật DB user
             const snap = await db.collection('users').where('u', '==', username).get();
             if(!snap.empty) {
                 const userRef = snap.docs[0].ref;
                 const expiryTime = Date.now() + (parseInt(daysStr) * 24 * 60 * 60 * 1000);
                 await userRef.update({ vipLevel: type, vipExpiry: expiryTime });
             }
-            // Đánh dấu request đã xong
             await db.collection('vip_requests').doc(docId).update({ status: 'approved' });
             showToast(`Đã duyệt gói ${type} cho ${username} trong ${daysStr} ngày!`);
             renderVipRequests();
@@ -728,6 +942,7 @@
                         <div class="text-[10px] text-gray-400 mt-1 grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1">  
                             <span><i class="fa-solid fa-key mr-1"></i> Pass Hash: <span class="text-white">${u.p.substring(0,6)}...</span></span>  
                             <span><i class="fa-solid fa-network-wired mr-1"></i> IP: <span class="text-[#00f0ff]">${u.ip || 'Chưa có'}</span></span>  
+                            <span class="col-span-full mt-0.5"><i class="fa-solid fa-coins mr-1 text-yellow-400"></i> Coin: <span class="text-white font-bold">${u.coin || 0}</span></span>
                             <span class="col-span-full mt-0.5"><i class="fa-regular fa-clock mr-1"></i> Online: ${dateStr}</span>  
                         </div>  
                     </div>  
@@ -747,7 +962,6 @@
     async function changeUserVip(username, newVip) {  
         if(isOnline) {   
             const snap = await db.collection('users').where('u', '==', username).get();   
-            // Khi Admin chỉnh tay ở đây, sẽ là VIP vĩnh viễn (xóa expiry)
             snap.forEach(doc => doc.ref.update({ vipLevel: newVip, vipExpiry: firebase.firestore.FieldValue.delete() }));   
         } else {   
             let users = JSON.parse(localStorage.getItem('nv_users')) || [];   
@@ -827,25 +1041,18 @@
             if(coverData) { const match = coverData.match(/(https?:\/\/[^"'\s>]+)/); if(match) coverData = match[1]; }  
             if (coverFileInput.files.length > 0) { coverData = await readFileAsBase64(coverFileInput.files[0]); }  
 
-            // QUAN TRỌNG: FIX LỖI MẤT ẢNH BÌA
-            // Nếu admin bấm sửa mà không chọn ảnh mới, tự động lấy lại ảnh cũ từ Database
             if (!coverData && coverFileInput.files.length === 0 && gameId) {
                 const oldGame = gamesDB.find(g => g.id === gameId);
-                if (oldGame && oldGame.cover) {
-                    coverData = oldGame.cover;
-                }
+                if (oldGame && oldGame.cover) { coverData = oldGame.cover; }
             }
 
             const screenshotsInput = document.getElementById('adScreenshotsFile'); const screenshotsUrlInput = document.getElementById('adScreenshotsUrl').value.trim(); let screenshotsArray = [];  
             if(screenshotsUrlInput) { const urls = screenshotsUrlInput.split('\n').map(u => u.trim()).filter(u => u !== ''); urls.forEach(u => { let cleanUrl = u; const match = u.match(/(https?:\/\/[^"'\s>]+)/); if (match) cleanUrl = match[1]; if(screenshotsArray.length < 5 && cleanUrl) screenshotsArray.push(cleanUrl); }); }  
             if (screenshotsInput.files.length > 0) { const remainingSlots = 5 - screenshotsArray.length; if (remainingSlots > 0) { const filesToProcess = Math.min(screenshotsInput.files.length, remainingSlots); for(let i = 0; i < filesToProcess; i++) { const base64Img = await readFileAsBase64(screenshotsInput.files[i]); screenshotsArray.push(base64Img); } } }  
             
-            // Fix luôn mất ảnh Screenshot khi sửa
             if(screenshotsArray.length === 0 && gameId) {
                 const oldGame = gamesDB.find(g => g.id === gameId);
-                if (oldGame && oldGame.screenshots) {
-                    screenshotsArray = oldGame.screenshots;
-                }
+                if (oldGame && oldGame.screenshots) { screenshotsArray = oldGame.screenshots; }
             }
 
             let estimatedSize = 0;  
@@ -890,7 +1097,6 @@
         document.getElementById('adFreeLink').checked = game.isFreeLink || false;
         const links = game.links || { android: {}, pc: {} }; document.getElementById('adLinkAndTerabox').value = links.android?.terabox || ""; document.getElementById('adLinkAndMediafire').value = links.android?.mediafire || ""; document.getElementById('adLinkAndDrive').value = links.android?.drive || ""; document.getElementById('adLinkPcTerabox').value = links.pc?.terabox || ""; document.getElementById('adLinkPcMediafire').value = links.pc?.mediafire || ""; document.getElementById('adLinkPcDrive').value = links.pc?.drive || "";  
         
-        // FIX: Đẩy lại link ảnh lên form (nếu là link URL) để Admin nhìn thấy
         document.getElementById('adCoverFile').value = ""; 
         document.getElementById('adCoverUrl').value = (game.cover && game.cover.startsWith('http')) ? game.cover : ""; 
         document.getElementById('adScreenshotsFile').value = "";  
@@ -907,7 +1113,19 @@
     }  
 
     function resetAdminForm() { document.getElementById('adGameId').value = ""; document.getElementById('adminForm').reset(); document.getElementById('adminSubmitBtn').innerHTML = `<i class="fa-solid fa-cloud-arrow-up mr-2"></i> LƯU LÊN MÁY CHỦ`; }  
-    function switchView(viewId) { localStorage.setItem('nv_current_view', viewId); const views = ['homeView', 'detailView', 'adminView', 'profileView']; views.forEach(id => { const el = document.getElementById(id); if(!el) return; if(id === viewId) { el.classList.remove('view-hidden'); el.classList.add('view-active'); } else { el.classList.remove('view-active'); el.classList.add('view-hidden'); } }); if(viewId === 'adminView') renderAdminManageList(); if(viewId === 'profileView') updateProfileView(); window.scrollTo({ top: 0, behavior: 'smooth' }); }  
+    function switchView(viewId) { 
+        localStorage.setItem('nv_current_view', viewId); 
+        const views = ['homeView', 'detailView', 'adminView', 'profileView', 'taixiuView']; 
+        views.forEach(id => { 
+            const el = document.getElementById(id); if(!el) return; 
+            if(id === viewId) { el.classList.remove('view-hidden'); el.classList.add('view-active'); } 
+            else { el.classList.remove('view-active'); el.classList.add('view-hidden'); } 
+        }); 
+        if(viewId === 'adminView') renderAdminManageList(); 
+        if(viewId === 'profileView') updateProfileView(); 
+        if(viewId === 'taixiuView') updateTxCoinDisplay(); // Load coin khi vào Tài xỉu
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    }  
     
     function renderLinkButton(url, name, bgClass, iconClass, reqPremium, hasAccess) { 
         if(!url) return ''; 
@@ -961,7 +1179,6 @@
         if(!user || user === 'Admin') return showToast("Lỗi tài khoản!", "error");
 
         try {
-            // Kiểm tra xem đã có yêu cầu đang chờ chưa
             const existSnap = await db.collection('vip_requests').where('u', '==', user).where('status', '==', 'pending').get();
             if(!existSnap.empty) return showToast("Bạn đang có yêu cầu chờ Admin duyệt rồi!", "error");
 
@@ -1005,16 +1222,19 @@
                 btn.innerHTML = "TẠO TÀI KHOẢN"; btn.disabled = false; return;  
             }
 
+            // Tặng 10k Coin khởi nghiệp
+            const STARTING_COIN = 10000;
+
             if(isOnline) {  
                 const snap = await db.collection('users').where('u', '==', u).get();  
                 if(!snap.empty) { showToast("Tài khoản đã tồn tại!", "error"); btn.innerHTML = "TẠO TÀI KHOẢN"; btn.disabled = false; return; }  
-                await db.collection('users').add({u, p, avatar: '', vipLevel: 'none', ip: userIP, lastLogin: Date.now()});  
+                await db.collection('users').add({u, p, avatar: '', vipLevel: 'none', ip: userIP, coin: STARTING_COIN, lastLogin: Date.now()});  
             } else {  
                 let users = JSON.parse(localStorage.getItem('nv_users')) || [];  
                 if(users.find(x => x.u.toLowerCase() === u.toLowerCase())) { showToast("Tài khoản đã tồn tại!", "error"); btn.innerHTML = "TẠO TÀI KHOẢN"; btn.disabled = false; return; }  
-                users.push({u, p, avatar: '', vipLevel: 'none', ip: userIP, lastLogin: Date.now()}); localStorage.setItem('nv_users', JSON.stringify(users));  
+                users.push({u, p, avatar: '', vipLevel: 'none', ip: userIP, coin: STARTING_COIN, lastLogin: Date.now()}); localStorage.setItem('nv_users', JSON.stringify(users));  
             }  
-            showToast("Đăng ký thành công! Hãy đăng nhập."); toggleAuthMode();  
+            showToast("Đăng ký thành công! Tặng 10,000 COIN khởi nghiệp."); toggleAuthMode();  
 
         } else {  
             if(u.toLowerCase() === 'admin') {  
@@ -1082,12 +1302,16 @@
           
         let vipLevel = 'none';  
         let vipExpiry = null;
+        let currentCoin = 0;
+
         if(role !== 'admin') {  
             if(isOnline) { 
                 const snap = await db.collection('users').where('u', '==', user).get(); 
                 if(!snap.empty) {
-                    vipLevel = snap.docs[0].data().vipLevel || 'none'; 
-                    vipExpiry = snap.docs[0].data().vipExpiry;
+                    const uData = snap.docs[0].data();
+                    vipLevel = uData.vipLevel || 'none'; 
+                    vipExpiry = uData.vipExpiry;
+                    currentCoin = uData.coin || 0;
                 }
             }   
             else { 
@@ -1095,6 +1319,7 @@
                 if(uObj) {
                     vipLevel = uObj.vipLevel || 'none'; 
                     vipExpiry = uObj.vipExpiry;
+                    currentCoin = uObj.coin || 0;
                 }
             }  
             localStorage.setItem('nv_vip_level', vipLevel);
@@ -1131,7 +1356,9 @@
                 badge.innerText = 'THÀNH VIÊN VÀNG'; badge.className = 'px-4 py-1 bg-[#00f0ff]/20 text-[#00f0ff] border border-[#00f0ff] rounded-full text-xs font-bold uppercase tracking-widest';  
                 card.className = 'glass-panel rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden border-t-4 border-[#00f0ff] mb-8';  
             }  
-            document.getElementById('stat1-value').innerText = "0"; document.getElementById('stat1-label').innerText = "Đã tải"; document.getElementById('stat2-value').innerText = "0"; document.getElementById('stat2-label').innerText = "Yêu thích"; document.getElementById('stat3-value').innerText = "0"; document.getElementById('stat3-label').innerText = "Bình luận";  
+            document.getElementById('stat1-value').innerText = "0"; document.getElementById('stat1-label').innerText = "Đã tải"; 
+            document.getElementById('stat2-value').innerHTML = `<i class="fa-solid fa-coins mr-1 text-yellow-400 text-lg"></i> ` + currentCoin; document.getElementById('stat2-label').innerText = "Neon Coin"; 
+            document.getElementById('stat3-value').innerText = "0"; document.getElementById('stat3-label').innerText = "Bình luận";  
         } updateAvatarUI();  
     }  
 
